@@ -1,3 +1,4 @@
+import { createId } from '../utils/id';
 import { useState, useCallback, useRef } from 'react';
 import { api } from '../services/api';
 import { logger } from '../utils/logger';
@@ -127,8 +128,8 @@ export function useConfigManager(config, addToast, deps) {
       if (importedData.catalogs) {
         const newCatalogs = importedData.catalogs.map((c) => ({
           ...c,
-          _id: crypto.randomUUID(),
-          id: crypto.randomUUID(),
+          _id: createId(),
+          id: createId(),
         }));
         config.setCatalogs((prev) => [...prev, ...newCatalogs]);
         if (newCatalogs.length > 0) {

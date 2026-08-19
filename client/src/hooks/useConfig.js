@@ -1,3 +1,4 @@
+import { createId } from '../utils/id';
 import { useState, useCallback, useEffect } from 'react';
 import { api } from '../services/api';
 
@@ -191,7 +192,7 @@ export function useConfig(initialUserId = null) {
   }, [userId, apiKey, configName, catalogs, preferences, markAsSaved]);
 
   const addCatalog = useCallback((catalog) => {
-    setCatalogs((prev) => [...prev, { ...catalog, _id: crypto.randomUUID() }]);
+    setCatalogs((prev) => [...prev, { ...catalog, _id: createId() }]);
     setIsDirty(true);
   }, []);
 

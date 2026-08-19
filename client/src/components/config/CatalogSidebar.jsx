@@ -39,6 +39,40 @@ const presetIcons = {
   top_rated: Star,
   popular: Sparkles,
 };
+const FRENCH_STREAMING_PRESETS = [
+  { id: "netflix-fr", label: "Netflix", aliases: ["Netflix"] },
+  { id: "canal-fr", label: "Canal+", aliases: ["Canal+", "CANAL+", "Canal Plus"] },
+  { id: "disney-fr", label: "Disney+", aliases: ["Disney Plus", "Disney+"] },
+  { id: "prime-fr", label: "Prime Video", aliases: ["Amazon Prime Video", "Prime Video"] },
+  { id: "max-fr", label: "Max", aliases: ["Max"] },
+  { id: "apple-fr", label: "Apple TV+", aliases: ["Apple TV Plus", "Apple TV+"] },
+  { id: "paramount-fr", label: "Paramount+", aliases: ["Paramount Plus", "Paramount+"] },
+  { id: "crunchyroll-fr", label: "Crunchyroll", aliases: ["Crunchyroll"] },
+  { id: "francetv-fr", label: "France.tv", aliases: ["France TV", "France.tv"] },
+  { id: "arte-fr", label: "ARTE", aliases: ["Arte", "ARTE"] },
+  { id: "mubi-fr", label: "MUBI", aliases: ["MUBI"] },
+];
+
+function findProvider(providers, aliases) {
+  const normalized = (providers || []).map((provider) => ({
+    ...provider,
+    _name: String(provider?.provider_name || "").trim().toLowerCase(),
+  }));
+  for (const alias of aliases) {
+    const wanted = alias.toLowerCase();
+    const exact = normalized.find((provider) => provider._name === wanted);
+    if (exact) return exact;
+  }
+  for (const alias of aliases) {
+    const wanted = alias.toLowerCase();
+    const partial = normalized.find(
+      (provider) => provider._name.includes(wanted) || wanted.includes(provider._name)
+    );
+    if (partial) return partial;
+  }
+  return null;
+}
+
 
 export const CatalogSidebar = memo(function CatalogSidebar() {
   const {
@@ -51,6 +85,7 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
     setConfigName: onConfigNameChange,
     preferences,
     handleAddPresetCatalog: onAddPresetCatalog,
+    handleAddCatalog: onAddCatalogDirect,
     handleDeleteCatalog: onDeleteCatalog,
     handleDuplicateCatalog: onDuplicateCatalog,
     handleImportConfig: onImportConfig,
@@ -60,10 +95,60 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
     presetCatalogs = { movie: [], series: [] },
     imdbPresetCatalogs = [],
     imdbEnabled = false,
+    getUatchProviders,
   } = useTMDBData();
   const { addToast, setShowNewCatalogModal } = useAppActions();
 
   const onAddCatalog = () => setShowNewCatalogModal(true);
+
+  const handleAddFrenchStreamingPreset = async (service) => {
+    if (!onAddCatalogDirect || !getTatchProviders) return;
+    try {
+      const [movieProviders, seriesProviders] = await Promise.all([
+        getWatchProviders("movie", "FR"),
+        getWatchProviders("series", "FR"),
+      ]);
+      const resolved = [
+        ["movie", findProvider(movieProviders, service.aliases)],
+        ["series", findProvider(seriesProviders, service.aliases)],
+      ].filter(($, provider) => provider?.provider_id);
+      let added = 0;
+      for (const [type, provider] of resolved) {
+        const alreadyExists = safeCatalogs.some(
+          (catalog) =>
+            catalog?.type === type &&
+            catalog?.filters?.servicePreset === service.id
+        );
+        if (alreadyExists) continue;
+        onAddCatalogDirect({
+          name: `${service.label} FR - ${type === "movie" ? "Films" : "Séries"}`,
+          type,
+          source: "tmdb",
+          enabled: true,
+          filters: {
+            listType: "discover",
+            sortBy: "popularity.desc",
+            watchRegion: "FR",
+            watchProviders: [provider.provider_id],
+            watchMonetizationTypes: ["flatrate"],
+            servicePreset: service.id,
+          },
+        });
+        added += 1;
+      }
+      if (added > 0) {
+        addToast?.(`${service.label} FR : ${added} catalogue${added > 1 ? "s" : ""} ajouté$,z{added > 1 ? "s" : ""}`);
+      } else if (resolved.length > 0) {
+        addToast?.(`${service.label} FR est déjà ajouté`);
+      } else {
+        addToast?.(`${service.label} n'est pas disponible chez TMDB pour la région France`);
+      }
+    } catch (error) {
+      console.error("Streaming FR:", error);
+      addToast?.(`Impossible d'ajouter ${service.label} FR`);
+    }
+  };
+
   const onReorderCatalogs = (nextCatalogs) => {
     setCatalogs(nextCatalogs);
   };
@@ -306,6 +391,41 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
                   <IconComponent size={14} />
                   <span>{preset.label.replace(/^[^\s]+\s/, '')}</span>
                   {!isAdded && <Plus size={14} className="preset-add-icon" />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="preset-group preset-group--streaming-fr">
+          <div className="preset-group-header" role="heading" aria-level="5">
+            <Play size={14} />
+            <span>Streaming FR</span>
+          </div>
+          <div className="preset-list">
+            {FRENCH_STREAMING_PRESETS.map((service) => {
+              const movieAdded = safeCatalogs.some(
+                (catalog) =>
+                  catalog?.type === "movie" &&
+                  catalog?.filters?.servicePreset === service.id
+              );
+              const seriesAdded = safeCatalogs.some(
+                (catalog) =>
+                  catalog?.type === "series" &&
+                  catalog?.filters?.servicePreset === service.id
+              );
+              const fullyAdded = movieAdded && seriesAdded;
+              return (
+                <button
+                  key={service.id}
+                  type="button"
+                  className={`preset-item ${fullyAdded ? "added" : ""}`}
+                  onClick={() => !fullyAdded && handleAddFrenchStreamingPreset(service)}
+                  disabled={fullyAdded}
+                >
+                  <Play size={14} />
+                  <span>{service.label} FR</span>
+                  {!fullyAdded && <Plus size={14} className="preset-add-icon" />}
                 </button>
               );
             })}

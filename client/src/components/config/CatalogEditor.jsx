@@ -352,8 +352,8 @@ export const CatalogEditor = memo(function CatalogEditor() {
           <div className="empty-state-icon">
             <Sparkles size={48} />
           </div>
-          <h3>Create Your First Catalog</h3>
-          <p>Click "Add" in the sidebar to start building a custom catalog with TMDB filters</p>
+          <h3>Créez votre premier catalogue</h3>
+          <p>Cliquez sur » Ajouter » dans la barre latérale pour créer un catalogue personnalisé avec les filtres TMDB</p>
         </div>
       </div>
     );

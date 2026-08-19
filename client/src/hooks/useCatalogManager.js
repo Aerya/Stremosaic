@@ -1,3 +1,4 @@
+import { createId } from '../utils/id';
 import { useState } from 'react';
 import { PRESET_DATE_MAP } from '../constants/datePresets';
 
@@ -55,7 +56,7 @@ export function useCatalogManager(config, addToast) {
   };
 
   const handleAddCatalog = (catalogData) => {
-    const newCatalog = { ...catalogData, _id: crypto.randomUUID() };
+    const newCatalog = { ...catalogData, _id: createId() };
     config.setCatalogs((prev) => [...prev, newCatalog]);
     setActiveCatalog(newCatalog);
   };
@@ -64,7 +65,7 @@ export function useCatalogManager(config, addToast) {
     const effectiveSource = source || globalSource;
     const isTmdb = effectiveSource !== 'imdb';
     const newCatalog = {
-      _id: crypto.randomUUID(),
+      _id: createId(),
       name: preset.label.replace(/^[^\s]+\s/, ''),
       type,
       filters: isTmdb ? buildPresetFilters(type, preset.value) : { listType: preset.value },
@@ -98,8 +99,8 @@ export function useCatalogManager(config, addToast) {
 
     const newCatalog = {
       ...structuredClone(catalog),
-      _id: crypto.randomUUID(),
-      id: crypto.randomUUID(),
+      _id: createId(),
+      id: createId(),
       name: `${catalog.name} (Copy)`,
     };
 
