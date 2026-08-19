@@ -39,6 +39,22 @@ const presetIcons = {
   top_rated: Star,
   popular: Sparkles,
 };
+
+const PRESET_LABELS_FR = {
+  trending_day: "Tendances du jour",
+  trending_week: "Tendances de la semaine",
+  now_playing: "Actuellement au cinéma",
+  upcoming: "Prochainement",
+  airing_today: "Diffusées aujourd'hui",
+  on_the_air: "En cours de diffusion",
+  top_rated: "Les mieux notés",
+  popular: "Populaires",
+};
+
+const getPresetLabelFr = (preset) =>
+  PRESET_LABELS_FR[preset?.value] ||
+  String(preset?.label || "").replace(/^[^\s]+\s/, "");
+
 const FRENCH_STREAMING_PRESETS = [
   { id: "netflix-fr", label: "Netflix", aliases: ["Netflix"] },
   { id: "canal-fr", label: "Canal+", aliases: ["Canal+", "CANAL+", "Canal Plus"] },
@@ -95,58 +111,38 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
     presetCatalogs = { movie: [], series: [] },
     imdbPresetCatalogs = [],
     imdbEnabled = false,
-    getUatchProviders,
+    getUatchProviders,,
+    getWatchProviders
   } = useTMDBData();
   const { addToast, setShowNewCatalogModal } = useAppActions();
 
   const onAddCatalog = () => setShowNewCatalogModal(true);
-
   const handleAddFrenchStreamingPreset = async (service) => {
-    if (!onAddCatalogDirect || !getTatchProviders) return;
+    if (typeof onAddCatalogDirect !== "function") { addToast?.("Erreur interne : ajout de catalogue indisponible"); return; }
+    if (typeof getWatchProviders !== "function") { addToast?.("Erreur interne : providers TMDB indisponibles"); return; }
     try {
       const [movieProviders, seriesProviders] = await Promise.all([
         getWatchProviders("movie", "FR"),
         getWatchProviders("series", "FR"),
       ]);
-      const resolved = [
-        ["movie", findProvider(movieProviders, service.aliases)],
-        ["series", findProvider(seriesProviders, service.aliases)],
-      ].filter(($, provider) => provider?.provider_id);
+      const targets = [
+        ["movie", findFrenchProvider(movieProviders, service.aliases)],
+        ["series", findFrenchProvider(seriesProviders, service.aliases)],
+      ].filter(([, provider]) => provider?.provider_id);
+      if (targets.length === 0) { addToast?.(`${service.label} : aucun provider TMDB trouvé pour la France`); return; }
       let added = 0;
-      for (const [type, provider] of resolved) {
-        const alreadyExists = safeCatalogs.some(
-          (catalog) =>
-            catalog?.type === type &&
-            catalog?.filters?.servicePreset === service.id
-        );
-        if (alreadyExists) continue;
+      for (const [type, provider] of targets) {
+        const exists = safeCatalogs.some((catalog) => catalog?.type === type && catalog?.filters?.servicePreset === service.id);
+        if (exists) continue;
         onAddCatalogDirect({
           name: `${service.label} FR - ${type === "movie" ? "Films" : "Séries"}`,
-          type,
-          source: "tmdb",
-          enabled: true,
-          filters: {
-            listType: "discover",
-            sortBy: "popularity.desc",
-            watchRegion: "FR",
-            watchProviders: [provider.provider_id],
-            watchMonetizationTypes: ["flatrate"],
-            servicePreset: service.id,
-          },
+          type, source: "tmdb", enabled: true,
+          filters: { listType: "discover", sortBy: "popularity.desc", watchRegion: "FR", watchProviders: [provider.provider_id], watchMonetizationTypes: ["flatrate"], servicePreset: service.id },
         });
         added += 1;
       }
-      if (added > 0) {
-        addToast?.(`${service.label} FR : ${added} catalogue${added > 1 ? "s" : ""} ajouté$,z{added > 1 ? "s" : ""}`);
-      } else if (resolved.length > 0) {
-        addToast?.(`${service.label} FR est déjà ajouté`);
-      } else {
-        addToast?.(`${service.label} n'est pas disponible chez TMDB pour la région France`);
-      }
-    } catch (error) {
-      console.error("Streaming FR:", error);
-      addToast?.(`Impossible d'ajouter ${service.label} FR`);
-    }
+      addToast?.(added > 0 ? `${service.label} FR : ${added} catalogue${added > 1 ? "s" : ""} ajouté${added > 1 ? "s" : ""}` : `${service.label} FR est déjà ajouté`);
+    } catch (error) { console.error("Streaming FR quick-add:", error); addToast?.(`Impossible d'ajouter ${service.label} FR`); }
   };
 
   const onReorderCatalogs = (nextCatalogs) => {
@@ -331,12 +327,12 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
                 <button
                   key={`${source}-${preset.value}`}
                   className={`preset-item ${source === 'imdb' ? 'preset-item--imdb' : ''} ${isAdded ? 'added' : ''}`}
-                  onClick={() => !isAdded && onAddPresetCatalog(type, preset, source)}
+                  onClick={() => !isAdded && onAddPresetCatalog(type, { ...preset, label: getPresetLabelFr(preset) }, source)}
                   disabled={isAdded}
                   title={isAdded ? 'Déjà ajouté' : preset.description}
                 >
                   <IconComponent size={14} />
-                  <span>{preset.label.replace(/^[^\s]+\s/, '')}</span>
+                  <span>{getPresetLabelFr(preset)}</span>
                   {!isAdded && <Plus size={14} className="preset-add-icon" />}
                 </button>
               );
@@ -384,12 +380,12 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
                 <button
                   key={`${source}-${preset.value}`}
                   className={`preset-item ${source === 'imdb' ? 'preset-item--imdb' : ''} ${isAdded ? 'added' : ''}`}
-                  onClick={() => !isAdded && onAddPresetCatalog(type, preset, source)}
+                  onClick={() => !isAdded && onAddPresetCatalog(type, { ...preset, label: getPresetLabelFr(preset) }, source)}
                   disabled={isAdded}
                   title={isAdded ? 'Déjà ajouté' : preset.description}
                 >
                   <IconComponent size={14} />
-                  <span>{preset.label.replace(/^[^\s]+\s/, '')}</span>
+                  <span>{getPresetLabelFr(preset)}</span>
                   {!isAdded && <Plus size={14} className="preset-add-icon" />}
                 </button>
               );

@@ -11,7 +11,7 @@ function createProps(filters = {}, onFiltersChange = vi.fn(), catalogType = 'mov
     traktGenres: [],
     traktListTypes: [
       { value: 'trending', label: 'Trending Now' },
-      { value: 'popular', label: 'Most Popular' },
+      { value: 'popular', label: 'Plus populaires' },
       { value: 'anticipated', label: 'Most Anticipated' },
       { value: 'recommended', label: 'Community Recommended' },
       { value: 'favorited', label: 'Most Favorited' },
@@ -51,13 +51,13 @@ describe('TraktFilterPanel year range visibility', () => {
   it('shows Year Range for discover browse type', () => {
     render(<TraktFilterPanel {...createProps({ traktListType: 'trending' })} />);
 
-    expect(screen.getByText('Year Range')).toBeInTheDocument();
+    expect(screen.getByText('Période')).toBeInTheDocument();
   });
 
   it('hides Year Range for calendar browse type', () => {
     render(<TraktFilterPanel {...createProps({ traktListType: 'calendar' })} />);
 
-    expect(screen.queryByText('Year Range')).not.toBeInTheDocument();
+    expect(screen.queryByText('Période')).not.toBeInTheDocument();
   });
 
   it('clears stale year filters when not in discover browse type', async () => {

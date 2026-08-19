@@ -26,12 +26,12 @@ describe('ReleaseFilters', () => {
 
     fireEvent.click(screen.getByRole('combobox', { name: /show status/i }));
     let listbox = screen.getByRole('listbox');
-    expect(within(listbox).getAllByText('Any')).toHaveLength(1);
+    expect(within(listbox).getAllByText('Tous')).toHaveLength(1);
     fireEvent.mouseDown(document.body);
 
     fireEvent.click(screen.getByRole('combobox', { name: /show type/i }));
     listbox = screen.getByRole('listbox');
-    expect(within(listbox).getAllByText('Any')).toHaveLength(1);
+    expect(within(listbox).getAllByText('Tous')).toHaveLength(1);
   });
 
   it('updates first-air-year max when current year changes', () => {

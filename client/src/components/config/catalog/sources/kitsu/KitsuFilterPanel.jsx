@@ -15,7 +15,7 @@ const KITSU_LIST_TYPES = [
 
 const KITSU_SORT_OPTIONS = [
   { value: '-averageRating', label: 'Highest Rated' },
-  { value: '-userCount', label: 'Most Popular' },
+  { value: '-userCount', label: 'Plus populaires' },
   { value: '-favoritesCount', label: 'Most Favorited' },
   { value: '-startDate', label: 'Newest' },
   { value: 'startDate', label: 'Oldest' },
@@ -36,7 +36,7 @@ const KITSU_STATUSES = [
   { value: 'finished', label: 'Finished' },
   { value: 'tba', label: 'TBA' },
   { value: 'unreleased', label: 'Unreleased' },
-  { value: 'upcoming', label: 'Upcoming' },
+  { value: 'upcoming', label: 'Prochainement' },
 ];
 
 const KITSU_AGE_RATINGS = [
@@ -229,7 +229,7 @@ export function KitsuFilterPanel({
           {!isTrending && (
             <div className="filter-group">
               <LabelWithTooltip
-                label="Sort By"
+                label="Trier par"
                 tooltip="How to order results. Only applies in Browse mode."
               />
               <SearchableSelect

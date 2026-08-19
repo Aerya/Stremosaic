@@ -879,7 +879,7 @@ export function TraktFilterPanel({
         >
           {showAdvancedFilters && (
             <div className="filter-group">
-              <LabelWithTooltip label="Original Language" tooltip="Filter by original language." />
+              <LabelWithTooltip label="Langue originale" tooltip="Filter by original language." />
               <SearchableSelect
                 options={availableLanguages}
                 value=""
@@ -910,7 +910,7 @@ export function TraktFilterPanel({
 
           {showAdvancedFilters && (
             <div className="filter-group">
-              <LabelWithTooltip label="Country" tooltip="Filter by country of origin." />
+              <LabelWithTooltip label="Pays" tooltip="Filter by country of origin." />
               <SearchableSelect
                 options={availableCountries}
                 value=""
@@ -1054,7 +1054,7 @@ export function TraktFilterPanel({
 
         {showYearRange && (
           <RangeSlider
-            label="Year Range"
+            label="Période"
             min={1900}
             max={CURRENT_YEAR + 1}
             step={1}
@@ -1082,7 +1082,7 @@ export function TraktFilterPanel({
 
         {showAdvancedFilters && (
           <RangeSlider
-            label="Runtime (minutes)"
+            label="Durée (minutes)"
             min={0}
             max={400}
             step={5}

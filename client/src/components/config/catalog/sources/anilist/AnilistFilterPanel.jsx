@@ -203,7 +203,7 @@ export function AnilistFilterPanel({
       >
         <div className="filter-group">
           <LabelWithTooltip
-            label="Sort By"
+            label="Trier par"
             tooltip="How to order your AniList results. Trending shows currently popular titles."
           />
           <SearchableSelect

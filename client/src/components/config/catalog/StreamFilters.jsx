@@ -112,7 +112,7 @@ export const StreamFilters = memo(function StreamFilters({
             options={monetizationTypes}
             value={filters.watchMonetizationTypes || []}
             onChange={(value) => onFiltersChange('watchMonetizationTypes', value)}
-            placeholder="Any"
+            placeholder="Tous"
             labelKey="label"
             valueKey="value"
           />

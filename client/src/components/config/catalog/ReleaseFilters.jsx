@@ -222,7 +222,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
             { l: '90d', v: 'last_90_days' },
             { l: '6mo', v: 'last_180_days' },
             { l: '1y', v: 'last_365_days' },
-            { l: 'Upcoming', v: 'next_30_days' },
+            { l: 'Prochainement', v: 'next_30_days' },
           ].map((p) => (
             <button
               key={p.v}
@@ -539,7 +539,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
               options={safeTvStatuses}
               value={localCatalog?.filters?.tvStatus || ''}
               onChange={(value) => onFiltersChange('tvStatus', value)}
-              placeholder="Any"
+              placeholder="Tous"
               searchPlaceholder="Search..."
               labelKey="label"
               valueKey="value"
@@ -555,7 +555,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
               options={safeTvTypes}
               value={localCatalog?.filters?.tvType || ''}
               onChange={(value) => onFiltersChange('tvType', value)}
-              placeholder="Any"
+              placeholder="Tous"
               searchPlaceholder="Search..."
               labelKey="label"
               valueKey="value"
@@ -577,7 +577,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
         ratingsLabel="Age Rating"
         ratingsTooltip="Content certification/age rating (e.g., PG-13, R, TV-MA). Varies by country - US ratings shown by default."
         countryPlaceholder="US (default)"
-        ratingsPlaceholder="Any"
+        ratingsPlaceholder="Tous"
         hint="Use this for exact certifications."
       />
     </>

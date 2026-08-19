@@ -480,12 +480,12 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       >
         <div className="filter-grid">
           <div className="filter-group">
-            <LabelWithTooltip label="Sort By" tooltip="How to order your IMDb results." />
+            <LabelWithTooltip label="Trier par" tooltip="How to order your IMDb results." />
             <SearchableSelect
               options={imdbSortOptions}
               value={filters.sortBy || 'POPULARITY'}
               onChange={(value) => onFiltersChange('sortBy', value)}
-              placeholder="Most Popular"
+              placeholder="Plus populaires"
               searchPlaceholder="Search..."
               labelKey="label"
               valueKey="value"
@@ -733,14 +733,14 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
         <div className="filter-spacer">
           <RangeSlider
-            label="Runtime (minutes)"
+            label="Durée (minutes)"
             tooltip="Filter by total runtime in minutes."
             min={0}
             max={400}
             step={1}
             value={[filters.runtimeMin || 0, filters.runtimeMax || RUNTIME_MAX_MINUTES]}
             onChange={handleRuntimeChange}
-            formatValue={(v) => (v === 0 ? 'Any' : v === 400 ? '400+' : `${v}m`)}
+            formatValue={(v) => (v === 0 ? 'Tous' : v === 400 ? '400+' : `${v}m`)}
             showInputs
           />
           <div className="runtime-presets filter-spacer-sm">
@@ -1051,7 +1051,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
             ratingOptions={availableCertificates}
             ratingsValue={filters.certificates || []}
             onRatingsChange={(value) => onFiltersChange('certificates', value)}
-            countryLabel="Country"
+            countryLabel="Pays"
             countryTooltip="Select a country to see its content rating options."
             ratingsLabel="Ratings"
             ratingsTooltip="Content rating certificates available for the selected country."

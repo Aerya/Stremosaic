@@ -57,14 +57,14 @@ export const FilterPanel = memo(function FilterPanel({
       <div className="filter-grid">
         <div className="filter-group">
           <LabelWithTooltip
-            label="Sort By"
+            label="Trier par"
             tooltip="How to order your results. Popular shows what's trending now, while rating shows critically acclaimed content."
           />
           <SearchableSelect
             options={safeSortOptions[localCatalog?.type] || safeSortOptions.movie || []}
             value={localCatalog?.filters?.sortBy || 'popularity.desc'}
             onChange={(value) => onFiltersChange('sortBy', value)}
-            placeholder="Most Popular"
+            placeholder="Plus populaires"
             searchPlaceholder="Search..."
             labelKey="label"
             valueKey="value"
@@ -74,14 +74,14 @@ export const FilterPanel = memo(function FilterPanel({
 
         <div className="filter-group">
           <LabelWithTooltip
-            label="Original Language"
+            label="Langue originale"
             tooltip="Filter by the original language of the content (e.g., select 'Japanese' for anime, 'Korean' for K-dramas)."
           />
           <SearchableSelect
             options={safeOriginalLanguages}
             value={localCatalog?.filters?.language || ''}
             onChange={(value) => onFiltersChange('language', value)}
-            placeholder="Any"
+            placeholder="Tous"
             searchPlaceholder="Search languages..."
             labelKey="english_name"
             valueKey="iso_639_1"
@@ -90,14 +90,14 @@ export const FilterPanel = memo(function FilterPanel({
 
         <div className="filter-group">
           <LabelWithTooltip
-            label="Country"
+            label="Pays"
             tooltip="Filter by country of origin. Select multiple countries (OR logic). Useful for finding British shows, Bollywood movies, etc."
           />
           <MultiSelect
             options={safeCountries}
             value={countriesValue}
             onChange={(value) => onFiltersChange('countries', value)}
-            placeholder="Any"
+            placeholder="Tous"
             searchPlaceholder="Search countries..."
             labelKey="english_name"
             valueKey="iso_3166_1"
@@ -107,7 +107,7 @@ export const FilterPanel = memo(function FilterPanel({
 
       <div className="filter-spacer-lg">
         <RangeSlider
-          label="Year Range"
+          label="Période"
           tooltip="Filter by release year or first air date. Great for finding classics or recent releases."
           min={1900}
           max={CURRENT_YEAR + 2}
@@ -124,7 +124,7 @@ export const FilterPanel = memo(function FilterPanel({
 
       <div className="filter-spacer">
         <RangeSlider
-          label="Rating"
+          label="Note"
           tooltip="TMDB average user rating (0-10 scale). Higher ratings indicate better reviews."
           min={0}
           max={10}
@@ -138,7 +138,7 @@ export const FilterPanel = memo(function FilterPanel({
 
       <div className="filter-spacer">
         <RangeSlider
-          label="Runtime (minutes)"
+          label="Durée (minutes)"
           tooltip="Filter by total runtime. Perfect for finding quick watches or epic adventures."
           min={0}
           max={400}
@@ -148,7 +148,7 @@ export const FilterPanel = memo(function FilterPanel({
             localCatalog?.filters?.runtimeMax || RUNTIME_MAX_MINUTES,
           ]}
           onChange={handleRuntimeRangeChange}
-          formatValue={(v) => (v === 0 ? 'Any' : v === 400 ? '400+' : `${v}m`)}
+          formatValue={(v) => (v === 0 ? 'Tous' : v === 400 ? '400+' : `${v}m`)}
           showInputs
         />
         <div className="runtime-presets filter-spacer-sm">
@@ -192,7 +192,7 @@ export const FilterPanel = memo(function FilterPanel({
 
       <div className="filter-spacer">
         <SingleSlider
-          label="Minimum Votes"
+          label="Nombre minimum de votes"
           tooltip="Requires this many user ratings. Higher values filter out obscure titles and ensure quality."
           min={0}
           max={10000}

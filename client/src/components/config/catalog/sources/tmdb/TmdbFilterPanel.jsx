@@ -343,7 +343,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
         <FilterSection
           id="filters"
           title="Sort & Filter"
-          description="Sorting, language, year, rating"
+          description="Tri, langue, année, note"
           icon={Settings}
           isOpen={expandedSections.filters}
           onToggle={onToggleSection}
@@ -363,7 +363,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
         <FilterSection
           id="release"
           title={`${isMovie ? 'Release' : 'Air Date'} & Classification`}
-          description="Date ranges, age ratings, release type"
+          description="Dates, classification d'âge et type de sortie"
           icon={Calendar}
           isOpen={expandedSections.release}
           onToggle={onToggleSection}
@@ -387,7 +387,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
         <FilterSection
           id="streaming"
           title="Where to Watch"
-          description="Filter by streaming services and original networks"
+          description="Filtrer par services de streaming et chaînes d'origine"
           icon={Play}
           isOpen={expandedSections.streaming}
           onToggle={onToggleSection}
@@ -413,7 +413,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
           title="Genres"
           description={
             activeFilters.find((f) => f.section === 'genres')?.label ||
-            'Select genres to include/exclude'
+            'Sélectionner les genres à inclure/exclure'
           }
           icon={Sparkles}
           isOpen={expandedSections.genres}

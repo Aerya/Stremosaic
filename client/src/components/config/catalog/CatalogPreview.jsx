@@ -200,7 +200,7 @@ export const CatalogPreview = memo(function CatalogPreview({
           {!loading && !error && !data && (
             <div className="preview-empty">
               <Eye size={32} />
-              <p>Configure filters and click Preview</p>
+              <p>Configurez les filtres puis cliquez sur Aperçu</p>
             </div>
           )}
         </div>

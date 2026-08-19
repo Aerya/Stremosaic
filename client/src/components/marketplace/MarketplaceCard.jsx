@@ -89,7 +89,7 @@ export function MarketplaceCard({
           title={`Preview ${name}`}
         >
           <Eye size={15} aria-hidden="true" />
-          <span className="marketplace-action-label">Preview</span>
+          <span className="marketplace-action-label">Aperçu</span>
         </button>
         <button
           type="button"

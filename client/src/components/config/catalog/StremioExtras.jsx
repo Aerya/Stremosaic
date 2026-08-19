@@ -13,7 +13,7 @@ const AVAILABLE_EXTRAS = [
   },
   {
     id: 'sortBy',
-    label: 'Sort By',
+    label: 'Trier par',
     description: 'Use the dropdown values as sort options',
   },
   {

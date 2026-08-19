@@ -16,7 +16,7 @@ export const CertificationCountryFilter = memo(function CertificationCountryFilt
   ratingsTooltip = 'Content certification/age rating options for the selected country.',
   countryPlaceholder = 'Select country...',
   countrySearchPlaceholder = 'Search countries...',
-  ratingsPlaceholder = 'Any',
+  ratingsPlaceholder = 'Tous',
   clearRatingsOnCountryChange = false,
   ratingsDisabled = false,
   hint,
