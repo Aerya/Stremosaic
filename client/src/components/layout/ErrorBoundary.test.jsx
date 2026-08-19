@@ -27,8 +27,8 @@ describe('ErrorBoundary', () => {
         <Thrower shouldThrow={true} />
       </ErrorBoundary>
     );
-    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-    expect(screen.getByText(/unexpected error/i)).toBeInTheDocument();
+    expect(screen.getByText('Une erreur est survenue')).toBeInTheDocument();
+    expect(screen.getByText(/erreur inattendue/i)).toBeInTheDocument();
   });
 
   it('shows a Reload button', () => {
@@ -37,7 +37,7 @@ describe('ErrorBoundary', () => {
         <Thrower shouldThrow={true} />
       </ErrorBoundary>
     );
-    expect(screen.getByRole('button', { name: /reload/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /recharger/i })).toBeInTheDocument();
   });
 
   it('calls window.location.reload on Reload click', () => {
@@ -53,7 +53,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /reload/i }));
+    fireEvent.click(screen.getByRole('button', { name: /recharger/i }));
 
     expect(reloadMock).toHaveBeenCalled();
   });

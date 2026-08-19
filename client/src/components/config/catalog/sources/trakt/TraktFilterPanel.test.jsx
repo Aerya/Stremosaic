@@ -84,13 +84,13 @@ describe('TraktFilterPanel year range visibility', () => {
   it('shows calendar movie external filters except Metacritic', () => {
     render(<TraktFilterPanel {...createProps({ traktListType: 'calendar' })} />);
 
-    expect(screen.getByText('IMDb Rating')).toBeInTheDocument();
-    expect(screen.getByText('TMDB Rating')).toBeInTheDocument();
+    expect(screen.getByText('Note IMDb')).toBeInTheDocument();
+    expect(screen.getByText('Note TMDB')).toBeInTheDocument();
     expect(screen.getByText('Rotten Tomatoes (Critics)')).toBeInTheDocument();
     expect(screen.getByText('Rotten Tomatoes (Audience)')).toBeInTheDocument();
     expect(screen.queryByText('Metacritic')).not.toBeInTheDocument();
-    expect(screen.getByText('IMDb Min Votes')).toBeInTheDocument();
-    expect(screen.getByText('TMDB Min Votes')).toBeInTheDocument();
+    expect(screen.getByText('Votes IMDb minimum')).toBeInTheDocument();
+    expect(screen.getByText('Votes TMDB minimum')).toBeInTheDocument();
   });
 
   it('shows only supported calendar series external filters', () => {
@@ -104,21 +104,21 @@ describe('TraktFilterPanel year range visibility', () => {
       />
     );
 
-    expect(screen.queryByText('IMDb Rating')).not.toBeInTheDocument();
-    expect(screen.getByText('TMDB Rating')).toBeInTheDocument();
+    expect(screen.queryByText('Note IMDb')).not.toBeInTheDocument();
+    expect(screen.getByText('Note TMDB')).toBeInTheDocument();
     expect(screen.queryByText('Rotten Tomatoes (Critics)')).not.toBeInTheDocument();
     expect(screen.queryByText('Rotten Tomatoes (Audience)')).not.toBeInTheDocument();
     expect(screen.queryByText('Metacritic')).not.toBeInTheDocument();
-    expect(screen.queryByText('IMDb Min Votes')).not.toBeInTheDocument();
-    expect(screen.getByText('TMDB Min Votes')).toBeInTheDocument();
+    expect(screen.queryByText('Votes IMDb minimum')).not.toBeInTheDocument();
+    expect(screen.getByText('Votes TMDB minimum')).toBeInTheDocument();
   });
 
   it('shows future-oriented window presets for upcoming calendar', () => {
     render(<TraktFilterPanel {...createProps({ traktListType: 'calendar' })} />);
 
-    expect(screen.getByText('Next Week Releases')).toBeInTheDocument();
-    expect(screen.getByText('Next Month')).toBeInTheDocument();
-    expect(screen.getByText('This Year')).toBeInTheDocument();
-    expect(screen.queryByText('3 Years')).not.toBeInTheDocument();
+    expect(screen.getByText('Sorties de la semaine prochaine')).toBeInTheDocument();
+    expect(screen.getByText('Mois prochain')).toBeInTheDocument();
+    expect(screen.getByText('Cette année')).toBeInTheDocument();
+    expect(screen.queryByText('3 ans')).not.toBeInTheDocument();
   });
 });

@@ -202,11 +202,11 @@ export function formatTraktCalendarWindowLabel(listType, days) {
   if (!Number.isFinite(numericDays) || numericDays <= 0) return '';
 
   if (normalized === 'calendar') {
-    if (numericDays === 7) return 'Next Week Releases';
-    if (numericDays === 30) return 'Next Month';
-    if (numericDays === getDaysUntilEndOfYearUtc()) return 'This Year';
-    return `Next ${numericDays} days`;
+    if (numericDays === 7) return 'Sorties de la semaine prochaine';
+    if (numericDays === 30) return 'Mois prochain';
+    if (numericDays === getDaysUntilEndOfYearUtc()) return 'Cette année';
+    return `Prochains ${numericDays} jours`;
   }
 
-  return `Last ${numericDays} days`;
+  return `Derniers ${numericDays} jours`;
 }

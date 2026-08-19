@@ -25,7 +25,7 @@ export const OptionsPanel = memo(function OptionsPanel({ localCatalog, onFilters
       <Checkbox
         checked={!!filters.randomize}
         onChange={(checked) => onFiltersChange('randomize', checked || undefined)}
-        label="Randomize Results"
+        label="Résultats aléatoires"
         tooltip="Charger une page aléatoire parmi les résultats correspondants et les mélanger."
       />
 
@@ -49,7 +49,7 @@ export const OptionsPanel = memo(function OptionsPanel({ localCatalog, onFilters
         <Checkbox
           checked={!!filters.screenedTheatrically}
           onChange={(checked) => onFiltersChange('screenedTheatrically', checked || undefined)}
-          label="Screened theatrically"
+          label="Projeté en salle"
           tooltip="Inclure les séries ayant été projetées au cinéma."
         />
       )}

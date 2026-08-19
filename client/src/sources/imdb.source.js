@@ -83,7 +83,7 @@ export const IMDB_SOURCE = {
     if (filters.sortBy && filters.sortBy !== 'POPULARITY') {
       active.push({
         key: 'sortBy',
-        label: `Sort: ${resolveSortLabel(imdbSortOptions, filters.sortBy)}`,
+        label: `Tri : ${resolveSortLabel(imdbSortOptions, filters.sortBy)}`,
         section: 'filters',
       });
     }
@@ -93,7 +93,7 @@ export const IMDB_SOURCE = {
       const extra = filters.genres.length > 2 ? ` +${filters.genres.length - 2}` : '';
       active.push({
         key: 'genres',
-        label: `Genres: ${names.join(', ')}${extra}`,
+        label: `Genres : ${names.join(', ')}${extra}`,
         section: 'genres',
       });
     }
@@ -103,7 +103,7 @@ export const IMDB_SOURCE = {
       const extra = filters.excludeGenres.length > 2 ? ` +${filters.excludeGenres.length - 2}` : '';
       active.push({
         key: 'excludeGenres',
-        label: `Exclude: ${names.join(', ')}${extra}`,
+        label: `Exclure : ${names.join(', ')}${extra}`,
         section: 'genres',
       });
     }
@@ -115,7 +115,7 @@ export const IMDB_SOURCE = {
       const extra = filters.imdbCountries.length > 2 ? ` +${filters.imdbCountries.length - 2}` : '';
       active.push({
         key: 'imdbCountries',
-        label: `IMDb Countries: ${names.join(', ')}${extra}`,
+        label: `Pays IMDb : ${names.join(', ')}${extra}`,
         section: 'region',
       });
     }
@@ -123,7 +123,7 @@ export const IMDB_SOURCE = {
     if (filters.yearFrom || filters.yearTo) {
       active.push({
         key: 'year',
-        label: `Year: ${filters.yearFrom || 'Any'}–${filters.yearTo || 'Now'}`,
+        label: `Année : ${filters.yearFrom || 'Toutes'}–${filters.yearTo || 'Présent'}`,
         section: 'filters',
       });
     }
@@ -134,7 +134,7 @@ export const IMDB_SOURCE = {
     ) {
       active.push({
         key: 'imdbRating',
-        label: `IMDb Rating: ${filters.imdbRatingMin || 0}–${filters.imdbRatingMax ?? 10}`,
+        label: `Note IMDb : ${filters.imdbRatingMin || 0}–${filters.imdbRatingMax ?? 10}`,
         section: 'filters',
       });
     }
@@ -142,7 +142,7 @@ export const IMDB_SOURCE = {
     if (filters.runtimeMin || filters.runtimeMax) {
       active.push({
         key: 'runtime',
-        label: `Runtime: ${filters.runtimeMin || 0}–${filters.runtimeMax || '∞'}min`,
+        label: `Durée : ${filters.runtimeMin || 0}–${filters.runtimeMax || '∞'}min`,
         section: 'filters',
       });
     }
@@ -150,7 +150,7 @@ export const IMDB_SOURCE = {
     if (filters.totalVotesMin > 0) {
       active.push({
         key: 'totalVotesMin',
-        label: `Min votes: ${filters.totalVotesMin.toLocaleString()}`,
+        label: `Votes minimum : ${filters.totalVotesMin.toLocaleString()}`,
         section: 'filters',
       });
     }
@@ -158,7 +158,7 @@ export const IMDB_SOURCE = {
     if (filters.releaseDateStart || filters.releaseDateEnd) {
       active.push({
         key: 'releaseDate',
-        label: `Release: ${filters.releaseDateStart || '…'} – ${filters.releaseDateEnd || '…'}`,
+        label: `Sortie : ${filters.releaseDateStart || '…'} – ${filters.releaseDateEnd || '…'}`,
         section: 'release',
       });
     }
@@ -166,7 +166,7 @@ export const IMDB_SOURCE = {
     if (filters.awardsWon?.length > 0) {
       active.push({
         key: 'awardsWon',
-        label: `Awards won: ${filters.awardsWon.length}`,
+        label: `Récompenses remportées : ${filters.awardsWon.length}`,
         section: 'awards',
       });
     }
@@ -174,7 +174,7 @@ export const IMDB_SOURCE = {
     if (filters.awardsNominated?.length > 0) {
       active.push({
         key: 'awardsNominated',
-        label: `Awards nominated: ${filters.awardsNominated.length}`,
+        label: `Nominations : ${filters.awardsNominated.length}`,
         section: 'awards',
       });
     }
@@ -182,7 +182,7 @@ export const IMDB_SOURCE = {
     if (selectedImdbPeople?.length > 0) {
       active.push({
         key: 'creditedNames',
-        label: `IMDb People: ${selectedImdbPeople.length}`,
+        label: `Personnes IMDb : ${selectedImdbPeople.length}`,
         section: 'people',
       });
     }
@@ -190,7 +190,7 @@ export const IMDB_SOURCE = {
     if (selectedImdbCompanies?.length > 0) {
       active.push({
         key: 'imdbCompanies',
-        label: `IMDb Studios: ${selectedImdbCompanies.length}`,
+        label: `Studios IMDb : ${selectedImdbCompanies.length}`,
         section: 'people',
       });
     }
@@ -198,19 +198,19 @@ export const IMDB_SOURCE = {
     if (selectedImdbExcludeCompanies?.length > 0) {
       active.push({
         key: 'imdbExcludeCompanies',
-        label: `Exclude IMDb studios: ${selectedImdbExcludeCompanies.length}`,
+        label: `Exclure studios IMDb : ${selectedImdbExcludeCompanies.length}`,
         section: 'people',
       });
     }
 
     if (filters.inTheatersLat) {
-      active.push({ key: 'inTheaters', label: 'In Theatres', section: 'theatres' });
+      active.push({ key: 'inTheaters', label: 'Au cinéma', section: 'theatres' });
     }
 
     if (filters.certificates?.length > 0) {
       active.push({
         key: 'imdbCertificates',
-        label: `Certificates: ${filters.certificates.length}`,
+        label: `Classifications : ${filters.certificates.length}`,
         section: 'certificates',
       });
     }
@@ -218,7 +218,7 @@ export const IMDB_SOURCE = {
     if (isMovieType && filters.rankedLists?.length > 0) {
       active.push({
         key: 'rankedLists',
-        label: `Ranked Lists: ${filters.rankedLists.length}`,
+        label: `Listes classées : ${filters.rankedLists.length}`,
         section: 'rankedLists',
       });
     }
@@ -226,7 +226,7 @@ export const IMDB_SOURCE = {
     if (isMovieType && filters.excludeRankedLists?.length > 0) {
       active.push({
         key: 'excludeRankedLists',
-        label: `Exclude Lists: ${filters.excludeRankedLists.length}`,
+        label: `Exclure listes : ${filters.excludeRankedLists.length}`,
         section: 'rankedLists',
       });
     }
@@ -234,19 +234,19 @@ export const IMDB_SOURCE = {
     if (filters.explicitContent) {
       active.push({
         key: 'explicitContent',
-        label: `Explicit: ${filters.explicitContent}`,
+        label: `Explicite : ${filters.explicitContent}`,
         section: 'advanced',
       });
     }
 
     if (filters.plot) {
-      active.push({ key: 'plot', label: `Plot: "${filters.plot}"`, section: 'textSearch' });
+      active.push({ key: 'plot', label: `Intrigue : "${filters.plot}"`, section: 'textSearch' });
     }
 
     if (filters.filmingLocations) {
       active.push({
         key: 'filmingLocations',
-        label: `Filmed in: "${filters.filmingLocations}"`,
+        label: `Tourné en : "${filters.filmingLocations}"`,
         section: 'textSearch',
       });
     }
@@ -254,21 +254,21 @@ export const IMDB_SOURCE = {
     if (filters.withData?.length > 0) {
       active.push({
         key: 'withData',
-        label: `Must have: ${filters.withData.length} data type(s)`,
+        label: `Doit contenir : ${filters.withData.length} type(s)`,
         section: 'advanced',
       });
     }
 
     if (filters.includeAdult) {
-      active.push({ key: 'includeAdult', label: 'Adult content', section: 'options' });
+      active.push({ key: 'includeAdult', label: 'Contenu adulte', section: 'options' });
     }
 
     if (filters.randomize) {
-      active.push({ key: 'randomize', label: 'Randomized', section: 'options' });
+      active.push({ key: 'randomize', label: 'Aléatoire', section: 'options' });
     }
 
     if (filters.discoverOnly) {
-      active.push({ key: 'discoverOnly', label: 'Discover only', section: 'options' });
+      active.push({ key: 'discoverOnly', label: 'Découverte uniquement', section: 'options' });
     }
 
     return active;

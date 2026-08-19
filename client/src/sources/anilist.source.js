@@ -157,7 +157,7 @@ export const ANILIST_SOURCE = {
     if (filters.sortBy && filters.sortBy !== 'TRENDING_DESC') {
       active.push({
         key: 'sortBy',
-        label: `Sort: ${resolveSortLabel(anilistSortOptions, filters.sortBy)}`,
+        label: `Tri : ${resolveSortLabel(anilistSortOptions, filters.sortBy)}`,
         section: 'filters',
       });
     }
@@ -167,7 +167,7 @@ export const ANILIST_SOURCE = {
       const extra = filters.genres.length > 2 ? ` +${filters.genres.length - 2}` : '';
       active.push({
         key: 'genres',
-        label: `Genres: ${names.join(', ')}${extra}`,
+        label: `Genres : ${names.join(', ')}${extra}`,
         section: 'genres',
       });
     }
@@ -177,7 +177,7 @@ export const ANILIST_SOURCE = {
       const extra = filters.excludeGenres.length > 2 ? ` +${filters.excludeGenres.length - 2}` : '';
       active.push({
         key: 'excludeGenres',
-        label: `Exclude: ${names.join(', ')}${extra}`,
+        label: `Exclure : ${names.join(', ')}${extra}`,
         section: 'genres',
       });
     }
@@ -186,26 +186,26 @@ export const ANILIST_SOURCE = {
       const labels = filters.format
         .map((f) => anilistFormatOptions.find((o) => o.value === f)?.label || f)
         .join(', ');
-      active.push({ key: 'format', label: `Format: ${labels}`, section: 'filters' });
+      active.push({ key: 'format', label: `Format : ${labels}`, section: 'filters' });
     }
 
     if (filters.status?.length > 0) {
       active.push({
         key: 'status',
-        label: `Status: ${filters.status.length} selected`,
+        label: `Statut : ${filters.status.length} sélectionné(s)`,
         section: 'filters',
       });
     }
 
     if (filters.season) {
       const label = `${filters.season}${filters.seasonYear ? ' ' + filters.seasonYear : ''}`;
-      active.push({ key: 'season', label: `Season: ${label}`, section: 'season' });
+      active.push({ key: 'season', label: `Saison : ${label}`, section: 'season' });
     }
 
     if (filters.tags?.length > 0) {
       const names = filters.tags.slice(0, 2);
       const extra = filters.tags.length > 2 ? ` +${filters.tags.length - 2}` : '';
-      active.push({ key: 'tags', label: `Tags: ${names.join(', ')}${extra}`, section: 'tags' });
+      active.push({ key: 'tags', label: `Tags : ${names.join(', ')}${extra}`, section: 'tags' });
     }
 
     if (filters.excludeTags?.length > 0) {
@@ -213,7 +213,7 @@ export const ANILIST_SOURCE = {
       const extra = filters.excludeTags.length > 2 ? ` +${filters.excludeTags.length - 2}` : '';
       active.push({
         key: 'excludeTags',
-        label: `Exclude tags: ${names.join(', ')}${extra}`,
+        label: `Exclure tags : ${names.join(', ')}${extra}`,
         section: 'tags',
       });
     }
@@ -224,7 +224,7 @@ export const ANILIST_SOURCE = {
     ) {
       active.push({
         key: 'averageScore',
-        label: `Score: ${filters.averageScoreMin || 0}–${filters.averageScoreMax ?? 100}`,
+        label: `Score : ${filters.averageScoreMin || 0}–${filters.averageScoreMax ?? 100}`,
         section: 'filters',
       });
     }
@@ -232,7 +232,7 @@ export const ANILIST_SOURCE = {
     if (filters.countryOfOrigin) {
       active.push({
         key: 'countryOfOrigin',
-        label: `Country: ${filters.countryOfOrigin}`,
+        label: `Pays : ${filters.countryOfOrigin}`,
         section: 'filters',
       });
     }
@@ -240,7 +240,7 @@ export const ANILIST_SOURCE = {
     if (filters.sourceMaterial?.length > 0) {
       active.push({
         key: 'sourceMaterial',
-        label: `Source: ${filters.sourceMaterial.length} selected`,
+        label: `Source : ${filters.sourceMaterial.length} sélectionné(s)`,
         section: 'filters',
       });
     }
@@ -248,19 +248,19 @@ export const ANILIST_SOURCE = {
     if (filters.studios?.length > 0) {
       active.push({
         key: 'studios',
-        label: `Studios: ${filters.studios.length} selected`,
+        label: `Studios : ${filters.studios.length} sélectionné(s)`,
         section: 'origin',
       });
     }
 
     if (filters.isAdult) {
-      active.push({ key: 'isAdult', label: 'Adult content', section: 'options' });
+      active.push({ key: 'isAdult', label: 'Contenu adulte', section: 'options' });
     }
 
     if (filters.episodesMin || filters.episodesMax) {
       active.push({
         key: 'episodes',
-        label: `Episodes: ${filters.episodesMin || 0}-${filters.episodesMax || '∞'}`,
+        label: `Épisodes : ${filters.episodesMin || 0}-${filters.episodesMax || '∞'}`,
         section: 'score',
       });
     }
@@ -268,13 +268,13 @@ export const ANILIST_SOURCE = {
     if (filters.durationMin || filters.durationMax) {
       active.push({
         key: 'duration',
-        label: `Duration: ${filters.durationMin || 0}-${filters.durationMax || '∞'} min`,
+        label: `Durée : ${filters.durationMin || 0}-${filters.durationMax || '∞'} min`,
         section: 'score',
       });
     }
 
     if (filters.randomize) {
-      active.push({ key: 'randomize', label: 'Randomized', section: 'options' });
+      active.push({ key: 'randomize', label: 'Aléatoire', section: 'options' });
     }
 
     return active;

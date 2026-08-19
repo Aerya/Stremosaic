@@ -138,7 +138,7 @@ export const MAL_SOURCE = {
     if (filters.malRankingType && filters.malRankingType !== 'all') {
       active.push({
         key: 'malRankingType',
-        label: `Ranking: ${resolveOptionLabel(malRankingTypes, filters.malRankingType)}`,
+        label: `Classement : ${resolveOptionLabel(malRankingTypes, filters.malRankingType)}`,
         section: 'filters',
       });
     }
@@ -146,7 +146,7 @@ export const MAL_SOURCE = {
     if (filters.malSeason && filters.malSeasonYear) {
       active.push({
         key: 'malSeason',
-        label: `Season: ${filters.malSeason} ${filters.malSeasonYear}`,
+        label: `Saison : ${filters.malSeason} ${filters.malSeasonYear}`,
         section: 'season',
       });
     }
@@ -159,7 +159,7 @@ export const MAL_SOURCE = {
       const extra = filters.malGenres.length > 2 ? ` +${filters.malGenres.length - 2}` : '';
       active.push({
         key: 'malGenres',
-        label: `Genres: ${names.join(', ')}${extra}`,
+        label: `Genres : ${names.join(', ')}${extra}`,
         section: 'genres',
       });
     }
@@ -167,7 +167,7 @@ export const MAL_SOURCE = {
     if (filters.malExcludeGenres?.length > 0) {
       active.push({
         key: 'malExcludeGenres',
-        label: `Excluded: ${filters.malExcludeGenres.length} genre(s)`,
+        label: `Exclus : ${filters.malExcludeGenres.length} genre(s)`,
         section: 'genres',
       });
     }
@@ -176,7 +176,7 @@ export const MAL_SOURCE = {
       const names = filters.malMediaType.map((v) => resolveOptionLabel(malMediaTypes, v));
       active.push({
         key: 'malMediaType',
-        label: `Type: ${names.join(', ')}`,
+        label: `Type : ${names.join(', ')}`,
         section: 'format',
       });
     }
@@ -185,7 +185,7 @@ export const MAL_SOURCE = {
       const names = filters.malStatus.map((v) => resolveOptionLabel(malStatuses, v));
       active.push({
         key: 'malStatus',
-        label: `Status: ${names.join(', ')}`,
+        label: `Statut : ${names.join(', ')}`,
         section: 'format',
       });
     }
@@ -193,7 +193,7 @@ export const MAL_SOURCE = {
     if (filters.malRating) {
       active.push({
         key: 'malRating',
-        label: `Rating: ${resolveOptionLabel(malRatings, filters.malRating)}`,
+        label: `Classification : ${resolveOptionLabel(malRatings, filters.malRating)}`,
         section: 'format',
       });
     }
@@ -201,7 +201,7 @@ export const MAL_SOURCE = {
     if (filters.malScoreMin || filters.malScoreMax) {
       active.push({
         key: 'malScore',
-        label: `Score: ${filters.malScoreMin || 0}-${filters.malScoreMax || 10}`,
+        label: `Score : ${filters.malScoreMin || 0}-${filters.malScoreMax || 10}`,
         section: 'score',
       });
     }
@@ -209,7 +209,7 @@ export const MAL_SOURCE = {
     if (filters.malOrderBy) {
       active.push({
         key: 'malOrderBy',
-        label: `Order: ${resolveOptionLabel(malOrderByOptions, filters.malOrderBy)}`,
+        label: `Ordre : ${resolveOptionLabel(malOrderByOptions, filters.malOrderBy)}`,
         section: 'score',
       });
     }
@@ -217,7 +217,7 @@ export const MAL_SOURCE = {
     if (filters.malSort) {
       active.push({
         key: 'malSort',
-        label: `Sort: ${resolveSortLabel(malSortOptions, filters.malSort)}`,
+        label: `Tri : ${resolveSortLabel(malSortOptions, filters.malSort)}`,
         section: 'filters',
       });
     }

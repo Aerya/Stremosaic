@@ -86,22 +86,22 @@ describe('ApiService', () => {
 
   it('persists token in localStorage when rememberMe is true', () => {
     api.setSessionToken('remember-me-tok', true);
-    expect(localStorage.getItem('tmdb-session-token')).toBe('remember-me-tok');
-    expect(sessionStorage.getItem('tmdb-session-token')).toBeNull();
+    expect(localStorage.getItem('stremosaic-session-token')).toBe('remember-me-tok');
+    expect(sessionStorage.getItem('stremosaic-session-token')).toBeNull();
   });
 
   it('persists token in sessionStorage when rememberMe is false', () => {
     api.setSessionToken('session-tok', false);
-    expect(sessionStorage.getItem('tmdb-session-token')).toBe('session-tok');
-    expect(localStorage.getItem('tmdb-session-token')).toBeNull();
+    expect(sessionStorage.getItem('stremosaic-session-token')).toBe('session-tok');
+    expect(localStorage.getItem('stremosaic-session-token')).toBeNull();
   });
 
   it('clearSession removes token from both storages', () => {
     api.setSessionToken('tok');
     api.clearSession();
     expect(api.getSessionToken()).toBeNull();
-    expect(localStorage.getItem('tmdb-session-token')).toBeNull();
-    expect(sessionStorage.getItem('tmdb-session-token')).toBeNull();
+    expect(localStorage.getItem('stremosaic-session-token')).toBeNull();
+    expect(sessionStorage.getItem('stremosaic-session-token')).toBeNull();
   });
 
   it('login stores token and returns result', async () => {

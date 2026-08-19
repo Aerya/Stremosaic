@@ -146,7 +146,7 @@ export const TRAKT_SOURCE = {
       const allListTypes = [...traktListTypes, ...traktCommunityMetrics];
       active.push({
         key: 'traktListType',
-        label: `List: ${resolveOptionLabel(allListTypes, normalizedListType, { fallbackFormatter: humanizeFilterValue })}`,
+        label: `Liste : ${resolveOptionLabel(allListTypes, normalizedListType, { fallbackFormatter: humanizeFilterValue })}`,
         section: 'filters',
       });
     }
@@ -158,7 +158,7 @@ export const TRAKT_SOURCE = {
     ) {
       active.push({
         key: 'traktPeriod',
-        label: `Period: ${resolveOptionLabel(traktPeriods, filters.traktPeriod, { fallbackFormatter: humanizeFilterValue })}`,
+        label: `Période : ${resolveOptionLabel(traktPeriods, filters.traktPeriod, { fallbackFormatter: humanizeFilterValue })}`,
         section: 'filters',
       });
     }
@@ -166,7 +166,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktCalendarType) {
       active.push({
         key: 'traktCalendarType',
-        label: `Feed: ${resolveOptionLabel(traktCalendarTypes, filters.traktCalendarType, { fallbackFormatter: humanizeFilterValue })}`,
+        label: `Calendrier : ${resolveOptionLabel(traktCalendarTypes, filters.traktCalendarType, { fallbackFormatter: humanizeFilterValue })}`,
         section: 'filters',
       });
     }
@@ -178,7 +178,7 @@ export const TRAKT_SOURCE = {
     ) {
       active.push({
         key: 'traktCalendarSort',
-        label: `Date Order: ${filters.traktCalendarSort === 'desc' ? 'Descending' : 'Ascending'}`,
+        label: `Ordre dates : ${filters.traktCalendarSort === 'desc' ? 'Décroissant' : 'Croissant'}`,
         section: 'filters',
       });
     }
@@ -189,7 +189,7 @@ export const TRAKT_SOURCE = {
     ) {
       active.push({
         key: 'traktCalendarRange',
-        label: `Range: ${filters.traktCalendarStartDate || '...'} to ${filters.traktCalendarEndDate || '...'}`,
+        label: `Période : ${filters.traktCalendarStartDate || '...'} au ${filters.traktCalendarEndDate || '...'}`,
         section: 'filters',
       });
     }
@@ -206,7 +206,7 @@ export const TRAKT_SOURCE = {
       );
       active.push({
         key: 'traktCalendarDays',
-        label: windowLabel || `Last ${filters.traktCalendarDays} days`,
+        label: windowLabel || `Derniers ${filters.traktCalendarDays} jours`,
         section: 'filters',
       });
     }
@@ -214,7 +214,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktGenres && filters.traktGenres.length > 0) {
       active.push({
         key: 'traktGenres',
-        label: `Genres: ${filters.traktGenres.length}`,
+        label: `Genres : ${filters.traktGenres.length}`,
         section: 'genres',
       });
     }
@@ -222,7 +222,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktExcludeGenres && filters.traktExcludeGenres.length > 0) {
       active.push({
         key: 'traktExcludeGenres',
-        label: `Excluded: ${filters.traktExcludeGenres.length}`,
+        label: `Exclus : ${filters.traktExcludeGenres.length}`,
         section: 'genres',
       });
     }
@@ -230,19 +230,19 @@ export const TRAKT_SOURCE = {
     if (filters.traktYearMin != null || filters.traktYearMax != null) {
       const min = filters.traktYearMin ?? 1900;
       const max = filters.traktYearMax ?? new Date().getFullYear() + 1;
-      active.push({ key: 'traktYear', label: `Year: ${min}-${max}`, section: 'filters' });
+      active.push({ key: 'traktYear', label: `Année : ${min}–${max}`, section: 'filters' });
     }
 
     if (filters.traktRuntimeMin != null || filters.traktRuntimeMax != null) {
       const min = filters.traktRuntimeMin ?? 0;
       const max = filters.traktRuntimeMax ?? RUNTIME_MAX_MINUTES;
-      active.push({ key: 'traktRuntime', label: `Runtime: ${min}-${max}m`, section: 'filters' });
+      active.push({ key: 'traktRuntime', label: `Durée : ${min}–${max} min`, section: 'filters' });
     }
 
     if (filters.traktCertifications && filters.traktCertifications.length > 0) {
       active.push({
         key: 'traktCertifications',
-        label: `Cert: ${filters.traktCertifications.join(',')}`,
+        label: `Classification : ${filters.traktCertifications.join(',')}` ,
         section: 'release',
       });
     }
@@ -250,7 +250,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktCountries && filters.traktCountries.length > 0) {
       active.push({
         key: 'traktCountries',
-        label: `Countries: ${filters.traktCountries.length}`,
+        label: `Pays : ${filters.traktCountries.length}`,
         section: 'filters',
       });
     }
@@ -258,7 +258,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktLanguages && filters.traktLanguages.length > 0) {
       active.push({
         key: 'traktLanguages',
-        label: `Languages: ${filters.traktLanguages.length}`,
+        label: `Langues : ${filters.traktLanguages.length}`,
         section: 'filters',
       });
     }
@@ -266,7 +266,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktStatus && filters.traktStatus.length > 0) {
       active.push({
         key: 'traktStatus',
-        label: `Status: ${filters.traktStatus.length}`,
+        label: `Statut : ${filters.traktStatus.length}`,
         section: 'release',
       });
     }
@@ -274,7 +274,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktRatingMin || filters.traktRatingMax) {
       active.push({
         key: 'traktRating',
-        label: `Rating: ${filters.traktRatingMin || 0}-${filters.traktRatingMax || 100}`,
+        label: `Note : ${filters.traktRatingMin || 0}–${filters.traktRatingMax || 100}`,
         section: 'filters',
       });
     }
@@ -282,7 +282,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktVotesMin) {
       active.push({
         key: 'traktVotesMin',
-        label: `Trakt Votes: \u2265${filters.traktVotesMin}`,
+        label: `Votes Trakt : ≥${filters.traktVotesMin}`,
         section: 'ratings',
       });
     }
@@ -292,7 +292,7 @@ export const TRAKT_SOURCE = {
       const max = filters.traktAiredEpisodesMax ?? '...';
       active.push({
         key: 'traktAiredEpisodes',
-        label: `Aired Episodes: ${min}-${max}`,
+        label: `Épisodes diffusés : ${min}–${max}`,
         section: 'filters',
       });
     }
@@ -300,7 +300,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktExcludeSingleSeason) {
       active.push({
         key: 'traktExcludeSingleSeason',
-        label: 'Hide New / Single-Season Shows',
+        label: 'Masquer les nouvelles séries / à saison unique',
         section: 'filters',
       });
     }
@@ -308,7 +308,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktImdbVotesMin) {
       active.push({
         key: 'traktImdbVotesMin',
-        label: `IMDb Votes: \u2265${filters.traktImdbVotesMin}`,
+        label: `Votes IMDb : ≥${filters.traktImdbVotesMin}`,
         section: 'ratings',
       });
     }
@@ -316,7 +316,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktTmdbVotesMin) {
       active.push({
         key: 'traktTmdbVotesMin',
-        label: `TMDB Votes: \u2265${filters.traktTmdbVotesMin}`,
+        label: `Votes TMDB : ≥${filters.traktTmdbVotesMin}`,
         section: 'ratings',
       });
     }
@@ -324,7 +324,7 @@ export const TRAKT_SOURCE = {
     if (filters.traktNetworkIds && filters.traktNetworkIds.length > 0) {
       active.push({
         key: 'traktNetworkIds',
-        label: `Networks: ${filters.traktNetworkIds.length}`,
+        label: `Réseaux : ${filters.traktNetworkIds.length}`,
         section: 'filters',
       });
     }
@@ -332,13 +332,13 @@ export const TRAKT_SOURCE = {
     if (filters.traktRtUserMeterMin || filters.traktRtUserMeterMax) {
       active.push({
         key: 'traktRtUserMeter',
-        label: `RT Audience: ${filters.traktRtUserMeterMin || 0}-${filters.traktRtUserMeterMax || 100}`,
+        label: `Audience RT : ${filters.traktRtUserMeterMin || 0}–${filters.traktRtUserMeterMax || 100}`,
         section: 'ratings',
       });
     }
 
     if (filters.randomize) {
-      active.push({ key: 'randomize', label: 'Randomized', section: 'options' });
+      active.push({ key: 'randomize', label: 'Aléatoire', section: 'options' });
     }
 
     return active;

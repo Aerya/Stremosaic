@@ -133,9 +133,9 @@ describe('traktCapabilities', () => {
       1
     );
 
-    expect(formatTraktCalendarWindowLabel('calendar', 7)).toBe('Next Week Releases');
-    expect(formatTraktCalendarWindowLabel('calendar', 30)).toBe('Next Month');
-    expect(formatTraktCalendarWindowLabel('calendar', daysToYearEnd)).toBe('This Year');
-    expect(formatTraktCalendarWindowLabel('recently_aired', 30)).toBe('Last 30 days');
+    expect(formatTraktCalendarWindowLabel('calendar', 7)).toBe('Sorties de la semaine prochaine');
+    expect(formatTraktCalendarWindowLabel('calendar', 30)).toBe('Mois prochain');
+    expect(formatTraktCalendarWindowLabel('calendar', daysToYearEnd)).toBe('Cette année');
+    expect(formatTraktCalendarWindowLabel('recently_aired', 30)).toBe('Derniers 30 jours');
   });
 });

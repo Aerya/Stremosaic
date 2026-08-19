@@ -100,7 +100,7 @@ describe('useActiveFilters', () => {
       const sortFilter = result.current.activeFilters.find((f) => f.key === 'sortBy');
 
       expect(sortFilter).toBeDefined();
-      expect(sortFilter.label).toBe('Sort: Popular');
+      expect(sortFilter.label).toBe('Tri : Popular');
       expect(sortFilter.label).not.toContain('POPULARITY_DESC');
     });
 
@@ -118,7 +118,7 @@ describe('useActiveFilters', () => {
       const sortFilter = result.current.activeFilters.find((f) => f.key === 'malSort');
 
       expect(sortFilter).toBeDefined();
-      expect(sortFilter.label).toBe('Sort: Top Score');
+      expect(sortFilter.label).toBe('Tri : Top Score');
       expect(sortFilter.label).not.toContain('anime_score');
     });
 
@@ -135,7 +135,7 @@ describe('useActiveFilters', () => {
       const sortFilter = result.current.activeFilters.find((f) => f.key === 'kitsuSort');
 
       expect(sortFilter).toBeDefined();
-      expect(sortFilter.label).toBe('Sort: Newest');
+      expect(sortFilter.label).toBe('Tri : Plus récents');
       expect(sortFilter.label).not.toContain('-startDate');
     });
 
@@ -153,8 +153,8 @@ describe('useActiveFilters', () => {
 
       expect(categoryFilter).toBeDefined();
       expect(categoryFilter.label).toContain('Action');
-      expect(categoryFilter.label).toContain('Slice of Life');
-      expect(categoryFilter.label).not.toBe('Categories: 2');
+      expect(categoryFilter.label).toContain('Tranche de vie');
+      expect(categoryFilter.label).not.toBe('Catégories : 2');
     });
 
     it('renders Kitsu excluded categories with readable names', () => {
@@ -173,7 +173,7 @@ describe('useActiveFilters', () => {
 
       expect(excludedFilter).toBeDefined();
       expect(excludedFilter.label).toContain('Romance');
-      expect(excludedFilter.label).toContain('Horror');
+      expect(excludedFilter.label).toContain('Horreur');
     });
 
     it('maps Kitsu season chip to season section', () => {
@@ -190,7 +190,7 @@ describe('useActiveFilters', () => {
 
       expect(seasonFilter).toBeDefined();
       expect(seasonFilter.section).toBe('season');
-      expect(seasonFilter.label).toBe('Season: Winter 2024');
+      expect(seasonFilter.label).toBe('Saison : Winter 2024');
     });
 
     it('detects selected genres', () => {
@@ -272,7 +272,7 @@ describe('useActiveFilters', () => {
       const { result } = renderHook(() => useActiveFilters(props));
       const wpFilter = result.current.activeFilters.find((f) => f.key === 'watchProviders');
       expect(wpFilter).toBeDefined();
-      expect(wpFilter.label).toContain('2 streaming service');
+      expect(wpFilter.label).toContain('2 service(s) de streaming');
     });
 
     it('detects TV-specific filters', () => {
@@ -301,8 +301,8 @@ describe('useActiveFilters', () => {
       const statusChip = result.current.activeFilters.find((f) => f.key === 'tvStatus');
       const typeChip = result.current.activeFilters.find((f) => f.key === 'tvType');
 
-      expect(statusChip?.label).toBe('Status: Returning Series');
-      expect(typeChip?.label).toBe('Type: Scripted');
+      expect(statusChip?.label).toBe('Statut : Returning Series');
+      expect(typeChip?.label).toBe('Type : Scripted');
     });
 
     it('detects option flags', () => {

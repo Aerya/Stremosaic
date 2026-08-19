@@ -24,12 +24,12 @@ describe('ReleaseFilters', () => {
   it('renders only one Any option for show status and show type dropdowns', () => {
     render(<ReleaseFilters {...baseProps} />);
 
-    fireEvent.click(screen.getByRole('combobox', { name: /show status/i }));
+    fireEvent.click(screen.getByRole('combobox', { name: /statut de la série/i }));
     let listbox = screen.getByRole('listbox');
     expect(within(listbox).getAllByText('Tous')).toHaveLength(1);
     fireEvent.mouseDown(document.body);
 
-    fireEvent.click(screen.getByRole('combobox', { name: /show type/i }));
+    fireEvent.click(screen.getByRole('combobox', { name: /type de série/i }));
     listbox = screen.getByRole('listbox');
     expect(within(listbox).getAllByText('Tous')).toHaveLength(1);
   });
@@ -68,9 +68,9 @@ describe('ReleaseFilters', () => {
       />
     );
 
-    expect(screen.getByText('Regional Appearance')).toBeInTheDocument();
-    expect(screen.getByText('Regional Appearance Type')).toBeInTheDocument();
-    expect(screen.getByText('Select a region above to filter by release type')).toBeInTheDocument();
+    expect(screen.getByText('Apparence régionale')).toBeInTheDocument();
+    expect(screen.getByText('Type d’apparence régionale')).toBeInTheDocument();
+    expect(screen.getByText('Sélectionnez d’abord une région ci-dessus pour filtrer par type de sortie')).toBeInTheDocument();
   });
 
   it('restricts series regional appearance type options to Premiere, Digital and TV', () => {
@@ -90,7 +90,7 @@ describe('ReleaseFilters', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('All types'));
+    fireEvent.click(screen.getByText('Tous types'));
     expect(screen.getByText('Premiere')).toBeInTheDocument();
     expect(screen.getByText('Digital')).toBeInTheDocument();
     expect(screen.getByText('TV')).toBeInTheDocument();
@@ -102,15 +102,15 @@ describe('ReleaseFilters', () => {
   it('shows helper text for Show Premiered To and renders timezone as searchable select', () => {
     render(<ReleaseFilters {...baseProps} />);
 
-    expect(screen.getByText('Latest first-air date to include')).toBeInTheDocument();
-    expect(screen.getByRole('combobox', { name: /timezone/i })).toBeInTheDocument();
+    expect(screen.getByText('Date maximale de première diffusion à inclure')).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /fuseau horaire/i })).toBeInTheDocument();
   });
 
   it('allows searching timezone by country name', () => {
     render(<ReleaseFilters {...baseProps} />);
 
-    fireEvent.click(screen.getByRole('combobox', { name: /timezone/i }));
-    const searchInput = screen.getByPlaceholderText('Search timezone...');
+    fireEvent.click(screen.getByRole('combobox', { name: /fuseau horaire/i }));
+    const searchInput = screen.getByPlaceholderText('Rechercher un fuseau horaire...');
     fireEvent.change(searchInput, { target: { value: 'india' } });
 
     expect(screen.getByText('Asia/Kolkata')).toBeInTheDocument();
