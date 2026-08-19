@@ -97,20 +97,20 @@ export function SettingsModal({
         ref={modalRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Global Settings"
+        aria-label="Préférences globales"
       >
         <div className="settings-modal-header">
           <div className="settings-modal-title-group">
             <Settings size={22} className="text-secondary" />
             <h2 className="modal-title m-0" style={{ fontSize: '1.15rem', fontWeight: '600' }}>
-              Global Settings
+              Préférences globales
             </h2>
           </div>
         </div>
 
         <div className="settings-modal-body">
           <CollapsibleSection
-            title="Data Management"
+            title="Gestion des données"
             icon={Database}
             isExpanded={expandedSection === 'data'}
             onToggle={() => toggleSection('data')}
@@ -127,8 +127,8 @@ export function SettingsModal({
                   <Upload size={18} />
                 </div>
                 <div className="sac-text">
-                  <span className="sac-title">Export Config</span>
-                  <span className="sac-desc">Save catalogs to a file</span>
+                  <span className="sac-title">Exporter la configuration</span>
+                  <span className="sac-desc">Enregistrer les catalogues dans un fichier</span>
                 </div>
               </button>
 
@@ -137,8 +137,8 @@ export function SettingsModal({
                   <Download size={18} />
                 </div>
                 <div className="sac-text">
-                  <span className="sac-title">Import Config</span>
-                  <span className="sac-desc">Load from a file</span>
+                  <span className="sac-title">Importer une configuration</span>
+                  <span className="sac-desc">Charger depuis un fichier</span>
                 </div>
                 <input
                   type="file"
@@ -159,10 +159,10 @@ export function SettingsModal({
                           onImportData(imported);
                           onClose();
                         } else {
-                          if (addToast) addToast('No valid data found', 'error');
+                          if (addToast) addToast('Aucune donnée valide trouvée', 'error');
                         }
                       } catch {
-                        if (addToast) addToast('Failed to parse file', 'error');
+                        if (addToast) addToast('Impossible de lire le fichier', 'error');
                       }
                       e.target.value = '';
                     };
@@ -174,7 +174,7 @@ export function SettingsModal({
           </CollapsibleSection>
 
           <CollapsibleSection
-            title="General Preferences"
+            title="Préférences générales"
             icon={Globe}
             isExpanded={expandedSection === 'general'}
             onToggle={() => toggleSection('general')}
@@ -182,8 +182,8 @@ export function SettingsModal({
             <div className="settings-card">
               <div className="settings-row">
                 <div className="settings-row-info">
-                  <span className="settings-label">Language</span>
-                  <span className="settings-desc">Global display & trailer language</span>
+                  <span className="settings-label">Langue</span>
+                  <span className="settings-desc">Langue globale d’affichage et des bandes-annonces</span>
                 </div>
                 <div className="settings-row-control">
                   <div style={{ minWidth: '280px' }}>
@@ -191,10 +191,10 @@ export function SettingsModal({
                       options={languages}
                       value={defaultLanguage}
                       onChange={handleLanguageChange}
-                      placeholder="Auto / English"
+                      placeholder="Auto / Français"
                       valueKey="iso_639_1"
                       labelKey="english_name"
-                      aria-label="Global Language"
+                      aria-label="Langue globale"
                       renderOption={(opt) => `${opt.english_name} (${opt.name})`}
                     />
                   </div>
@@ -222,8 +222,8 @@ export function SettingsModal({
                 }}
               >
                 <div className="settings-row-info">
-                  <span className="settings-label">Shuffle Catalogs</span>
-                  <span className="settings-desc">Randomize the order when Stremio loads</span>
+                  <span className="settings-label">Mélanger les catalogues</span>
+                  <span className="settings-desc">Aléatoriser l’ordre des catalogues au chargement dans Stremio</span>
                 </div>
                 <div className="settings-row-control align-right">
                   <div className="toggle-switch">
@@ -243,7 +243,7 @@ export function SettingsModal({
           </CollapsibleSection>
 
           <CollapsibleSection
-            title="API Keys"
+            title="Clés d’API"
             icon={KeyRound}
             isExpanded={expandedSection === 'apiKeys'}
             onToggle={() => toggleSection('apiKeys')}
@@ -257,7 +257,7 @@ export function SettingsModal({
           </CollapsibleSection>
 
           <CollapsibleSection
-            title="Search Integrations"
+            title="Intégrations de recherche"
             icon={Settings}
             isExpanded={expandedSection === 'search'}
             onToggle={() => toggleSection('search')}
@@ -285,9 +285,9 @@ export function SettingsModal({
                 }}
               >
                 <div className="settings-row-info">
-                  <span className="settings-label">Disable All Search</span>
+                  <span className="settings-label">Désactiver la recherche globale</span>
                   <span className="settings-desc">
-                    Turn off search integration across all networks
+                    Désactiver l’intégration de recherche sur l’ensemble des réseaux
                   </span>
                 </div>
                 <div className="settings-row-control align-right">
@@ -314,7 +314,7 @@ export function SettingsModal({
                       color: 'var(--text-muted)',
                     }}
                   >
-                    Select providers to add them to your Stremio search results.
+                    Sélectionnez les services à inclure dans vos résultats de recherche Stremio.
                   </div>
                   <div className="settings-provider-grid">
                     {[
@@ -360,7 +360,7 @@ export function SettingsModal({
           </CollapsibleSection>
 
           <CollapsibleSection
-            title="Artwork Sources"
+            title="Sources d’illustrations / visuels"
             icon={ImageIcon}
             isExpanded={expandedSection === 'artwork'}
             onToggle={() => toggleSection('artwork')}
@@ -380,10 +380,10 @@ export function SettingsModal({
             style={{ color: 'var(--text-error)' }}
             onClick={() => handleLogout()}
           >
-            Log Out
+            Se déconnecter
           </button>
           <button className="btn btn-secondary" onClick={onClose}>
-            Close
+            Fermer
           </button>
         </div>
       </div>

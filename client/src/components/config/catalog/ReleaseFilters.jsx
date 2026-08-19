@@ -177,7 +177,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
   }, [localCatalog?.filters?.firstAirDateFrom, localCatalog?.filters?.firstAirDateTo]);
 
   const DATE_TAG_LABELS = {
-    today: 'Today',
+    today: 'Aujourd’hui',
     'today-30d': 'Today − 30 days',
     'today-90d': 'Today − 90 days',
     'today-6mo': 'Today − 6 months',
@@ -265,7 +265,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
       <div className="filter-two-col">
         <div className="filter-group">
           <LabelWithTooltip
-            label={isMovie ? 'Release Date From' : 'Episode Air Date From'}
+            label={isMovie ? 'Sortie à partir du' : 'Episode Air Date From'}
             tooltip={
               isMovie
                 ? 'Filter movies released on or after this date'
@@ -289,7 +289,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
             return tag ? (
               <div className="date-today-badge">
                 <span>{tag}</span>
-                <span className="date-today-hint">Recalculates daily</span>
+                <span className="date-today-hint">Recalculé chaque jour</span>
               </div>
             ) : (
               <input
@@ -306,7 +306,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
         </div>
         <div className="filter-group">
           <LabelWithTooltip
-            label={isMovie ? 'Release Date To' : 'Episode Air Date To'}
+            label={isMovie ? 'Sortie jusqu’au' : 'Episode Air Date To'}
             tooltip={
               isMovie
                 ? 'Filter movies released on or before this date'
@@ -321,8 +321,8 @@ export const ReleaseFilters = memo(function ReleaseFilters({
             if (years) {
               return (
                 <div className="date-today-badge">
-                  <span>Today</span>
-                  <span className="date-today-hint">Recalculates daily</span>
+                  <span>Aujourd’hui</span>
+                  <span className="date-today-hint">Recalculé chaque jour</span>
                 </div>
               );
             }
@@ -330,7 +330,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
             return tag ? (
               <div className="date-today-badge">
                 <span>{tag}</span>
-                <span className="date-today-hint">Recalculates daily</span>
+                <span className="date-today-hint">Recalculé chaque jour</span>
               </div>
             ) : (
               <input
@@ -362,7 +362,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
         }}
       >
         <div className="released-only-content">
-          <span className="released-only-title">Released Only</span>
+          <span className="released-only-title">Déjà sortis uniquement</span>
           <span className="released-only-desc">
             {isMovie
               ? 'Show only movies with a digital release'
@@ -378,10 +378,10 @@ export const ReleaseFilters = memo(function ReleaseFilters({
         <div className="filter-two-col" style={{ marginTop: '16px' }}>
           <div className="filter-group">
             <LabelWithTooltip
-              label="Show Premiered From"
-              tooltip="Filter by when the TV show first aired. This is the date of the very first episode, not individual episode air dates."
+              label="Première diffusion à partir du"
+              tooltip="Filtrer selon la date de première diffusion de la série. Il s’agit de la date du tout premier épisode, et non des dates de diffusion de chaque épisode."
             />
-            <span className="filter-label-hint">When show first aired (premiere date)</span>
+            <span className="filter-label-hint">Date de première diffusion de la série</span>
             <input
               type="date"
               className="input"
@@ -391,10 +391,10 @@ export const ReleaseFilters = memo(function ReleaseFilters({
           </div>
           <div className="filter-group">
             <LabelWithTooltip
-              label="Show Premiered To"
-              tooltip="Latest premiere date to include. Shows that first aired before or on this date."
+              label="Première diffusion jusqu’au"
+              tooltip="Date de première diffusion maximale à inclure. Les séries ayant commencé avant ou à cette date seront incluses."
             />
-            <span className="filter-label-hint">Latest first-air date to include</span>
+            <span className="filter-label-hint">Date maximale de première diffusion à inclure</span>
             <input
               type="date"
               className={`input${premiereRangeError ? ' field-invalid' : ''}`}
@@ -410,10 +410,10 @@ export const ReleaseFilters = memo(function ReleaseFilters({
         <div className="filter-two-col" style={{ marginTop: '16px' }}>
           <div className="filter-group">
             <LabelWithTooltip
-              label="First Air Year"
-              tooltip="Filter by the year the show first aired (TMDB first_air_date_year)."
+              label="Année de première diffusion"
+              tooltip="Filtrer selon l’année de première diffusion de la série (TMDB first_air_date_year)."
             />
-            <span className="filter-label-hint">Year the series premiered</span>
+            <span className="filter-label-hint">Année de première diffusion de la série</span>
             <input
               type="number"
               className="input"
@@ -430,7 +430,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
           <div className="filter-group">
             <LabelWithTooltip
               label="Timezone"
-              tooltip="IANA timezone used for date math (e.g., America/New_York). This affects how relative date windows (Today, Last X years, Released only) are calculated."
+              tooltip="Fuseau horaire IANA utilisé pour les calculs de dates (ex. Europe/Paris). Il influence les périodes relatives comme Aujourd’hui, les X dernières années et Déjà sortis uniquement."
             />
             <span className="filter-label-hint">
               Use IANA format: Area/City (example: America/New_York)
@@ -440,7 +440,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
               value={localCatalog?.filters?.timezone || ''}
               onChange={(value) => onFiltersChange('timezone', value || undefined)}
               placeholder="Any timezone (UTC default)"
-              searchPlaceholder="Search timezone..."
+              searchPlaceholder="Rechercher un fuseau horaire..."
               labelKey="label"
               valueKey="value"
               searchLabel={false}
@@ -476,8 +476,8 @@ export const ReleaseFilters = memo(function ReleaseFilters({
               if (isMovie) onFiltersChange('certificationCountry', undefined);
             }
           }}
-          placeholder="Worldwide"
-          searchPlaceholder="Search countries..."
+          placeholder="Monde entier"
+          searchPlaceholder="Rechercher des pays..."
           labelKey="english_name"
           valueKey="iso_3166_1"
         />
@@ -486,8 +486,8 @@ export const ReleaseFilters = memo(function ReleaseFilters({
       {isMovie && (
         <div className="filter-group" style={{ marginTop: '16px' }}>
           <LabelWithTooltip
-            label="Primary Release Year"
-            tooltip="Filter by the year of a movie's primary (worldwide) release."
+            label="Année de sortie principale"
+            tooltip="Filtrer selon l’année de sortie principale du film (monde)."
           />
           <SearchableSelect
             options={yearOptions}
@@ -495,8 +495,8 @@ export const ReleaseFilters = memo(function ReleaseFilters({
             onChange={(value) => {
               onFiltersChange('primaryReleaseYear', value ? Number(value) : undefined);
             }}
-            placeholder="Any year"
-            searchPlaceholder="Search year..."
+            placeholder="Toutes les années"
+            searchPlaceholder="Rechercher une année..."
             labelKey="label"
             valueKey="value"
           />
@@ -532,34 +532,34 @@ export const ReleaseFilters = memo(function ReleaseFilters({
         <div className="filter-two-col" style={{ marginTop: '16px' }}>
           <div className="filter-group">
             <LabelWithTooltip
-              label="Show Status"
-              tooltip="Whether the TV show is currently Returning Series, Ended, Canceled, In Production, or Pilot status."
+              label="Statut de la série"
+              tooltip="Statut actuel de la série : en cours, terminée, annulée, en production ou pilote."
             />
             <SearchableSelect
               options={safeTvStatuses}
               value={localCatalog?.filters?.tvStatus || ''}
               onChange={(value) => onFiltersChange('tvStatus', value)}
               placeholder="Tous"
-              searchPlaceholder="Search..."
+              searchPlaceholder="Rechercher..."
               labelKey="label"
               valueKey="value"
-              aria-label="Show Status"
+              aria-label="Statut de la série"
             />
           </div>
           <div className="filter-group">
             <LabelWithTooltip
-              label="Show Type"
-              tooltip="Format of TV show: Scripted (regular series), Reality, Documentary, Talk Show, News, Miniseries, etc."
+              label="Type de série"
+              tooltip="Format de la série : fiction, téléréalité, documentaire, talk-show, actualités, mini-série, etc."
             />
             <SearchableSelect
               options={safeTvTypes}
               value={localCatalog?.filters?.tvType || ''}
               onChange={(value) => onFiltersChange('tvType', value)}
               placeholder="Tous"
-              searchPlaceholder="Search..."
+              searchPlaceholder="Rechercher..."
               labelKey="label"
               valueKey="value"
-              aria-label="Show Type"
+              aria-label="Type de série"
             />
           </div>
         </div>
@@ -574,7 +574,7 @@ export const ReleaseFilters = memo(function ReleaseFilters({
         onRatingsChange={(value) => onFiltersChange('certifications', value)}
         countryLabel="Age Rating Country"
         countryTooltip="Select which country's certification system to use for age ratings. Changing this updates the available options in the Age Rating filter. Independent of the Release Region filter."
-        ratingsLabel="Age Rating"
+        ratingsLabel="Classification par âge"
         ratingsTooltip="Content certification/age rating (e.g., PG-13, R, TV-MA). Varies by country - US ratings shown by default."
         countryPlaceholder="US (default)"
         ratingsPlaceholder="Tous"

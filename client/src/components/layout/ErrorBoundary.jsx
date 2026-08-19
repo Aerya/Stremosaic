@@ -37,7 +37,7 @@ export class ErrorBoundary extends Component {
                 padding: '24px',
               }}
             >
-              <h2 style={{ fontSize: '24px' }}>Something went wrong</h2>
+              <h2 style={{ fontSize: '24px' }}>Une erreur est survenue</h2>
               <p style={{ color: 'var(--text-muted)', maxWidth: '400px' }}>
                 An unexpected error occurred. Please reload the page to try again.
               </p>

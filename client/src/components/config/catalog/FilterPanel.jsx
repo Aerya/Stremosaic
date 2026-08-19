@@ -58,14 +58,14 @@ export const FilterPanel = memo(function FilterPanel({
         <div className="filter-group">
           <LabelWithTooltip
             label="Trier par"
-            tooltip="How to order your results. Popular shows what's trending now, while rating shows critically acclaimed content."
+            tooltip="Définissez l’ordre des résultats. Popularité met en avant les tendances actuelles, tandis que Note privilégie les contenus les mieux évalués."
           />
           <SearchableSelect
             options={safeSortOptions[localCatalog?.type] || safeSortOptions.movie || []}
             value={localCatalog?.filters?.sortBy || 'popularity.desc'}
             onChange={(value) => onFiltersChange('sortBy', value)}
             placeholder="Plus populaires"
-            searchPlaceholder="Search..."
+            searchPlaceholder="Rechercher..."
             labelKey="label"
             valueKey="value"
             allowClear={false}
@@ -75,14 +75,14 @@ export const FilterPanel = memo(function FilterPanel({
         <div className="filter-group">
           <LabelWithTooltip
             label="Langue originale"
-            tooltip="Filter by the original language of the content (e.g., select 'Japanese' for anime, 'Korean' for K-dramas)."
+            tooltip="Filtrer selon la langue originale du contenu (ex. japonais pour les anime, coréen pour les K-dramas)."
           />
           <SearchableSelect
             options={safeOriginalLanguages}
             value={localCatalog?.filters?.language || ''}
             onChange={(value) => onFiltersChange('language', value)}
             placeholder="Tous"
-            searchPlaceholder="Search languages..."
+            searchPlaceholder="Rechercher des langues..."
             labelKey="english_name"
             valueKey="iso_639_1"
           />
@@ -91,14 +91,14 @@ export const FilterPanel = memo(function FilterPanel({
         <div className="filter-group">
           <LabelWithTooltip
             label="Pays"
-            tooltip="Filter by country of origin. Select multiple countries (OR logic). Useful for finding British shows, Bollywood movies, etc."
+            tooltip="Filtrer selon le pays d’origine. Plusieurs pays peuvent être sélectionnés."
           />
           <MultiSelect
             options={safeCountries}
             value={countriesValue}
             onChange={(value) => onFiltersChange('countries', value)}
             placeholder="Tous"
-            searchPlaceholder="Search countries..."
+            searchPlaceholder="Rechercher des pays..."
             labelKey="english_name"
             valueKey="iso_3166_1"
           />
@@ -108,7 +108,7 @@ export const FilterPanel = memo(function FilterPanel({
       <div className="filter-spacer-lg">
         <RangeSlider
           label="Période"
-          tooltip="Filter by release year or first air date. Great for finding classics or recent releases."
+          tooltip="Filtrer selon l’année de sortie ou de première diffusion."
           min={1900}
           max={CURRENT_YEAR + 2}
           step={1}
@@ -125,7 +125,7 @@ export const FilterPanel = memo(function FilterPanel({
       <div className="filter-spacer">
         <RangeSlider
           label="Note"
-          tooltip="TMDB average user rating (0-10 scale). Higher ratings indicate better reviews."
+          tooltip="Note moyenne des utilisateurs TMDB (sur 10)."
           min={0}
           max={10}
           step={0.1}
@@ -139,7 +139,7 @@ export const FilterPanel = memo(function FilterPanel({
       <div className="filter-spacer">
         <RangeSlider
           label="Durée (minutes)"
-          tooltip="Filter by total runtime. Perfect for finding quick watches or epic adventures."
+          tooltip="Filtrer selon la durée totale."
           min={0}
           max={400}
           step={1}
@@ -193,7 +193,7 @@ export const FilterPanel = memo(function FilterPanel({
       <div className="filter-spacer">
         <SingleSlider
           label="Nombre minimum de votes"
-          tooltip="Requires this many user ratings. Higher values filter out obscure titles and ensure quality."
+          tooltip="Exiger ce nombre minimum d’évaluations. Une valeur élevée écarte les titres les plus confidentiels."
           min={0}
           max={10000}
           step={1}

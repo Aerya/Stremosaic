@@ -23,12 +23,12 @@ export const PeopleFilters = memo(function PeopleFilters({
       {showPeople && (
         <div className="filter-group">
           <LabelWithTooltip
-            label="Cast & Crew"
-            tooltip="Find content featuring specific actors, directors, writers, or other crew members."
+            label="Casting & Équipe"
+            tooltip="Recherchez du contenu avec des acteurs, réalisateurs ou scénaristes spécifiques."
           />
           <SearchInput
             type="person"
-            placeholder="Search actors, directors..."
+            placeholder="Rechercher des acteurs, réalisateurs..."
             onSearch={searchPerson}
             selectedItems={selectedPeople}
             onSelect={onSelectPeople}
@@ -38,12 +38,12 @@ export const PeopleFilters = memo(function PeopleFilters({
       )}
       <div className="filter-group">
         <LabelWithTooltip
-          label="Studios / Companies"
-          tooltip="Filter by production companies (e.g., Warner Bros, Pixar)."
+          label="Studios / Sociétés de production"
+          tooltip="Filtrer par sociétés de production (ex. Warner Bros, Pixar)."
         />
         <SearchInput
           type="company"
-          placeholder="Search production companies..."
+          placeholder="Rechercher des sociétés de production..."
           onSearch={searchCompany}
           selectedItems={selectedCompanies}
           onSelect={onSelectCompanies}
@@ -52,12 +52,12 @@ export const PeopleFilters = memo(function PeopleFilters({
       </div>
       <div className="filter-group">
         <LabelWithTooltip
-          label="Keywords / Tags"
-          tooltip="Search by themes or topics (e.g., 'time travel', 'heist')."
+          label="Mots-clés / Tags"
+          tooltip="Rechercher par thèmes ou sujets (ex. 'voyage dans le temps')."
         />
         <SearchInput
           type="keyword"
-          placeholder="Search keywords to include..."
+          placeholder="Rechercher des mots-clés à inclure..."
           onSearch={searchKeyword}
           selectedItems={selectedKeywords}
           onSelect={onSelectKeywords}
@@ -66,13 +66,13 @@ export const PeopleFilters = memo(function PeopleFilters({
       </div>
       <div className="filter-group">
         <LabelWithTooltip
-          label="Exclude Keywords"
-          tooltip="Filter OUT content with these themes/topics."
+          label="Exclure des mots-clés"
+          tooltip="Exclure le contenu comportant ces thèmes."
         />
-        <span className="filter-label-hint">Results will NOT contain these keywords</span>
+        <span className="filter-label-hint">Les résultats ne contiendront pas ces mots-clés</span>
         <SearchInput
           type="keyword"
-          placeholder="Search keywords to exclude..."
+          placeholder="Rechercher des mots-clés à exclure..."
           onSearch={searchKeyword}
           selectedItems={excludeKeywords}
           onSelect={onExcludeKeywords}
@@ -81,13 +81,13 @@ export const PeopleFilters = memo(function PeopleFilters({
       </div>
       <div className="filter-group">
         <LabelWithTooltip
-          label="Exclude Companies"
-          tooltip="Filter OUT content from specific studios."
+          label="Exclure des studios"
+          tooltip="Exclure le contenu de certains studios."
         />
-        <span className="filter-label-hint">Filter out content from these studios</span>
+        <span className="filter-label-hint">Exclure le contenu de ces studios</span>
         <SearchInput
           type="company"
-          placeholder="Search companies to exclude..."
+          placeholder="Rechercher des sociétés à exclure..."
           onSearch={searchCompany}
           selectedItems={excludeCompanies}
           onSelect={onExcludeCompanies}

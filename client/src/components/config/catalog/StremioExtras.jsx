@@ -18,7 +18,7 @@ const AVAILABLE_EXTRAS = [
   },
   {
     id: 'certification',
-    label: 'Age Rating',
+    label: 'Classification par âge',
     description: 'Use the dropdown values as certifications',
   },
 ];

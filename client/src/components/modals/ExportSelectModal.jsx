@@ -91,16 +91,16 @@ export function ExportSelectModal({
         ref={modalRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Select Catalogs to Export"
+        aria-label="Sélectionner les catalogues à exporter"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
         style={{ maxWidth: '520px' }}
       >
         <div className="modal-header" style={{ paddingBottom: '8px' }}>
           <div>
-            <h3 className="modal-title">Export Configuration</h3>
+            <h3 className="modal-title">Exporter la configuration</h3>
             <p className="text-secondary" style={{ fontSize: '13px', marginTop: '4px' }}>
-              Select which catalogs to export ({selected.size} of {safeCatalogs.length} selected)
+              Sélectionnez les catalogues à exporter ({selected.size} sur {safeCatalogs.length} sélectionné(s))
             </p>
           </div>
           <button className="btn btn-ghost btn-icon" onClick={onClose}>
@@ -127,7 +127,7 @@ export function ExportSelectModal({
                   style={{ gap: '6px', fontSize: '13px' }}
                 >
                   {allSelected ? <CheckSquare size={14} /> : <Square size={14} />}
-                  {allSelected ? 'Deselect All' : 'Select All'}
+                  {allSelected ? 'Tout désélectionner' : 'Tout sélectionner'}
                 </button>
               </div>
 
@@ -178,15 +178,15 @@ export function ExportSelectModal({
                           fontSize: '14px',
                         }}
                       >
-                        {catalog.name || 'Untitled'}
+                        {catalog.name || 'Sans titre'}
                       </span>
                     </span>
                     <span className="text-secondary" style={{ fontSize: '12px', flexShrink: 0 }}>
                       {catalog.type === 'anime'
                         ? 'Anime'
                         : catalog.type === 'series'
-                          ? 'TV'
-                          : 'Movie'}
+                          ? 'Série'
+                          : 'Film'}
                       {catalog.source === 'imdb' ? ' · IMDb' : ''}
                     </span>
                   </label>
@@ -197,7 +197,7 @@ export function ExportSelectModal({
 
           {safeCatalogs.length === 0 && (
             <div style={{ padding: '24px 16px', textAlign: 'center' }} className="text-secondary">
-              No catalogs to export
+              Aucun catalogue à exporter
             </div>
           )}
 
@@ -217,7 +217,7 @@ export function ExportSelectModal({
                   checked={exportPrefs}
                   onChange={(e) => setExportPrefs(e.target.checked)}
                 />
-                <span>Include preferences (shuffle, search, etc.)</span>
+                <span>Inclure les préférences (mélange, recherche, etc.)</span>
               </label>
             )}
             {configName && (
@@ -227,7 +227,7 @@ export function ExportSelectModal({
                   checked={exportName}
                   onChange={(e) => setExportName(e.target.checked)}
                 />
-                <span>Include config name: &ldquo;{configName}&rdquo;</span>
+                <span>Inclure le nom de la configuration : &ldquo;{configName}&rdquo;</span>
               </label>
             )}
           </div>
@@ -235,7 +235,7 @@ export function ExportSelectModal({
 
         <div className="modal-footer">
           <button type="button" className="btn btn-ghost" onClick={onClose}>
-            Cancel
+            Annuler
           </button>
           <button
             type="button"
@@ -243,8 +243,8 @@ export function ExportSelectModal({
             onClick={handleConfirm}
             disabled={selected.size === 0 && !exportPrefs && !exportName}
           >
-            Export{' '}
-            {selected.size > 0 ? `${selected.size} Catalog${selected.size !== 1 ? 's' : ''}` : ''}
+            Exporter{' '}
+            {selected.size > 0 ? `${selected.size} catalogue${selected.size > 1 ? 's' : ''}` : ''}
           </button>
         </div>
       </div>

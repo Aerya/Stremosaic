@@ -13,7 +13,7 @@ const catalogSchema = new mongoose.Schema(
     type: { type: String, enum: ['movie', 'series', 'anime', 'collection'], required: true },
     source: {
       type: String,
-      enum: ['tmdb', 'anilist', 'mal', 'simkl', 'kitsu', 'bingebase'],
+      enum: ['tmdb', 'imdb', 'anilist', 'mal', 'simkl', 'kitsu', 'trakt', 'bingebase'],
       default: 'tmdb',
     },
     filters: {

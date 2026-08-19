@@ -31,7 +31,7 @@ describe('mal client outbound headers', () => {
 
     expect(options.headers.Accept).toBe('application/json');
     expect(options.headers['User-Agent']).toBe(
-      'TMDB-Discover-Plus/9.9.9-test (+https://github.com/semi-column/stremosaic)'
+      'Stremosaic/9.9.9-test (+https://github.com/Aerya/Stremosaic)'
     );
   });
 });

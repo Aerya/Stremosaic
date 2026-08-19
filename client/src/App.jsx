@@ -169,7 +169,7 @@ function App() {
                       onClick={tmdb.refresh}
                       style={{ marginLeft: 8 }}
                     >
-                      Retry
+                      Réessayer
                     </button>
                   </div>
                 )}
@@ -224,7 +224,7 @@ function App() {
                 {config.catalogs.length > 0 && (
                   <div className="save-button-wrapper">
                     {config.isDirty && (
-                      <span className="unsaved-indicator" title="Unsaved changes" />
+                      <span className="unsaved-indicator" title="Modifications non enregistrées" />
                     )}
                     <button
                       className="btn btn-primary"

@@ -163,7 +163,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
         <FilterSection
           id="collection"
           title="Collection / Studio"
-          description="Choose one TMDB collection or one studio filmography"
+          description="Choisir une collection TMDB ou la filmographie d’un studio"
           icon={Sparkles}
           isOpen={expandedSections.collection}
           onToggle={onToggleSection}
@@ -220,7 +220,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
                 );
               }}
               placeholder="Collection"
-              searchPlaceholder="Search..."
+              searchPlaceholder="Rechercher..."
               labelKey="label"
               valueKey="value"
               allowClear={false}
@@ -233,7 +233,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
                 <span className="filter-label">Find collection</span>
                 <SearchInput
                   type="collection"
-                  placeholder="Search TMDB collections..."
+                  placeholder="Rechercher des collections TMDB..."
                   onSearch={async (query) => {
                     const response = await searchCollection(
                       query,
@@ -274,7 +274,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
                   value={localCatalog?.filters?.sortBy || 'collection_order'}
                   onChange={(value) => onFiltersChange('sortBy', value)}
                   placeholder="Collection Order"
-                  searchPlaceholder="Search..."
+                  searchPlaceholder="Rechercher..."
                   labelKey="label"
                   valueKey="value"
                   allowClear={false}
@@ -289,7 +289,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
                 <span className="filter-label">Find studio</span>
                 <SearchInput
                   type="company"
-                  placeholder="Search TMDB studios..."
+                  placeholder="Rechercher des studios TMDB..."
                   onSearch={async (query) => {
                     const response = await searchCompany(query);
                     return response || [];
@@ -342,7 +342,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
       {!isPresetCatalog && !isCollectionMode && (
         <FilterSection
           id="filters"
-          title="Sort & Filter"
+          title="Tri et filtres"
           description="Tri, langue, année, note"
           icon={Settings}
           isOpen={expandedSections.filters}
@@ -386,7 +386,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
       {supportsFullFilters && (
         <FilterSection
           id="streaming"
-          title="Where to Watch"
+          title="Où regarder"
           description="Filtrer par services de streaming et chaînes d'origine"
           icon={Play}
           isOpen={expandedSections.streaming}
@@ -472,7 +472,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
         <FilterSection
           id="options"
           title="Options"
-          description="Include adult, video, randomize, or discover-only results"
+          description="Inclure le contenu adulte, vidéo, aléatoire ou réservé à Découvrir"
           icon={Settings}
           isOpen={expandedSections.options}
           onToggle={onToggleSection}
@@ -498,7 +498,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
         <FilterSection
           id="extras"
           title="Stremio Extras"
-          description="Expose filter dropdowns inside Stremio"
+          description="Afficher les filtres déroulants dans Stremio"
           icon={Layers}
           isOpen={expandedSections.extras}
           onToggle={onToggleSection}

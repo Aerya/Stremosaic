@@ -9,12 +9,12 @@ import { Checkbox } from '../../../../forms/Checkbox';
 import { LabelWithTooltip } from '../../../../forms/Tooltip';
 
 const KITSU_LIST_TYPES = [
-  { value: 'browse', label: 'Browse' },
-  { value: 'trending', label: 'Trending' },
+  { value: 'browse', label: 'Parcourir' },
+  { value: 'trending', label: 'Tendances' },
 ];
 
 const KITSU_SORT_OPTIONS = [
-  { value: '-averageRating', label: 'Highest Rated' },
+  { value: '-averageRating', label: 'Les mieux notés' },
   { value: '-userCount', label: 'Plus populaires' },
   { value: '-favoritesCount', label: 'Most Favorited' },
   { value: '-startDate', label: 'Newest' },
@@ -202,8 +202,8 @@ export function KitsuFilterPanel({
     <>
       <FilterSection
         id="ranking"
-        title="List & Sort"
-        description="Choose list type and sorting"
+        title="Liste et tri"
+        description="Choisir le type de liste et le tri"
         icon={Settings}
         isOpen={expandedSections?.ranking}
         onToggle={onToggleSection}
@@ -212,14 +212,14 @@ export function KitsuFilterPanel({
         <div className="filter-grid">
           <div className="filter-group">
             <LabelWithTooltip
-              label="List Type"
-              tooltip="Browse allows filtering; Trending shows currently popular anime on Kitsu."
+              label="Type de liste"
+              tooltip="Parcourir permet d’utiliser des filtres ; Tendances affiche les anime populaires sur Kitsu."
             />
             <SearchableSelect
               options={KITSU_LIST_TYPES}
               value={filters.kitsuListType || 'browse'}
               onChange={(value) => onFiltersChange('kitsuListType', value)}
-              placeholder="Browse"
+              placeholder="Parcourir"
               labelKey="label"
               valueKey="value"
               allowClear={false}
@@ -230,13 +230,13 @@ export function KitsuFilterPanel({
             <div className="filter-group">
               <LabelWithTooltip
                 label="Trier par"
-                tooltip="How to order results. Only applies in Browse mode."
+                tooltip="Définir l’ordre des résultats. S’applique uniquement au mode Parcourir."
               />
               <SearchableSelect
                 options={KITSU_SORT_OPTIONS}
                 value={filters.kitsuSort || '-averageRating'}
                 onChange={(value) => onFiltersChange('kitsuSort', value)}
-                placeholder="Highest Rated"
+                placeholder="Les mieux notés"
                 labelKey="label"
                 valueKey="value"
                 allowClear={false}
@@ -250,7 +250,7 @@ export function KitsuFilterPanel({
         <FilterSection
           id="genres"
           title="Categories"
-          description="Filter by Kitsu anime categories"
+          description="Filtrer selon les catégories d’anime Kitsu"
           icon={Sparkles}
           isOpen={expandedSections?.genres}
           onToggle={onToggleSection}
@@ -275,8 +275,8 @@ export function KitsuFilterPanel({
       {!isTrending && (
         <FilterSection
           id="format"
-          title="Type & Status"
-          description="Subtype, airing status, and age rating"
+          title="Type et statut"
+          description="Sous-type, statut de diffusion et classification par âge"
           icon={Layers}
           isOpen={expandedSections?.format}
           onToggle={onToggleSection}
@@ -286,7 +286,7 @@ export function KitsuFilterPanel({
             <div className="filter-group">
               <LabelWithTooltip
                 label="Subtype"
-                tooltip="Filter by anime format: TV, Movie, OVA, ONA, Special."
+                tooltip="Filtrer selon le format : TV, film, OVA, ONA, spécial."
               />
               <AnimeFormatSelector
                 selected={filters.kitsuSubtype || []}
@@ -297,7 +297,7 @@ export function KitsuFilterPanel({
           )}
 
           <div className="filter-group">
-            <LabelWithTooltip label="Status" tooltip="Filter by airing status." />
+            <LabelWithTooltip label="Statut" tooltip="Filtrer selon le statut de diffusion." />
             <AnimeFormatSelector
               selected={filters.kitsuStatus || []}
               options={KITSU_STATUSES}
@@ -306,7 +306,7 @@ export function KitsuFilterPanel({
           </div>
 
           <div className="filter-group">
-            <LabelWithTooltip label="Age Rating" tooltip="Filter by content age rating." />
+            <LabelWithTooltip label="Classification par âge" tooltip="Filtrer selon la classification par âge." />
             <AnimeFormatSelector
               selected={filters.kitsuAgeRating || []}
               options={KITSU_AGE_RATINGS}
@@ -320,7 +320,7 @@ export function KitsuFilterPanel({
         <FilterSection
           id="season"
           title="Season"
-          description="Filter by anime season and year"
+          description="Filtrer selon la saison et l’année de l’anime"
           icon={Calendar}
           isOpen={expandedSections?.season}
           onToggle={onToggleSection}

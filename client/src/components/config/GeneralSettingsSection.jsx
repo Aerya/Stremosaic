@@ -40,7 +40,7 @@ export function GeneralSettingsSection() {
         }}
       >
         <span className="sidebar-section-title" style={{ flex: 1, margin: 0 }}>
-          General Settings
+          Paramètres généraux
         </span>
         <ChevronDown
           size={14}
@@ -63,20 +63,20 @@ export function GeneralSettingsSection() {
                 display: 'block',
               }}
             >
-              Global Display & Trailer Language
+              Langue globale d’affichage et des bandes-annonces
             </span>
             <SearchableSelect
               options={languages}
               value={defaultLanguage}
               onChange={handleLanguageChange}
-              placeholder="Default (Auto/English)"
+              placeholder="Par défaut (Auto/Français)"
               valueKey="iso_639_1"
               labelKey="english_name"
-              aria-label="Global Display & Trailer Language"
+              aria-label="Langue globale d’affichage et des bandes-annonces"
               renderOption={(opt) => `${opt.english_name} (${opt.name})`}
             />
             <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
-              Overrides language for all catalogs.
+              Remplace la langue pour l’ensemble des catalogues.
             </p>
           </div>
 
@@ -93,7 +93,7 @@ export function GeneralSettingsSection() {
               onClick={() => actions.handleLogout()}
               style={{ width: '100%', justifyContent: 'center', color: 'var(--text-error)' }}
             >
-              Log Out
+              Se déconnecter
             </button>
           </div>
         </div>

@@ -65,13 +65,13 @@ export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false })
 
   const placeholders = {
     tmdb: 'ex. Science-fiction, Sélection Netflix',
-    imdb: 'e.g., Oscar Winners, IMDb Top Rated',
+    imdb: 'ex. Gagnants des Oscars, Top IMDb',
     anilist: 'ex. Top Anime, Tendances de la saison',
     mal: 'ex. Top MAL, Anime de saison',
     kitsu: 'ex. Tendances Kitsu, Anime les mieux notés',
     simkl: 'ex. Anime tendances, Meilleurs de 2024',
     bingebase: 'ex. Ma liste Bingebase',
-    trakt: 'e.g., Trending Films, Most Watched',
+    trakt: 'ex. Films tendances, Les plus vus',
   };
 
   return (

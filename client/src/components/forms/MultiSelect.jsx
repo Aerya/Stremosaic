@@ -5,7 +5,7 @@ export const MultiSelect = memo(function MultiSelect({
   options = [],
   value = [],
   onChange,
-  placeholder = 'Select...',
+  placeholder = 'Sélectionner...',
   searchPlaceholder = null,
   emptyMessage = 'No options found',
   labelKey = 'label',
@@ -181,7 +181,7 @@ export const MultiSelect = memo(function MultiSelect({
               className="multi-select-clear"
               onClick={handleClear}
               type="button"
-              aria-label="Clear selection"
+              aria-label="Effacer la sélection"
             >
               <X size={14} />
             </button>
@@ -199,7 +199,7 @@ export const MultiSelect = memo(function MultiSelect({
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder={searchPlaceholder || 'Search...'}
+                placeholder={searchPlaceholder || 'Rechercher...'}
                 className="multi-select-input"
                 onKeyDown={(e) => {
                   if (e.key === 'Escape') {
@@ -213,7 +213,7 @@ export const MultiSelect = memo(function MultiSelect({
                   type="button"
                   className="multi-select-search-clear"
                   onClick={() => setSearch('')}
-                  aria-label="Clear search"
+                  aria-label="Effacer la recherche"
                 >
                   <X size={14} />
                 </button>

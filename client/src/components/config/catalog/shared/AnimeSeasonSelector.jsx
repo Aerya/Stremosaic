@@ -20,7 +20,7 @@ export function AnimeSeasonSelector({ season, year, onSeasonChange, onYearChange
           value={season || ''}
           onChange={(val) => onSeasonChange(val || undefined)}
           placeholder="Any Season"
-          searchPlaceholder="Search..."
+          searchPlaceholder="Rechercher..."
           labelKey="label"
           valueKey="value"
         />
@@ -30,8 +30,8 @@ export function AnimeSeasonSelector({ season, year, onSeasonChange, onYearChange
           options={yearOptions}
           value={year ? String(year) : ''}
           onChange={(val) => onYearChange(val ? parseInt(val, 10) : undefined)}
-          placeholder="Any Year"
-          searchPlaceholder="Search year..."
+          placeholder="Toutes les années"
+          searchPlaceholder="Rechercher une année..."
           labelKey="label"
           valueKey="value"
         />

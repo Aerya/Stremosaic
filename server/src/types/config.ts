@@ -280,7 +280,15 @@ export interface TraktCatalogFilters extends BaseCatalogFilters {
   traktRtUserMeterMax?: number;
 }
 
-export type SourceType = 'tmdb' | 'anilist' | 'mal' | 'simkl' | 'kitsu' | 'bingebase';
+export type SourceType =
+  | 'tmdb'
+  | 'imdb'
+  | 'anilist'
+  | 'mal'
+  | 'simkl'
+  | 'kitsu'
+  | 'trakt'
+  | 'bingebase';
 
 export type CatalogFilters = TmdbCatalogFilters &
   ImdbCatalogFilters &

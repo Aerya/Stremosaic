@@ -99,7 +99,7 @@ type EntryDraft = {
 // single max-size page (limit 50), large enough to span many pages.
 const draftsArb = fc.array(entryDraftArb, { minLength: 1, maxLength: 40 });
 
-const enabledDrafts = (drafts: EntryDraft[]) => drafts.filter((draft) => draft.source !== 'mal');
+const enabledDrafts = (drafts: EntryDraft[]) => drafts;
 
 /** Build a fully-formed, searchable (public + active) Marketplace_Entry. */
 function buildEntry(draft: EntryDraft): MarketplaceEntry {

@@ -43,7 +43,12 @@ function buildIndexes(entries: AnimeIdEntry[]): void {
     if (entry.anilist_id) newByAnilist.set(entry.anilist_id, entry);
     if (entry.mal_id) newByMal.set(entry.mal_id, entry);
     if (entry.kitsu_id) newByKitsu.set(entry.kitsu_id, entry);
-    if (entry.imdb_id) newByImdb.set(entry.imdb_id.toLowerCase(), entry);
+    if (entry.imdb_id != null) {
+      const imdbStr = String(entry.imdb_id).trim();
+      if (imdbStr.length > 0) {
+        newByImdb.set(imdbStr.toLowerCase(), entry);
+      }
+    }
     if (entry.simkl_id) newBySimkl.set(entry.simkl_id, entry);
     if (entry.themoviedb_id) newByTmdb.set(entry.themoviedb_id, entry);
     if (entry.anidb_id) newByAnidb.set(entry.anidb_id, entry);

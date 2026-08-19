@@ -5,7 +5,7 @@ import { useCatalog } from '../../context/AppContext';
 const ARTWORK_SETTINGS = [
   {
     key: 'poster',
-    label: 'Poster',
+    label: 'Affiche',
     serviceField: 'posterService',
     apiKeyField: 'posterApiKey',
     encryptedField: 'posterApiKeyEncrypted',
@@ -13,7 +13,7 @@ const ARTWORK_SETTINGS = [
   },
   {
     key: 'backdrop',
-    label: 'Backdrop',
+    label: 'Arrière-plan',
     serviceField: 'backdropService',
     apiKeyField: 'backdropApiKey',
     encryptedField: 'backdropApiKeyEncrypted',
@@ -75,7 +75,7 @@ export function PosterSettingsSection() {
     if (service === 'rpdb') return { name: 'RPDB', url: 'https://ratingposterdb.com' };
     if (service === 'fanart') return { name: 'Fanart.tv', url: 'https://fanart.tv' };
     if (service === 'topPosters') {
-      return { name: 'Top Posters', url: 'https://api.top-streaming.stream' };
+      return { name: 'Affiches principales', url: 'https://api.top-streaming.stream' };
     }
     return null;
   };
@@ -95,7 +95,7 @@ export function PosterSettingsSection() {
         tabIndex={0}
       >
         <Image size={14} className="text-muted" />
-        <span className="sidebar-section-title">Artwork Sources</span>
+        <span className="sidebar-section-title">Sources d’illustrations</span>
         <ChevronDown
           size={14}
           className={`text-muted poster-settings-chevron${isCollapsed ? ' collapsed' : ''}`}
@@ -115,7 +115,7 @@ export function PosterSettingsSection() {
             return (
               <div key={setting.key} className="input-group poster-settings-service-group">
                 <label htmlFor={`${setting.key}-service`} className="poster-settings-label">
-                  {setting.label} Source
+                  Source pour {setting.label.toLowerCase()}
                 </label>
                 <select
                   id={`${setting.key}-service`}
@@ -123,19 +123,19 @@ export function PosterSettingsSection() {
                   value={service}
                   onChange={(e) => handleServiceChange(setting, e.target.value)}
                 >
-                  <option value="none">Default (Provider Metadata)</option>
+                  <option value="none">Par défaut (Métadonnées source)</option>
                   <option value="rpdb">RPDB</option>
                   <option value="fanart">Fanart.tv</option>
-                  <option value="topPosters">Top Posters</option>
-                  <option value="customUrl">Custom URL Pattern</option>
+                  <option value="topPosters">Affiches principales</option>
+                  <option value="customUrl">Modèle d’URL personnalisée</option>
                 </select>
 
                 {service !== 'none' && (
                   <>
                     <label htmlFor={`${setting.key}-api-key`} className="poster-settings-label">
-                      {isCustomService ? 'API Key (optional)' : 'API Key'}{' '}
+                      {isCustomService ? 'Clé API (optionnelle)' : 'Clé API'}{' '}
                       {hasApiKey && !apiKeyInput && (
-                        <span className="poster-settings-status">(set)</span>
+                        <span className="poster-settings-status">(définie)</span>
                       )}
                     </label>
                     <div className="poster-settings-input-wrapper">
@@ -147,8 +147,8 @@ export function PosterSettingsSection() {
                           hasApiKey
                             ? '••••••••'
                             : isCustomService
-                              ? 'Optional (for {api_key} placeholder)'
-                              : 'Enter API key'
+                              ? 'Optionnel (pour la variable {api_key})'
+                              : 'Saisissez la clé API'
                         }
                         value={apiKeyInput}
                         onChange={(e) => handleApiKeyChange(setting, e)}
@@ -162,7 +162,7 @@ export function PosterSettingsSection() {
                           }))
                         }
                         className="poster-settings-toggle-visibility"
-                        title={showApiKeyByArt[setting.key] ? 'Hide' : 'Show'}
+                        title={showApiKeyByArt[setting.key] ? 'Masquer' : 'Afficher'}
                       >
                         {showApiKeyByArt[setting.key] ? <EyeOff size={14} /> : <Eye size={14} />}
                       </button>
@@ -170,7 +170,7 @@ export function PosterSettingsSection() {
 
                     {serviceInfo ? (
                       <p className="poster-settings-hint">
-                        Get key from{' '}
+                        Obtenir une clé sur{' '}
                         <a
                           href={serviceInfo.url}
                           target="_blank"
@@ -189,7 +189,7 @@ export function PosterSettingsSection() {
                           htmlFor={`${setting.key}-custom-pattern`}
                           className="poster-settings-label"
                         >
-                          Custom URL Pattern
+                          Modèle d’URL personnalisée
                         </label>
                         <input
                           id={`${setting.key}-custom-pattern`}
@@ -200,7 +200,7 @@ export function PosterSettingsSection() {
                           onChange={(e) => handleCustomPatternChange(setting, e)}
                         />
                         <p className="poster-settings-hint">
-                          Placeholders: {'{asset}'}, {'{type}'}, {'{imdb_id}'}, {'{tmdb_id}'},{' '}
+                          Variables : {'{asset}'}, {'{type}'}, {'{imdb_id}'}, {'{tmdb_id}'},{' '}
                           {'{rating_id}'}, {'{rating_id_type}'}, {'{api_key}'},{' '}
                           {'{api_key_urlencoded}'}, {'{language}'}, {'{language_short}'}
                         </p>

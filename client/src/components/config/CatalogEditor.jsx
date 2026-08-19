@@ -23,7 +23,7 @@ const PREVIEW_POSTER_PROVIDER_OVERRIDE_OPTIONS = [
   { id: 'tmdb', label: 'TMDB' },
   { id: 'imdb', label: 'IMDb' },
   { id: 'rpdb', label: 'RPDB' },
-  { id: 'topPosters', label: 'Top Posters' },
+  { id: 'topPosters', label: 'Affiches principales' },
 ];
 
 const PREVIEW_POSTER_PROVIDER_OPTION_TVDB = {
@@ -47,7 +47,7 @@ const PREVIEW_POSTER_PROVIDER_LABELS = {
   tvdb: 'TVDB',
   fanart: 'Fanart.tv',
   rpdb: 'RPDB',
-  topPosters: 'Top Posters',
+  topPosters: 'Affiches principales',
   customUrl: 'Custom URL',
 };
 
@@ -65,15 +65,15 @@ function getPreviewPosterProviderHint(provider, globalProvider) {
   if (!provider || provider === 'default') {
     const globalLabel =
       PREVIEW_POSTER_PROVIDER_LABELS[globalProvider] || PREVIEW_POSTER_PROVIDER_LABELS.tmdb;
-    return `Uses global poster source (${globalLabel}).`;
+    return `Source globale par défaut (${globalLabel}).`;
   }
 
   if (provider === 'customUrl') {
-    return 'Uses your configured Custom URL pattern for preview posters.';
+    return 'Utilise votre modèle d’URL personnalisée pour les affiches de prévisualisation.';
   }
 
   const forcedLabel = PREVIEW_POSTER_PROVIDER_LABELS[provider] || provider;
-  return `Forces ${forcedLabel} posters in preview only.`;
+  return `Force les affiches ${forcedLabel} uniquement en prévisualisation.`;
 }
 
 function normalizeArtworkContentType(type) {
@@ -289,7 +289,7 @@ export const CatalogEditor = memo(function CatalogEditor() {
       PREVIEW_POSTER_PROVIDER_LABELS[globalPreviewPosterProvider] ||
       PREVIEW_POSTER_PROVIDER_LABELS.tmdb;
     const baseOptions = [
-      { id: 'default', label: `Global default (${globalLabel})` },
+      { id: 'default', label: `Source globale (${globalLabel})` },
       { id: 'tmdb', label: 'TMDB' },
       { id: 'imdb', label: 'IMDb' },
     ];
@@ -555,16 +555,16 @@ export const CatalogEditor = memo(function CatalogEditor() {
                 <input
                   type="text"
                   className={`editor-name-input${!localCatalog?.name?.trim() ? ' field-invalid' : ''}`}
-                  placeholder="Catalog Name..."
+                  placeholder="Nom du catalogue..."
                   value={localCatalog?.name || ''}
                   onChange={(e) => handleNameChange(e.target.value)}
                   maxLength={50}
                   style={{ margin: 0, padding: 0 }}
                 />
               </div>
-              {!localCatalog?.name?.trim() && <span className="field-error">Name is required</span>}
+              {!localCatalog?.name?.trim() && <span className="field-error">Le nom est requis</span>}
               <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                Powered by{' '}
+                Propulsé par{' '}
                 <a
                   href={
                     SOURCE_ATTRIBUTION[localCatalog?.source]?.url || SOURCE_ATTRIBUTION.tmdb.url
@@ -589,18 +589,18 @@ export const CatalogEditor = memo(function CatalogEditor() {
                 aria-pressed={localCatalog?.published === false}
                 title={
                   localCatalog?.published === false
-                    ? 'Private — hidden from the marketplace. Click to make public.'
-                    : 'Public — discoverable in the marketplace. Click to make private.'
+                    ? 'Privé — masqué de la marketplace. Cliquez pour rendre public.'
+                    : 'Public — visible dans la marketplace. Cliquez pour rendre privé.'
                 }
               >
                 {localCatalog?.published === false ? <Lock size={12} /> : <Globe size={12} />}
-                {localCatalog?.published === false ? 'Private' : 'Public'}
+                {localCatalog?.published === false ? 'Privé' : 'Public'}
               </button>
             </div>
           </div>
           <div className="editor-actions">
             <div className="preview-provider-field">
-              <span className="preview-provider-label">Preview posters</span>
+              <span className="preview-provider-label">Affiches d’aperçu</span>
               <div className="preview-provider-row">
                 <div className="preview-provider-select">
                   <SearchableSelect
@@ -609,11 +609,11 @@ export const CatalogEditor = memo(function CatalogEditor() {
                     onChange={(value) => setPreviewPosterProvider(value || 'default')}
                     valueKey="id"
                     labelKey="label"
-                    placeholder="Select preview poster source"
-                    searchPlaceholder="Search poster source..."
+                    placeholder="Source des affiches d’aperçu"
+                    searchPlaceholder="Rechercher une source..."
                     allowClear={false}
                     menuPlacement="bottom"
-                    aria-label="Preview poster provider"
+                    aria-label="Source des affiches d’aperçu"
                   />
                 </div>
                 <button
@@ -626,7 +626,7 @@ export const CatalogEditor = memo(function CatalogEditor() {
                   ) : (
                     <Eye size={16} />
                   )}
-                  Preview
+                  Aperçu
                 </button>
               </div>
               <span className="preview-provider-hint">{previewPosterProviderHint}</span>
@@ -642,7 +642,7 @@ export const CatalogEditor = memo(function CatalogEditor() {
               disabled={isPresetCatalog}
               style={isPresetCatalog ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
             >
-              <Film size={18} /> Movies
+              <Film size={18} /> Films
             </button>
             <button
               className={`type-btn ${catalogType === 'series' ? 'active' : ''}`}
@@ -650,7 +650,7 @@ export const CatalogEditor = memo(function CatalogEditor() {
               disabled={isPresetCatalog}
               style={isPresetCatalog ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
             >
-              <Tv size={18} /> TV Shows
+              <Tv size={18} /> Séries
             </button>
             {supportedTypes.includes('anime') && (
               <button
@@ -676,7 +676,7 @@ export const CatalogEditor = memo(function CatalogEditor() {
             <div className="mal-jikan-warning" role="status">
               <AlertTriangle size={16} aria-hidden="true" />
               <span>
-                Some MAL results may be temporarily unavailable when Jikan cannot reach MyAnimeList.
+                Certains résultats MAL peuvent être temporairement indisponibles si Jikan ne parvient pas à joindre MyAnimeList.
               </span>
             </div>
           )}
@@ -696,7 +696,7 @@ export const CatalogEditor = memo(function CatalogEditor() {
 
           <div className="mobile-preview-btn-container">
             <div className="preview-provider-field mobile-preview-provider">
-              <span className="preview-provider-label">Preview posters</span>
+              <span className="preview-provider-label">Affiches d’aperçu</span>
               <div className="preview-provider-select">
                 <SearchableSelect
                   options={previewPosterProviderOptions}
@@ -704,11 +704,11 @@ export const CatalogEditor = memo(function CatalogEditor() {
                   onChange={(value) => setPreviewPosterProvider(value || 'default')}
                   valueKey="id"
                   labelKey="label"
-                  placeholder="Select preview poster source"
-                  searchPlaceholder="Search poster source..."
+                  placeholder="Source des affiches d’aperçu"
+                  searchPlaceholder="Rechercher une source..."
                   allowClear={false}
                   menuPlacement="top"
-                  aria-label="Preview poster provider"
+                  aria-label="Source des affiches d’aperçu"
                 />
               </div>
               <span className="preview-provider-hint">{previewPosterProviderHint}</span>
@@ -720,7 +720,7 @@ export const CatalogEditor = memo(function CatalogEditor() {
               disabled={previewLoading}
             >
               {previewLoading ? <Loader size={16} className="animate-spin" /> : <Eye size={16} />}
-              Preview
+              Aperçu
             </button>
           </div>
         </div>
