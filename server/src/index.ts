@@ -1,0 +1,632 @@
+import express from 'express';
+import type { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
+import compression from 'compression';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { config, validateRequiredConfig } from './config.ts';
+import { initStorage, getStorage } from './services/storage/index.ts';
+import { initCache, getCacheStatus } from './services/cache/index.ts';
+import { addonRouter } from './routes/addon.ts';
+import { apiRouter } from './routes/api.ts';
+import { authRouter } from './routes/auth.ts';
+import { bingebaseRouter } from './routes/bingebase.ts';
+import marketplaceRouter from './routes/marketplace.ts';
+import { createLogger } from './utils/logger.ts';
+import { getBaseUrl, logSwallowedError } from './utils/helpers.ts';
+import { apiRateLimit } from './utils/rateLimit.ts';
+import { monitoringRateLimit } from './utils/rateLimit.ts';
+import { setRevocationStore, destroySecurity } from './utils/security.ts';
+import { RedisRevocationStore } from './infrastructure/revocationStore.ts';
+import { warmEssentialCaches } from './infrastructure/cacheWarmer.ts';
+import { destroyTmdbThrottle, getTmdbThrottle } from './infrastructure/tmdbThrottle.ts';
+import { destroyImdbThrottle } from './infrastructure/imdbThrottle.ts';
+import { getConfigCache } from './infrastructure/configCache.ts';
+import {
+  initImdbRatings,
+  getImdbRatingsStats,
+  destroyImdbRatings,
+} from './services/imdbRatings/index.ts';
+import { getCircuitBreakerState } from './services/tmdb/client.ts';
+import { getImdbCircuitBreakerState } from './services/imdb/client.ts';
+import { isImdbApiEnabled } from './services/imdb/index.ts';
+import { initImdbApi } from './services/imdb/index.ts';
+import { initAnimeIdMap } from './services/animeIdMap/index.ts';
+import { requestIdMiddleware, getRequestCacheStats } from './utils/requestContext.ts';
+import { sendError, ErrorCodes, AppError } from './utils/AppError.ts';
+import { TIMEOUTS, HEAP_WARN_THRESHOLD_MB } from './constants.ts';
+import type { Server } from 'http';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const app = express();
+const log = createLogger('server');
+const PORT = config.port;
+const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf8'));
+const SERVER_VERSION = pkg.version;
+
+let server: Server | null = null;
+let isShuttingDown = false;
+let revocationStoreInstance: RedisRevocationStore | null = null;
+
+/**
+ * Server status — tracks startup state, degradation, and readiness.
+ */
+const serverStatus: {
+  healthy: boolean;
+  degraded: boolean;
+  reason: string;
+  startedAt: string | null;
+  cacheWarming: {
+    warmed: number;
+    failed: number;
+    skipped?: boolean;
+    elapsedMs?: number;
+    inProgress?: boolean;
+  };
+} = {
+  healthy: false,
+  degraded: false,
+  reason: '',
+  startedAt: null,
+  cacheWarming: { warmed: 0, failed: 0, skipped: false, inProgress: false },
+};
+
+const trustProxySetting = config.trustProxy;
+const VALID_TRUST_PROXY = /^(\d+|true|false|loopback|linklocal|uniquelocal)$/;
+if (
+  trustProxySetting &&
+  !VALID_TRUST_PROXY.test(trustProxySetting) &&
+  !/^[\d.\/,: ]+$/.test(trustProxySetting)
+) {
+  log.error('Invalid TRUST_PROXY value', { value: trustProxySetting });
+  throw new Error(
+    `Invalid TRUST_PROXY value: ${trustProxySetting}. ` +
+      `Must be a number, boolean, named preset (loopback|linklocal|uniquelocal), ` +
+      `or comma-separated list of IPs/CIDRs.`
+  );
+}
+app.set(
+  'trust proxy',
+  /^\d+$/.test(trustProxySetting) ? parseInt(trustProxySetting, 10) : trustProxySetting
+);
+
+const rawOrigins = config.cors.origin;
+const allowedOrigins =
+  rawOrigins === '*'
+    ? ['*']
+    : rawOrigins
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: config.cors.allowCredentials,
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+app.use(express.json({ limit: config.jsonBodyLimit }));
+app.use(compression({ threshold: 1024 }));
+
+const CSP_POLICY = {
+  'default-src': ["'self'"],
+  'script-src': ["'self'", 'https://static.cloudflareinsights.com'],
+  'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+  'img-src': [
+    "'self'",
+    'https://docs.elfhosted.com',
+    'https://image.tmdb.org',
+    'https://api.ratingposterdb.com',
+    'https://api.top-streaming.stream',
+    'https://assets.fanart.tv',
+    'https://artworks.thetvdb.com',
+    'https://thetvdb.com',
+    'https://www.thetvdb.com',
+    'https://s4.anilist.co',
+    'https://media.kitsu.app',
+    'https://media.kitsu.io',
+    'https://myanimelist.net',
+    'https://cdn.myanimelist.net',
+    'https://storage.ko-fi.com',
+    'https://m.media-amazon.com',
+    'https://ia.media-imdb.com',
+    'https://wsrv.nl',
+    'https://simkl.in',
+    'https://data.simkl.in',
+    'https://*.metahub.space',
+    'data:',
+  ],
+  'font-src': ["'self'", 'https://fonts.gstatic.com'],
+  'connect-src': [
+    "'self'",
+    'https://api.themoviedb.org',
+    'https://static.cloudflareinsights.com',
+    'https://cloudflareinsights.com',
+  ],
+  'frame-ancestors': ["'none'"],
+  'base-uri': ["'self'"],
+  'form-action': ["'self'"],
+};
+
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-DNS-Prefetch-Control', 'off');
+  res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
+
+  if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
+    res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains');
+  }
+
+  const cspString = Object.entries(CSP_POLICY)
+    .map(([directive, sources]) => `${directive} ${sources.join(' ')}`)
+    .join('; ');
+
+  res.setHeader('Content-Security-Policy', cspString);
+
+  next();
+});
+
+app.use(requestIdMiddleware());
+
+const REQUEST_LOG_IGNORED_PREFIXES = ['/health', '/ready'];
+const REQUEST_LOG_IGNORED_EXTENSIONS = /\.(?:js|css|map|png|jpg|jpeg|gif|svg|ico|webp|woff2?)$/i;
+
+const shouldLogCorrelationForPath = (pathname: string): boolean => {
+  if (REQUEST_LOG_IGNORED_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return false;
+  if (pathname.startsWith('/assets/') || pathname.startsWith('/static/')) return false;
+  if (REQUEST_LOG_IGNORED_EXTENSIONS.test(pathname)) return false;
+  return true;
+};
+
+app.use((req, res, next) => {
+  const started = process.hrtime.bigint();
+  res.on('finish', () => {
+    if (!shouldLogCorrelationForPath(req.path)) return;
+    const durationMs = Number((process.hrtime.bigint() - started) / 1000000n);
+    const cache = getRequestCacheStats() ?? {
+      hits: 0,
+      misses: 0,
+      writes: 0,
+      deletes: 0,
+      errors: 0,
+    };
+    log.info('Request completed', {
+      method: req.method,
+      path: req.originalUrl || req.path,
+      statusCode: res.statusCode,
+      durationMs,
+      cache,
+    });
+  });
+  next();
+});
+
+app.use((req, res, next) => {
+  req.setTimeout(TIMEOUTS.REQUEST_MS);
+  res.setTimeout(TIMEOUTS.REQUEST_MS, () => {
+    if (!res.headersSent) {
+      log.warn('Request timeout', { url: req.originalUrl, method: req.method });
+      res.status(504).json({ error: 'Gateway Timeout' });
+    }
+  });
+  next();
+});
+
+// Global generic rate limit for all routes
+app.use(apiRateLimit);
+
+const clientDistPath = path.join(__dirname, '../../client/dist');
+const distManifest = path.join(clientDistPath, 'manifest.json');
+const publicManifest = path.join(__dirname, '../../client/public/manifest.json');
+
+let clientManifestPath = publicManifest;
+if (process.env.NODE_ENV === 'production') {
+  clientManifestPath = distManifest;
+} else if (process.env.NODE_ENV === 'nightly') {
+  clientManifestPath = fs.existsSync(distManifest) ? distManifest : publicManifest;
+}
+
+log.info('Environment status', {
+  port: PORT,
+  nodeEnv: config.nodeEnv,
+  trustProxy: config.trustProxy,
+  hasEncryptionKey: Boolean(process.env.ENCRYPTION_KEY),
+  hasJwtSecret: Boolean(process.env.JWT_SECRET),
+});
+
+if (process.env.DISABLE_RATE_LIMIT === 'true' && !config.features.disableRateLimit) {
+  log.warn('DISABLE_RATE_LIMIT is set but ignored outside development/test environments');
+}
+
+log.info('Client dist status', {
+  path: clientDistPath,
+  exists: fs.existsSync(clientDistPath),
+});
+
+app.get(['/configure', '/configure/:userId'], (req, res) => {
+  res.set('Cache-Control', 'no-store, must-revalidate');
+  const userId = req.params.userId as string | undefined;
+  if (userId) {
+    return res.redirect(302, `/?userId=${encodeURIComponent(userId)}`);
+  }
+  return res.redirect(302, '/');
+});
+
+app.get('/:userId/configure', (req, res) => {
+  res.set('Cache-Control', 'no-store, must-revalidate');
+  const userId = req.params.userId as string;
+  if (userId && !userId.includes('.')) {
+    return res.redirect(302, `/?userId=${encodeURIComponent(userId)}`);
+  }
+  return res.status(404).send('Not Found');
+});
+
+let _clientManifestParsed: Record<string, unknown> | null = null;
+
+app.get('/manifest.json', (req, res) => {
+  try {
+    if (!_clientManifestParsed) {
+      if (!fs.existsSync(clientManifestPath)) {
+        log.warn('Manifest file not found', { path: clientManifestPath });
+      }
+      const raw = fs.readFileSync(clientManifestPath, 'utf8');
+      _clientManifestParsed = JSON.parse(raw);
+    }
+    const manifest = { ..._clientManifestParsed };
+    const baseUrl = config.baseUrl || getBaseUrl(req);
+    manifest.logo = `${baseUrl.replace(/\/$/, '')}/logo.png`;
+    res.setHeader('Cache-Control', 'no-store, must-revalidate');
+    res.json(manifest);
+  } catch (error) {
+    log.warn('Failed to serve manifest.json', { error: (error as Error).message });
+    sendError(res, 500, ErrorCodes.INTERNAL_ERROR, 'Failed to load manifest');
+  }
+});
+
+app.use(
+  express.static(clientDistPath, {
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-store, must-revalidate');
+      }
+    },
+  })
+);
+
+// ============================================
+// Fallback Placeholder Images (served from static/)
+// ============================================
+const staticPath = path.join(__dirname, '../static');
+app.use(
+  express.static(staticPath, {
+    maxAge: '1d',
+    immutable: true,
+    setHeaders: (res) => {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+    },
+  })
+);
+
+app.get('/ready', (req, res) => {
+  if (isShuttingDown) {
+    return res.status(503).json({ ready: false, reason: 'shutting_down' });
+  }
+  if (!serverStatus.healthy) {
+    return res.status(503).json({ ready: false, reason: 'starting' });
+  }
+  res.json({
+    ready: true,
+    cacheWarming: serverStatus.cacheWarming.inProgress ? 'in_progress' : 'complete',
+  });
+});
+
+// ============================================
+// Enhanced Health Check Endpoint
+// ============================================
+app.get('/health', monitoringRateLimit, (req, res) => {
+  if (isShuttingDown) {
+    return res.status(503).json({
+      status: 'shutting_down',
+      message: 'Server is shutting down',
+    });
+  }
+
+  let dbStatus = 'disconnected';
+  try {
+    if (getStorage()) {
+      dbStatus = 'connected';
+    }
+  } catch (e) {
+    dbStatus = 'error';
+    logSwallowedError('health:db-status', e);
+  }
+
+  // Determine overall status
+  let status = 'ok';
+  if (!serverStatus.healthy) status = 'starting';
+  else if (serverStatus.degraded) status = 'degraded';
+
+  const cacheStatus = getCacheStatus();
+  const throttleStats = getTmdbThrottle().getStats();
+  const configCacheStats = getConfigCache().getStats();
+
+  const health = {
+    status,
+    degradedReason: serverStatus.degraded ? serverStatus.reason : undefined,
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    startedAt: serverStatus.startedAt,
+    version: SERVER_VERSION,
+    database: dbStatus,
+    cache: cacheStatus,
+    configCache: configCacheStats,
+    tmdbThrottle: throttleStats,
+    tmdbCircuitBreaker: getCircuitBreakerState(),
+    imdbRatings: getImdbRatingsStats(),
+    imdbApi: isImdbApiEnabled()
+      ? {
+          enabled: true,
+          circuitBreaker: getImdbCircuitBreakerState(),
+        }
+      : { enabled: false },
+    cacheWarming: serverStatus.cacheWarming,
+    memory: {
+      rss: Math.round(process.memoryUsage().rss / 1024 / 1024),
+      used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+      total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
+      unit: 'MB',
+    },
+  };
+
+  const heapUsedMB = health.memory.used;
+  if (heapUsedMB > HEAP_WARN_THRESHOLD_MB) {
+    log.warn('High heap usage', {
+      heapUsedMB,
+      rss: health.memory.rss,
+      threshold: HEAP_WARN_THRESHOLD_MB,
+    });
+  }
+
+  const httpStatus = status === 'ok' || status === 'degraded' ? 200 : 503;
+  res.status(httpStatus).json(health);
+});
+
+app.use('/api/auth', authRouter);
+app.use('/api/bingebase', bingebaseRouter);
+
+app.use('/api/marketplace', marketplaceRouter);
+
+app.use('/api', apiRouter);
+
+app.use('/', addonRouter);
+
+app.get('*', (req, res) => {
+  const indexPath = path.join(clientDistPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('Not Found');
+  }
+});
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  log.error('Unhandled error', { error: err.message, stack: err.stack, url: req.url });
+  if (res.headersSent) {
+    return next(err);
+  }
+  if (err instanceof AppError) {
+    return sendError(res, err.statusCode, err.code, err.message);
+  }
+  sendError(res, 500, ErrorCodes.INTERNAL_ERROR, 'Internal server error');
+});
+
+function gracefulShutdown(signal: string) {
+  log.info(`Received ${signal}, starting graceful shutdown...`);
+  isShuttingDown = true;
+
+  const shutdownTimeout = setTimeout(() => {
+    log.warn('Shutdown timeout reached, forcing exit');
+    process.exit(1);
+  }, TIMEOUTS.SHUTDOWN_MS);
+
+  // Cleanup singletons
+  destroyTmdbThrottle();
+  destroyImdbThrottle();
+  destroySecurity();
+  if (revocationStoreInstance) {
+    revocationStoreInstance
+      .destroy()
+      .catch((err) => logSwallowedError('shutdown:revocation-store', err));
+  }
+  destroyImdbRatings().catch((err) => logSwallowedError('shutdown:imdb-ratings', err));
+
+  if (server) {
+    server.close(async (err) => {
+      try {
+        const storage = getStorage();
+        if (storage) await storage.disconnect();
+      } catch (e) {
+        log.error('Error disconnecting storage', { error: (e as Error).message });
+      }
+
+      clearTimeout(shutdownTimeout);
+      if (err) {
+        log.error('Error during shutdown', { error: err.message });
+        process.exit(1);
+      }
+      log.info('Server closed successfully');
+      process.exit(0);
+    });
+  } else {
+    clearTimeout(shutdownTimeout);
+    process.exit(0);
+  }
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+process.on('uncaughtException', (err) => {
+  const message = err instanceof Error ? err.message : String(err);
+  const stack = err instanceof Error ? err.stack : undefined;
+  log.error('Uncaught exception', { error: message, stack });
+  gracefulShutdown('uncaughtException');
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  log.error('Unhandled rejection', { reason: String(reason) });
+});
+
+async function start() {
+  try {
+    validateRequiredConfig();
+
+    try {
+      await initCache();
+    } catch (cacheErr) {
+      log.warn('Cache initialization issue (degraded mode)', {
+        error: (cacheErr as Error).message,
+      });
+      serverStatus.degraded = true;
+      serverStatus.reason = 'Cache initialization failed — using memory fallback';
+    }
+
+    if (config.cache.redisUrl) {
+      try {
+        const revocationStore = new RedisRevocationStore(config.cache.redisUrl);
+        await revocationStore.connect();
+        setRevocationStore(revocationStore);
+        revocationStoreInstance = revocationStore;
+        log.info('JWT revocation store: Redis (multi-replica safe)');
+      } catch (err) {
+        log.warn('Redis revocation store unavailable, using in-process fallback', {
+          error: (err as Error).message,
+        });
+        serverStatus.degraded = true;
+        serverStatus.reason =
+          serverStatus.reason || 'JWT revocation store unavailable — single-replica only';
+      }
+    } else {
+      log.info('JWT revocation store: in-process Map (single-replica only)');
+    }
+
+    await initStorage();
+
+    serverStatus.healthy = true;
+    serverStatus.startedAt = new Date().toISOString();
+
+    // Auto-reconcile marketplace entries in background (non-blocking)
+    // Ensures catalogs are indexed after deployments or schema fixes
+    // Runs after server starts to avoid blocking container health checks
+    const reconcileMarketplaceOnStartup = async () => {
+      try {
+        const storage = getStorage();
+        const configs = (await storage.getAllConfigs?.()) || [];
+        if (configs.length === 0) {
+          log.info('No user configs found for marketplace reconciliation');
+          return;
+        }
+
+        log.info(`Starting marketplace reconciliation for ${configs.length} configs`);
+        const { reconcileMarketplaceEntries } = await import('./services/marketplaceService.ts');
+        let reconciled = 0;
+        let failed = 0;
+        const batchSize = 50;
+
+        for (let i = 0; i < configs.length; i += batchSize) {
+          const batch = configs.slice(i, i + batchSize);
+          const results = await Promise.allSettled(
+            batch.map((cfg) => reconcileMarketplaceEntries(null, cfg))
+          );
+
+          const batchReconciled = results.filter((r) => r.status === 'fulfilled').length;
+          reconciled += batchReconciled;
+          failed += results.filter((r) => r.status === 'rejected').length;
+
+          log.debug(`Marketplace reconciliation progress`, {
+            processed: Math.min(i + batchSize, configs.length),
+            total: configs.length,
+            reconciled,
+            failed,
+          });
+        }
+
+        log.info(`Marketplace reconciliation finished on startup`, {
+          total: configs.length,
+          reconciled,
+          failed,
+          percentage: ((reconciled / configs.length) * 100).toFixed(1),
+        });
+      } catch (err) {
+        log.warn('Marketplace startup reconciliation failed (non-critical)', {
+          error: err instanceof Error ? err.message : 'unknown',
+        });
+      }
+    };
+
+    // Start reconciliation in background after server is listening
+    Promise.resolve()
+      .then(() => reconcileMarketplaceOnStartup())
+      .catch(() => {
+        // Catch-all, shouldn't happen but prevents unhandled rejections
+      });
+
+    server = app.listen(PORT, '0.0.0.0', () => {
+      log.info(`Stremosaic running at http://0.0.0.0:${PORT}`);
+      log.info(`Configure at http://localhost:${PORT}/configure`);
+      log.info(`Health check at http://localhost:${PORT}/health`);
+    });
+
+    if (config.addon.isNightly) {
+      serverStatus.cacheWarming = { warmed: 0, failed: 0, skipped: true };
+      log.info('Skipping startup cache warming for nightly profile');
+    } else {
+      serverStatus.cacheWarming.inProgress = true;
+      const defaultApiKey = config.tmdb.apiKey;
+      warmEssentialCaches(defaultApiKey)
+        .then((result) => {
+          serverStatus.cacheWarming = { ...result, inProgress: false };
+          log.info('Background cache warming finished', result);
+        })
+        .catch((err) => {
+          serverStatus.cacheWarming.inProgress = false;
+          log.warn('Background cache warming failed (non-critical)', { error: err.message });
+        });
+    }
+
+    initImdbRatings()
+      .then(() => {
+        log.info('IMDb ratings initialized', getImdbRatingsStats());
+      })
+      .catch((err) => {
+        log.warn('IMDb ratings initialization failed (non-critical)', { error: err.message });
+      });
+
+    initImdbApi();
+
+    initAnimeIdMap()
+      .then(() => {
+        log.info('Anime ID map initialized');
+      })
+      .catch((err) => {
+        log.warn('Anime ID map initialization failed (non-critical)', { error: err.message });
+      });
+  } catch (error) {
+    log.error('Failed to start server', { error: (error as Error).message });
+    process.exit(1);
+  }
+}
+
+start();

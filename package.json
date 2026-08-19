@@ -1,0 +1,54 @@
+{
+  "name": "stremosaic",
+  "version": "2.10.5",
+  "description": "Stremosaic - multi-source catalog builder for Stremio",
+  "main": "server/src/index.ts",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node --experimental-strip-types server/src/index.ts",
+    "build": "cd client && npm install && npm run build",
+    "heroku-postbuild": "cd server && npm install && cd ../client && npm install --include=dev && npm run build",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "test": "cd server && npm test",
+    "test:integration": "cd server && npm run test:integration",
+    "format": "prettier --write .",
+    "lint": "cd client && npm run lint",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "stremio",
+    "addon",
+    "tmdb",
+    "catalog",
+    "discover",
+    "movies",
+    "tv-shows",
+    "streaming"
+  ],
+  "author": "Aerya",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aerya/Stremosaic.git"
+  },
+  "homepage": "https://github.com/Aerya/Stremosaic#readme",
+  "bugs": {
+    "url": "https://github.com/Aerya/Stremosaic/issues"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
+    "prettier": "^3.8.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,md}": "npx prettier --write",
+    "client/src/**/*.{js,jsx}": "npx eslint --fix --config client/eslint.config.js"
+  }
+}

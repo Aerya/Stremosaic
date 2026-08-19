@@ -1,0 +1,180 @@
+import { createContext, useContext, useMemo } from 'react';
+
+// ─── Catalog Context ──────────────────────────────────────
+const CatalogContext = createContext(null);
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function useCatalog() {
+  const ctx = useContext(CatalogContext);
+  if (!ctx) throw new Error('useCatalog must be used within AppProviders');
+  return ctx;
+}
+
+// ─── TMDB Data Context ────────────────────────────────────
+const TMDBDataContext = createContext(null);
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function useTMDBData() {
+  const ctx = useContext(TMDBDataContext);
+  if (!ctx) throw new Error('useTMDBData must be used within AppProviders');
+  return ctx;
+}
+
+// ─── App Actions Context ──────────────────────────────────
+const AppActionsContext = createContext(null);
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function useAppActions() {
+  const ctx = useContext(AppActionsContext);
+  if (!ctx) throw new Error('useAppActions must be used within AppProviders');
+  return ctx;
+}
+
+// ─── Provider ─────────────────────────────────────────────
+export function AppProviders({ state, actions, config, tmdb, children }) {
+  const catalogValue = useMemo(
+    () => ({
+      catalogs: config.catalogs,
+      setCatalogs: config.setCatalogs,
+      activeCatalog: state.activeCatalog,
+      setActiveCatalog: state.setActiveCatalog,
+      globalSource: state.globalSource,
+      setGlobalSource: state.setGlobalSource,
+      configName: config.configName,
+      setConfigName: config.setConfigName,
+      preferences: config.preferences,
+      setPreferences: config.setPreferences,
+      isDirty: config.isDirty,
+      userId: config.userId,
+      handleAddCatalog: actions.handleAddCatalog,
+      handleAddPresetCatalog: actions.handleAddPresetCatalog,
+      handleDeleteCatalog: actions.handleDeleteCatalog,
+      handleDuplicateCatalog: actions.handleDuplicateCatalog,
+      handleUpdateCatalog: actions.handleUpdateCatalog,
+      handleImportConfig: actions.handleImportConfig,
+    }),
+    [
+      config,
+      state.activeCatalog,
+      state.setActiveCatalog,
+      state.globalSource,
+      state.setGlobalSource,
+      actions,
+    ]
+  );
+
+  const tmdbValue = useMemo(
+    () => ({
+      genres: tmdb.genres,
+      loading: tmdb.loading,
+      error: tmdb.error,
+      refresh: tmdb.refresh,
+      languages: tmdb.languages,
+      originalLanguages: tmdb.originalLanguages,
+      countries: tmdb.countries,
+      sortOptions: tmdb.sortOptions,
+      releaseTypes: tmdb.releaseTypes,
+      tvStatuses: tmdb.tvStatuses,
+      tvTypes: tmdb.tvTypes,
+      monetizationTypes: tmdb.monetizationTypes,
+      certifications: tmdb.certifications,
+      certificateRatingsByCountry: tmdb.certificateRatingsByCountry,
+      watchRegions: tmdb.watchRegions,
+      tvNetworks: tmdb.tvNetworks,
+      presetCatalogs: tmdb.presetCatalogs,
+      imdbPresetCatalogs: tmdb.imdbPresetCatalogs,
+      imdbEnabled: tmdb.imdbEnabled,
+      imdbGenres: tmdb.imdbGenres,
+      imdbKeywords: tmdb.imdbKeywords,
+      imdbAwards: tmdb.imdbAwards,
+      imdbSortOptions: tmdb.imdbSortOptions,
+      imdbTitleTypes: tmdb.imdbTitleTypes,
+      imdbCertificateRatings: tmdb.imdbCertificateRatings,
+      imdbRankedLists: tmdb.imdbRankedLists,
+      imdbWithDataOptions: tmdb.imdbWithDataOptions,
+      preview: tmdb.preview,
+      previewImdb: tmdb.previewImdb,
+      previewAnilist: tmdb.previewAnilist,
+      previewMal: tmdb.previewMal,
+      previewKitsu: tmdb.previewKitsu,
+      previewSimkl: tmdb.previewSimkl,
+      // Anime reference data
+      anilistEnabled: tmdb.anilistEnabled,
+      anilistGenres: tmdb.anilistGenres,
+      anilistTags: tmdb.anilistTags,
+      anilistSortOptions: tmdb.anilistSortOptions,
+      anilistFormatOptions: tmdb.anilistFormatOptions,
+      anilistStatusOptions: tmdb.anilistStatusOptions,
+      anilistSeasonOptions: tmdb.anilistSeasonOptions,
+      anilistSourceOptions: tmdb.anilistSourceOptions,
+      anilistCountryOptions: tmdb.anilistCountryOptions,
+      malEnabled: tmdb.malEnabled,
+      malGenres: tmdb.malGenres,
+      malRankingTypes: tmdb.malRankingTypes,
+      malSortOptions: tmdb.malSortOptions,
+      malOrderByOptions: tmdb.malOrderByOptions,
+      malMediaTypes: tmdb.malMediaTypes,
+      malStatuses: tmdb.malStatuses,
+      malRatings: tmdb.malRatings,
+      simklEnabled: tmdb.simklEnabled,
+      simklGenres: tmdb.simklGenres,
+      simklSortOptions: tmdb.simklSortOptions,
+      simklListTypes: tmdb.simklListTypes,
+      simklTrendingPeriods: tmdb.simklTrendingPeriods,
+      simklBestFilters: tmdb.simklBestFilters,
+      simklAnimeTypes: tmdb.simklAnimeTypes,
+      traktEnabled: tmdb.traktEnabled,
+      traktGenres: tmdb.traktGenres,
+      traktListTypes: tmdb.traktListTypes,
+      traktPeriods: tmdb.traktPeriods,
+      traktCalendarTypes: tmdb.traktCalendarTypes,
+
+      traktShowStatuses: tmdb.traktShowStatuses,
+      traktCertificationsMovie: tmdb.traktCertificationsMovie,
+      traktCertificationsSeries: tmdb.traktCertificationsSeries,
+      traktCommunityMetrics: tmdb.traktCommunityMetrics,
+      traktNetworks: tmdb.traktNetworks,
+      traktHasKey: tmdb.traktHasKey,
+      previewTrakt: tmdb.previewTrakt,
+      searchPerson: tmdb.searchPerson,
+      searchCompany: tmdb.searchCompany,
+      searchKeyword: tmdb.searchKeyword,
+      searchCollection: tmdb.searchCollection,
+      searchTVNetworks: tmdb.searchTVNetworks,
+      searchImdbPeople: tmdb.searchImdbPeople,
+      searchImdbCompanies: tmdb.searchImdbCompanies,
+      searchCities: tmdb.searchCities,
+      getPersonById: tmdb.getPersonById,
+      getCompanyById: tmdb.getCompanyById,
+      getKeywordById: tmdb.getKeywordById,
+      getNetworkById: tmdb.getNetworkById,
+      getCollectionById: tmdb.getCollectionById,
+      getWatchProviders: tmdb.getWatchProviders,
+    }),
+    [tmdb]
+  );
+
+  const actionsValue = useMemo(
+    () => ({
+      addToast: actions.addToast,
+      removeToast: actions.removeToast,
+      handleSave: actions.handleSave,
+      handleLogin: actions.handleLogin,
+      handleLogout: actions.handleLogout,
+      handleSwitchConfig: actions.handleSwitchConfig,
+      handleDeleteConfigFromDropdown: actions.handleDeleteConfigFromDropdown,
+      handleCreateNewConfig: actions.handleCreateNewConfig,
+      isSaving: state.isSaving,
+      setShowNewCatalogModal: state.setShowNewCatalogModal,
+    }),
+    [actions, state.isSaving, state.setShowNewCatalogModal]
+  );
+
+  return (
+    <CatalogContext.Provider value={catalogValue}>
+      <TMDBDataContext.Provider value={tmdbValue}>
+        <AppActionsContext.Provider value={actionsValue}>{children}</AppActionsContext.Provider>
+      </TMDBDataContext.Provider>
+    </CatalogContext.Provider>
+  );
+}

@@ -1,0 +1,34 @@
+{
+  "name": "stremosaic",
+  "description": "Stremosaic - Custom Catalog Builder for Stremio",
+  "keywords": ["stremio", "addon", "tmdb"],
+  "healthchecks": {
+    "web": [
+      {
+        "type": "startup",
+        "name": "web check",
+        "description": "Checking if the app responds",
+        "path": "/health",
+        "attempts": 3,
+        "wait": 5,
+        "timeout": 30,
+        "content": "ok"
+      },
+      {
+        "type": "uptime",
+        "name": "uptime check",
+        "description": "Continuous liveness check",
+        "path": "/health",
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3,
+        "content": "ok"
+      }
+    ]
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  }
+}

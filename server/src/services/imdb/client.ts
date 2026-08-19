@@ -1,0 +1,322 @@
+import { getCache } from '../cache/index.ts';
+import { createLogger } from '../../utils/logger.ts';
+import { getImdbThrottle } from '../../infrastructure/imdbThrottle.ts';
+import { config } from '../../config.ts';
+import { getRequestId } from '../../utils/requestContext.ts';
+import { TIMEOUTS, CIRCUIT_BREAKER_DEFAULTS } from '../../constants.ts';
+import { CACHE_STORAGE, IMDB_CACHE_TTL_DEFAULTS } from '../../cacheTtls.ts';
+
+import type { Logger } from '../../types/index.ts';
+
+type ImdbFetchError = Error & { code?: string; statusCode?: number };
+
+const log = createLogger('imdb:client') as Logger;
+
+const FETCH_TIMEOUT_MS = TIMEOUTS.IMDB_FETCH_MS;
+
+function resolveCallerHost(baseUrl: string | undefined): string {
+  const raw = baseUrl?.trim();
+  if (!raw) return 'unknown';
+
+  try {
+    return new URL(raw).host.toLowerCase() || 'unknown';
+  } catch {
+    return raw.toLowerCase();
+  }
+}
+
+function getCallerHeaders(): Record<string, string> {
+  const variant = config.addon.variant === 'nightly' ? 'nightly' : 'stable';
+  const callerHost = resolveCallerHost(config.baseUrl);
+
+  return {
+    'x-tmdbdp-source': 'stremosaic',
+    'x-tmdbdp-variant': variant,
+    'x-tmdbdp-caller': `${variant}:${callerHost}`,
+  };
+}
+
+const inFlightRequests = new Map<string, Promise<unknown>>();
+
+const CIRCUIT_BREAKER = {
+  threshold: CIRCUIT_BREAKER_DEFAULTS.THRESHOLD,
+  windowMs: CIRCUIT_BREAKER_DEFAULTS.WINDOW_MS,
+  cooldownMs: CIRCUIT_BREAKER_DEFAULTS.COOLDOWN_MS,
+  failures: [] as number[],
+  openedAt: 0,
+};
+
+function recordCircuitFailure(): void {
+  const now = Date.now();
+  CIRCUIT_BREAKER.failures.push(now);
+  CIRCUIT_BREAKER.failures = CIRCUIT_BREAKER.failures.filter(
+    (ts) => now - ts < CIRCUIT_BREAKER.windowMs
+  );
+  if (CIRCUIT_BREAKER.failures.length >= CIRCUIT_BREAKER.threshold) {
+    CIRCUIT_BREAKER.openedAt = now;
+    log.warn('IMDb circuit breaker OPEN', { failures: CIRCUIT_BREAKER.failures.length });
+  }
+}
+
+function recordCircuitSuccess(): void {
+  CIRCUIT_BREAKER.failures = [];
+  CIRCUIT_BREAKER.openedAt = 0;
+}
+
+function isCircuitOpen(): boolean {
+  if (!CIRCUIT_BREAKER.openedAt) return false;
+  if (Date.now() - CIRCUIT_BREAKER.openedAt > CIRCUIT_BREAKER.cooldownMs) {
+    CIRCUIT_BREAKER.openedAt = 0;
+    return false;
+  }
+  return true;
+}
+
+export function getImdbCircuitBreakerState(): {
+  state: 'closed' | 'open';
+  recentFailures: number;
+  openedAt: number;
+} {
+  return {
+    state: isCircuitOpen() ? 'open' : 'closed',
+    recentFailures: CIRCUIT_BREAKER.failures.length,
+    openedAt: CIRCUIT_BREAKER.openedAt,
+  };
+}
+
+export function resetImdbCircuitBreaker(): void {
+  CIRCUIT_BREAKER.failures = [];
+  CIRCUIT_BREAKER.openedAt = 0;
+}
+
+export async function imdbFetch(
+  endpoint: string,
+  params: Record<string, string | number | boolean | string[] | undefined | null> = {},
+  cacheTtl: number = IMDB_CACHE_TTL_DEFAULTS.DEFAULT_REQUEST,
+  retries: number = 3
+): Promise<unknown> {
+  const apiKey = config.imdbApi.apiKey;
+  const apiHost = config.imdbApi.apiHost;
+
+  if (!apiKey) {
+    throw new Error('IMDb API key not configured');
+  }
+
+  if (!apiHost) {
+    throw new Error('IMDb API host not configured');
+  }
+
+  const ep = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const isLocalhost = apiHost.startsWith('localhost') || apiHost.startsWith('127.0.0.1');
+  const protocol = isLocalhost ? 'http' : 'https';
+  const url = new URL(`${protocol}://${apiHost}${ep}`);
+
+  if (url.protocol !== 'https:' && !isLocalhost) {
+    throw new Error('Blocked non-HTTPS outbound request');
+  }
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') return;
+
+    if (Array.isArray(value)) {
+      if (value.length === 0) return;
+
+      if (key === 'keywords' || key === 'excludeKeywords') {
+        url.searchParams.set(key, value.map(String).join(','));
+      } else {
+        value.forEach((v) => url.searchParams.append(key, String(v)));
+      }
+    } else {
+      url.searchParams.set(key, String(value));
+    }
+  });
+
+  const cacheKey = `imdb:${url.pathname}${url.search}`;
+  const freshnessKey = `imdb:fresh:${url.pathname}${url.search}`;
+  const cache = getCache();
+
+  if (isCircuitOpen()) {
+    const err = new Error('IMDb circuit breaker is open') as ImdbFetchError;
+    err.statusCode = 503;
+    throw err;
+  }
+
+  try {
+    const cached = await cache.get(cacheKey);
+    if (cached !== null && cached !== undefined) {
+      const isFresh = await cache.get(freshnessKey).catch(() => null);
+      if (isFresh) return cached;
+
+      doBackgroundRevalidation(ep, url, cacheKey, freshnessKey, cacheTtl, retries);
+      return cached;
+    }
+  } catch (err) {
+    log.warn('IMDb cache get failed', { error: (err as Error).message });
+  }
+
+  const existing = inFlightRequests.get(cacheKey);
+  if (existing) return existing;
+
+  const promise = executeImdbFetch(ep, url, cacheKey, freshnessKey, cacheTtl, retries);
+  inFlightRequests.set(cacheKey, promise);
+
+  try {
+    return await promise;
+  } finally {
+    inFlightRequests.delete(cacheKey);
+  }
+}
+
+function doBackgroundRevalidation(
+  ep: string,
+  url: URL,
+  cacheKey: string,
+  freshnessKey: string,
+  cacheTtl: number,
+  retries: number
+): void {
+  if (inFlightRequests.has(cacheKey)) return;
+
+  const promise = executeImdbFetch(ep, url, cacheKey, freshnessKey, cacheTtl, retries);
+  inFlightRequests.set(cacheKey, promise);
+  promise
+    .catch((err) =>
+      log.warn('IMDb background revalidation failed', { error: (err as Error).message })
+    )
+    .finally(() => inFlightRequests.delete(cacheKey));
+}
+
+async function executeImdbFetch(
+  ep: string,
+  url: URL,
+  cacheKey: string,
+  freshnessKey: string,
+  cacheTtl: number,
+  retries: number
+): Promise<unknown> {
+  const apiKey = config.imdbApi.apiKey;
+  const apiHost = config.imdbApi.apiHost;
+  const keyHeader = config.imdbApi.apiKeyHeader;
+  const hostHeader = config.imdbApi.apiHostHeader;
+  const cache = getCache();
+
+  let lastError: ImdbFetchError | undefined;
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const throttle = getImdbThrottle();
+      await throttle.acquire();
+
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => abortController.abort(), FETCH_TIMEOUT_MS);
+
+      const fetchStart = Date.now();
+      let response;
+      try {
+        response = await fetch(url.toString(), {
+          signal: abortController.signal as RequestInit['signal'],
+          headers: {
+            [keyHeader]: apiKey,
+            [hostHeader]: apiHost,
+            Accept: 'application/json',
+            ...getCallerHeaders(),
+          },
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
+      const fetchDuration = Date.now() - fetchStart;
+
+      if (!response.ok) {
+        if (response.status >= 500 || response.status === 429) {
+          if (response.status === 429) {
+            const retryAfter = response.headers.get('Retry-After');
+            if (retryAfter) {
+              const waitMs = Math.min(parseInt(retryAfter) * 1000, 10000) || 1000;
+              log.warn('IMDb 429 — respecting Retry-After', { retryAfter, waitMs });
+              await new Promise((resolve) => setTimeout(resolve, waitMs));
+            }
+          }
+          throw new Error(`IMDb API retryable error: ${response.status}`);
+        }
+
+        const errorBody = (await response.json().catch(() => ({}))) as Record<string, unknown>;
+        const statusMessage = typeof errorBody.message === 'string' ? errorBody.message : undefined;
+        const err = new Error(
+          statusMessage || `IMDb API error: ${response.status}`
+        ) as ImdbFetchError;
+        err.statusCode = response.status;
+        throw err;
+      }
+
+      const data: unknown = await response.json();
+      recordCircuitSuccess();
+
+      log.debug('IMDb API response', {
+        endpoint: ep,
+        durationMs: fetchDuration,
+        requestId: getRequestId(),
+      });
+
+      try {
+        await cache.set(
+          cacheKey,
+          data,
+          cacheTtl * CACHE_STORAGE.IMDB_RESPONSE_RETENTION_MULTIPLIER
+        );
+        await cache.set(freshnessKey, 1, cacheTtl);
+      } catch (cacheErr) {
+        log.warn('Failed to cache IMDb response', {
+          key: cacheKey.substring(0, 80),
+          error: (cacheErr as Error).message,
+        });
+      }
+
+      return data;
+    } catch (err) {
+      const error = err as ImdbFetchError;
+      lastError = error;
+      const isNetworkError =
+        error.code === 'ECONNREFUSED' ||
+        error.code === 'ECONNRESET' ||
+        error.code === 'ETIMEDOUT' ||
+        error.message.includes('retryable error') ||
+        error.name === 'FetchError';
+
+      if (attempt < retries && isNetworkError) {
+        const delay = 300 * Math.pow(2, attempt);
+        log.warn(`IMDb request failed, retrying in ${delay}ms`, {
+          attempt: attempt + 1,
+          error: error.message,
+        });
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        continue;
+      }
+
+      break;
+    }
+  }
+
+  if (!lastError) {
+    throw new Error('All retries exhausted without error');
+  }
+
+  log.error('IMDb fetch error after retries', {
+    error: lastError.message,
+    endpoint: ep.slice(0, 80),
+    statusCode: lastError.statusCode,
+    requestId: getRequestId(),
+  });
+
+  const shouldTrip =
+    !lastError.statusCode ||
+    lastError.statusCode >= 500 ||
+    lastError.statusCode === 429 ||
+    ['ECONNREFUSED', 'ECONNRESET', 'ETIMEDOUT'].includes(lastError.code || '');
+
+  if (shouldTrip) {
+    recordCircuitFailure();
+  }
+
+  throw lastError;
+}

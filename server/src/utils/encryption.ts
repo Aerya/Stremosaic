@@ -1,0 +1,66 @@
+import crypto from 'crypto';
+import { createLogger } from './logger.ts';
+import { config } from '../config.ts';
+
+import type { Logger } from '../types/index.ts';
+
+const log = createLogger('encryption') as Logger;
+
+const ALGORITHM = 'aes-256-gcm';
+const IV_LENGTH = 16;
+
+let cachedKey: Buffer | null = null;
+
+function getEncryptionKey(): Buffer {
+  if (cachedKey) return cachedKey;
+  const key = Buffer.from(config.encryption.key, 'hex');
+  if (key.length !== 32) {
+    throw new Error(`ENCRYPTION_KEY must be 64 hex chars (32 bytes), got ${key.length} bytes`);
+  }
+  cachedKey = key;
+  return cachedKey;
+}
+
+export function encrypt(plaintext: string | null | undefined): string | null {
+  if (!plaintext) return null;
+
+  const key = getEncryptionKey();
+  const iv = crypto.randomBytes(IV_LENGTH);
+  const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
+
+  let encrypted = cipher.update(plaintext, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+
+  const authTag = cipher.getAuthTag();
+
+  return `${iv.toString('hex')}:${authTag.toString('hex')}:${encrypted}`;
+}
+
+export function decrypt(encryptedData: string | null | undefined): string | null {
+  if (!encryptedData) return null;
+
+  const parts = encryptedData.split(':');
+
+  if (parts.length !== 3) {
+    throw new Error('Invalid encrypted data format: expected iv:authTag:ciphertext');
+  }
+
+  const key = getEncryptionKey();
+  const [ivHex, authTagHex, ciphertext] = parts;
+  const iv = Buffer.from(ivHex, 'hex');
+  const authTag = Buffer.from(authTagHex, 'hex');
+
+  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+  decipher.setAuthTag(authTag);
+
+  let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+
+  return decrypted;
+}
+
+export function isEncrypted(value: unknown): boolean {
+  if (!value || typeof value !== 'string') return false;
+  const parts = value.split(':');
+  return parts.length === 3 && parts[0].length === IV_LENGTH * 2;
+}

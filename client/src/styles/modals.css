@@ -1,0 +1,340 @@
+/* Install Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  /* align-items: center; Removed to prevent cutoff */
+  justify-content: center;
+  z-index: var(--z-overlay);
+  padding: var(--space-6);
+  animation: fadeIn var(--transition-fast);
+  overflow-y: auto;
+}
+
+.modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  max-width: 500px;
+  width: 100%;
+  animation: slideUp var(--transition-normal);
+  margin: auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.install-link-box {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.install-link-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.install-link {
+  font-family: monospace;
+  font-size: 0.875rem;
+  word-break: break-all;
+  color: var(--accent-light);
+}
+
+.copy-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.success-icon {
+  color: var(--success);
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  inset-block-end: var(--space-6);
+  inset-inline-end: var(--space-6);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  animation: slideUp var(--transition-normal);
+}
+
+.toast.success {
+  border-color: var(--success);
+}
+
+.toast.error {
+  border-color: var(--error);
+}
+
+.toast-icon {
+  flex-shrink: 0;
+}
+
+.toast-message {
+  font-size: 0.875rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ======================================
+   Catalog Type Grid (Modal)
+   ====================================== */
+
+.catalog-type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.type-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  text-align: left;
+  transition:
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.type-card:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+}
+
+.type-card.active {
+  background: rgba(var(--accent-primary-rgb), 0.1);
+  border-color: var(--accent-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.type-card.active::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent-primary);
+}
+
+.type-card-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.type-card.active .type-card-icon {
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+}
+
+.type-card-icon.tmdb {
+  color: #01b4e4;
+}
+
+.type-card-icon.imdb {
+  color: #f5c518;
+}
+
+.type-card-icon.anilist {
+  color: #02a9ff;
+}
+.type-card-icon.mal {
+  color: #2e51a2;
+}
+.type-card-icon.simkl {
+  color: #0ac775;
+}
+.type-card-icon.trakt {
+  color: #ed1c24;
+}
+
+.type-card.active .type-card-icon.tmdb,
+.type-card.active .type-card-icon.imdb,
+.type-card.active .type-card-icon.trakt,
+.type-card.active .type-card-icon.anilist,
+.type-card.active .type-card-icon.mal,
+.type-card.active .type-card-icon.simkl {
+  color: var(--text-on-accent);
+}
+
+.type-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.type-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.type-desc {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Source Selector Pills */
+.source-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.source-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+}
+
+.source-pill:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+.source-pill.active {
+  border-color: var(--accent-primary);
+  background: rgba(var(--accent-primary-rgb), 0.1);
+  color: var(--accent-primary);
+  box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.source-pill .source-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.source-dot.tmdb {
+  background: #01b4e4;
+}
+.source-dot.imdb {
+  background: #f5c518;
+}
+.source-dot.anilist {
+  background: #02a9ff;
+}
+.source-dot.mal {
+  background: #2e51a2;
+}
+.source-dot.kitsu {
+  background: #f75239;
+}
+.source-dot.simkl {
+  background: #0ac775;
+}
+.source-dot.trakt {
+  background: #ed1c24;
+}
+
+.source-pill.active .source-dot {
+  box-shadow: 0 0 6px currentColor;
+}
+
+@media (max-width: 480px) {
+  .catalog-type-grid {
+    grid-template-columns: 1fr;
+  }
+  .source-selector {
+    gap: 6px;
+  }
+  .source-pill {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+}

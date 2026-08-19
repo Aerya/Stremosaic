@@ -1,0 +1,393 @@
+import type { ContentType } from './common.ts';
+
+export type PosterServiceType =
+  | 'none'
+  | 'rpdb'
+  | 'topPosters'
+  | 'customUrl'
+  | 'tmdb'
+  | 'imdb'
+  | 'tvdb'
+  | 'fanart';
+
+export interface ArtworkSourceConfig {
+  provider?: PosterServiceType;
+  customUrlPattern?: string;
+  apiKeyEncrypted?: string;
+  apiKey?: string;
+}
+
+// --- Per-content-type artwork settings (v2) ---
+
+export type ArtContentType = 'movie' | 'series' | 'anime';
+export type ArtKind = 'poster' | 'backdrop' | 'logo' | 'landscape' | 'episode';
+
+export interface ContentTypeArtwork {
+  poster?: ArtworkSourceConfig;
+  backdrop?: ArtworkSourceConfig;
+  logo?: ArtworkSourceConfig;
+  landscape?: ArtworkSourceConfig;
+  episode?: ArtworkSourceConfig;
+}
+
+export interface ArtworkSettings {
+  movie?: ContentTypeArtwork;
+  series?: ContentTypeArtwork;
+  anime?: ContentTypeArtwork;
+  englishArtOnly?: boolean;
+  originalLangFallback?: boolean;
+}
+
+export interface ArtworkOptionsMap {
+  movie: ArtworkOptions;
+  series: ArtworkOptions;
+  anime: ArtworkOptions;
+  englishArtOnly: boolean;
+  originalLangFallback: boolean;
+}
+
+export interface UserPreferences {
+  // Global API keys for artwork/metadata providers
+  apiKeys?: Record<string, string>;
+  apiKeysEncrypted?: Record<string, string>;
+
+  showAdultContent?: boolean;
+  defaultLanguage?: string;
+  shuffleCatalogs?: boolean;
+  // Artwork settings: v2 per-content-type or legacy flat Record
+  artwork?: ArtworkSettings | Record<string, ArtworkSourceConfig>;
+  // Option to disable search catalogs
+  disableSearch?: boolean;
+  disableTmdbSearch?: boolean;
+  disableImdbSearch?: boolean;
+  disableAnilistSearch?: boolean;
+  disableMalSearch?: boolean;
+  disableKitsuSearch?: boolean;
+  disableSimklSearch?: boolean;
+  disableTraktSearch?: boolean;
+  includeAdult?: boolean;
+  region?: string;
+  countries?: string;
+}
+
+export interface BaseCatalogFilters {
+  sortBy?: string;
+  genres?: number[];
+  excludeGenres?: number[];
+  genreMatchMode?: import('./common.ts').GenreMatchMode;
+  yearFrom?: number;
+  yearTo?: number;
+  ratingMin?: number;
+  ratingMax?: number;
+  runtimeMin?: number;
+  runtimeMax?: number;
+  language?: string;
+  countries?: string;
+  certifications?: string[];
+  certificationCountry?: string;
+  excludeKeywords?: string | string[];
+  includeAdult?: boolean;
+  randomize?: boolean;
+  discoverOnly?: boolean;
+  query?: string;
+  genreNames?: string[];
+}
+
+export interface TmdbCatalogFilters extends BaseCatalogFilters {
+  listType?: string;
+  collectionId?: string;
+  collectionName?: string;
+  studioId?: string;
+  studioName?: string;
+  voteCountMin?: number;
+  stremioExtras?: string[];
+  stremioExtraMode?: 'genre' | 'year' | 'sortBy' | 'certification';
+  imdbOnly?: boolean;
+  displayLanguage?: string;
+  region?: string;
+  releaseType?: number;
+  releaseTypes?: number[];
+  releaseDateFrom?: string;
+  releaseDateTo?: string;
+  primaryReleaseYear?: number;
+  includeVideo?: boolean;
+  airDateFrom?: string;
+  airDateTo?: string;
+  firstAirDateFrom?: string;
+  firstAirDateTo?: string;
+  firstAirDateYear?: number;
+  includeNullFirstAirDates?: boolean;
+  screenedTheatrically?: boolean;
+  timezone?: string;
+  withNetworks?: string;
+  tvStatus?: string;
+  tvType?: string;
+  withPeople?: string;
+  withCast?: string;
+  withCrew?: string;
+  withCompanies?: string;
+  withKeywords?: string;
+  excludeCompanies?: string;
+  watchRegion?: string;
+  watchProviders?: number[];
+  watchMonetizationType?: string;
+  watchMonetizationTypes?: string[];
+  releasedOnly?: boolean;
+  lastXYears?: number;
+  certificationMin?: string;
+  certificationMax?: string;
+  datePreset?: string;
+  certification?: string;
+}
+
+export interface ImdbCatalogFilters extends BaseCatalogFilters {
+  imdbListId?: string;
+  imdbRatingMin?: number;
+  imdbRatingMax?: number;
+  totalVotesMin?: number;
+  totalVotesMax?: number;
+  releaseDateStart?: string;
+  releaseDateEnd?: string;
+  imdbCountries?: string[];
+  languages?: string[];
+  keywords?: string[];
+  awardsWon?: string[];
+  awardsNominated?: string[];
+  types?: string[];
+  sortOrder?: string;
+  rankedList?: string;
+  rankedLists?: string[];
+  excludeRankedLists?: string[];
+  rankedListMaxRank?: number;
+  creditedNames?: string[];
+  companies?: string[];
+  excludeCompanies?: string[];
+  certificateRating?: string;
+  certificateCountry?: string;
+  certificates?: string[];
+  explicitContent?: string;
+  plot?: string | string[];
+  filmingLocations?: string | string[];
+  withData?: string[];
+  inTheatersLat?: number;
+  inTheatersLong?: number;
+  inTheatersRadius?: number;
+}
+
+export interface AnilistCatalogFilters extends BaseCatalogFilters {
+  anilistSort?: string;
+  format?: string[];
+  status?: string[];
+  season?: string;
+  seasonYear?: number;
+  tags?: string[];
+  excludeTags?: string[];
+  tagCategories?: string[];
+  countryOfOrigin?: string;
+  sourceMaterial?: string[];
+  averageScoreMin?: number;
+  averageScoreMax?: number;
+  popularityMin?: number;
+  episodesMin?: number;
+  episodesMax?: number;
+  durationMin?: number;
+  durationMax?: number;
+  isAdult?: boolean;
+  studios?: number[];
+}
+
+export interface MalCatalogFilters extends BaseCatalogFilters {
+  malRankingType?: string;
+  malSeason?: string;
+  malSeasonYear?: number;
+  malMediaType?: string[];
+  malStatus?: string[];
+  malSort?: string;
+  malRating?: string;
+  malGenres?: number[];
+  malExcludeGenres?: number[];
+  malScoreMin?: number;
+  malScoreMax?: number;
+  malOrderBy?: string;
+}
+
+export interface KitsuCatalogFilters extends BaseCatalogFilters {
+  kitsuListType?: string;
+  kitsuSort?: string;
+  kitsuSubtype?: string[];
+  kitsuStatus?: string[];
+  kitsuAgeRating?: string[];
+  kitsuCategories?: string[];
+  kitsuExcludeCategories?: string[];
+  kitsuSeason?: string;
+  kitsuSeasonYear?: number;
+  kitsuStreamers?: string;
+}
+
+export interface SimklCatalogFilters extends BaseCatalogFilters {
+  simklListType?: string;
+  simklTrendingPeriod?: string;
+  simklGenre?: string;
+  simklType?: string;
+  simklSort?: string;
+  simklBestFilter?: string;
+  simklYear?: string;
+  simklNetwork?: string;
+}
+
+export interface TraktCatalogFilters extends BaseCatalogFilters {
+  traktListType?: string;
+  traktPeriod?: string;
+  traktCalendarType?: string;
+  traktCalendarDays?: number;
+  traktCalendarStartDate?: string;
+  traktCalendarEndDate?: string;
+  traktCalendarSort?: 'asc' | 'desc';
+  traktListId?: string;
+  traktGenres?: string[];
+  traktExcludeGenres?: string[];
+  traktYears?: string;
+  traktYearMin?: number;
+  traktYearMax?: number;
+  traktRuntimes?: string;
+  traktRuntimeMin?: number;
+  traktRuntimeMax?: number;
+  traktCertifications?: string[];
+  traktCountries?: string[];
+  traktLanguages?: string[];
+  traktNetworkIds?: number[];
+  traktStudioIds?: string[];
+  traktStatus?: string[];
+  traktRatingMin?: number;
+  traktRatingMax?: number;
+  traktVotesMin?: number;
+  traktAiredEpisodesMin?: number;
+  traktAiredEpisodesMax?: number;
+  traktExcludeSingleSeason?: boolean;
+  traktImdbRatingMin?: number;
+  traktImdbRatingMax?: number;
+  traktTmdbRatingMin?: number;
+  traktTmdbRatingMax?: number;
+  traktRtMeterMin?: number;
+  traktRtMeterMax?: number;
+  traktMetascoreMin?: number;
+  traktMetascoreMax?: number;
+  traktImdbVotesMin?: number;
+  traktImdbVotesMax?: number;
+  traktTmdbVotesMin?: number;
+  traktTmdbVotesMax?: number;
+  traktRtUserMeterMin?: number;
+  traktRtUserMeterMax?: number;
+}
+
+export type SourceType = 'tmdb' | 'anilist' | 'mal' | 'simkl' | 'kitsu' | 'bingebase';
+
+export type CatalogFilters = TmdbCatalogFilters &
+  ImdbCatalogFilters &
+  AnilistCatalogFilters &
+  MalCatalogFilters &
+  KitsuCatalogFilters &
+  SimklCatalogFilters &
+  TraktCatalogFilters;
+
+export interface CatalogFormState {
+  selectedPeople?: Array<{ id: number | string; name: string; profile_path?: string }>;
+  selectedCompanies?: Array<{ id: number | string; name: string; logo_path?: string }>;
+  selectedKeywords?: Array<{ id: number | string; name: string }>;
+  excludeKeywords?: Array<{ id: number | string; name: string }>;
+  excludeCompanies?: Array<{ id: number | string; name: string; logo_path?: string }>;
+  selectedNetworks?: Array<{ id: number | string; name: string; logo_path?: string }>;
+  selectedCollection?: {
+    id: number | string;
+    name: string;
+    poster_path?: string | null;
+    backdrop_path?: string | null;
+  };
+  selectedStudio?: {
+    id: number | string;
+    name: string;
+    logo_path?: string | null;
+  };
+  expandedSections?: Record<string, boolean>;
+}
+
+export interface ClonedFrom {
+  marketplaceId: string;
+  originUserId: string;
+  originCatalogId: string;
+  clonedAt: string; // ISO timestamp
+}
+
+export interface CatalogConfig {
+  _id: string;
+  id?: string;
+  name: string;
+  type: ContentType;
+  source?: SourceType;
+  filters: CatalogFilters;
+  formState?: CatalogFormState;
+  enabled?: boolean;
+  published?: boolean;
+  clonedFrom?: ClonedFrom;
+}
+
+export interface UserConfig {
+  userId: string;
+  configName?: string;
+  apiKeyId?: string;
+  tmdbApiKeyEncrypted?: string;
+  tmdbApiKey?: string;
+  malClientIdEncrypted?: string;
+  malClientId?: string;
+  simklApiKeyEncrypted?: string;
+  simklApiKey?: string;
+  traktClientIdEncrypted?: string;
+  traktClientId?: string;
+  bingebaseAccessTokenEncrypted?: string;
+  bingebaseUsername?: string;
+  catalogs: CatalogConfig[];
+  preferences: UserPreferences;
+  createdAt?: Date;
+  updatedAt?: Date;
+  baseUrl?: string;
+}
+
+export interface PosterOptions {
+  apiKey?: string;
+  service: PosterServiceType;
+  customUrlPattern?: string;
+}
+
+export interface ArtworkOptions {
+  poster: PosterOptions | null;
+  backdrop: PosterOptions | null;
+  logo: PosterOptions | null;
+  landscape: PosterOptions | null;
+  episode: PosterOptions | null;
+  englishArtOnly?: boolean;
+  originalLangFallback?: boolean;
+}
+
+export interface PosterUrlOptions extends PosterOptions {
+  tmdbId: number | string;
+  type: ContentType;
+  imdbId?: string | null;
+  language?: string | null;
+  season?: number;
+  episode?: number;
+}
+
+export interface ConfigCacheOptions {
+  maxSize?: number;
+  ttlMs?: number;
+}
+
+export interface ConfigCacheStats {
+  size: number;
+  maxSize: number;
+  pendingLoads: number;
+  hits: number;
+  misses: number;
+  evictions: number;
+  coalesced: number;
+}

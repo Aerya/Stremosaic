@@ -1,0 +1,23 @@
+{
+  "id": "community.tmdb.discover.plus",
+  "version": "2.10.5",
+  "name": "Stremosaic",
+  "description": "Create custom movie and TV catalogs for Stremio with powerful TMDB filters",
+  "resources": [
+    "catalog",
+    "meta"
+  ],
+  "types": [
+    "movie",
+    "series"
+  ],
+  "idPrefixes": [
+    "tmdb:",
+    "tt"
+  ],
+  "catalogs": [],
+  "logo": "/logo.png",
+  "behaviorHints": {
+    "configurable": true
+  }
+}

@@ -1,0 +1,38 @@
+# Environment
+.env
+.env.local
+*.key
+
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build
+dist/
+build/
+client/dist/
+
+# Generated files
+server/src/metadata.json
+server/coverage/
+.github/prompts/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+.kiro
+*.swp
+*.swo
+
+# Misc
+*.local
+/graphify-out

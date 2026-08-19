@@ -1,0 +1,203 @@
+import { getCache } from '../cache/index.ts';
+import { tmdbFetch } from './client.ts';
+import { batchGetPreviewDetails } from './details.ts';
+import { createLogger } from '../../utils/logger.ts';
+import type {
+  TmdbExternalIds,
+  TmdbFindResponse,
+  TmdbResult,
+  ContentType,
+} from '../../types/index.ts';
+import { CONCURRENCY } from '../../constants.ts';
+import { CACHE_TTLS } from '../../cacheTtls.ts';
+import { logSwallowedError } from '../../utils/helpers.ts';
+
+const log = createLogger('tmdb:lookup');
+
+const EXTERNAL_ID_TTL = CACHE_TTLS.EXTERNAL_ID;
+const NEGATIVE_LOOKUP_TTL = CACHE_TTLS.NEGATIVE_LOOKUP;
+
+export async function getExternalIds(
+  apiKey: string,
+  tmdbId: number | string,
+  type: string = 'movie'
+): Promise<TmdbExternalIds | null> {
+  const mediaType = type === 'series' ? 'tv' : 'movie';
+  const cacheKey = `external_ids_${mediaType}_${tmdbId}`;
+  const cache = getCache();
+
+  try {
+    const cached = (await cache.get(cacheKey)) as TmdbExternalIds | null;
+    if (cached) return cached;
+  } catch (e) {
+    log.debug('Cache get failed', { key: cacheKey, error: (e as Error).message });
+  }
+
+  try {
+    const data = (await tmdbFetch(
+      `/${mediaType}/${tmdbId}/external_ids`,
+      apiKey
+    )) as TmdbExternalIds;
+    try {
+      await cache.set(cacheKey, data, EXTERNAL_ID_TTL);
+    } catch (e) {
+      log.debug('Cache set failed', { key: cacheKey, error: (e as Error).message });
+    }
+    return data;
+  } catch (err) {
+    logSwallowedError('tmdb:lookup:fetch-external-ids', err);
+    return null;
+  }
+}
+
+const ENRICHMENT_CONCURRENCY = CONCURRENCY.ENRICHMENT;
+
+export async function enrichItemsWithImdbIds(
+  apiKey: string,
+  items: TmdbResult[],
+  type: string = 'movie'
+): Promise<TmdbResult[]> {
+  if (!items || !Array.isArray(items) || items.length === 0) return items;
+
+  for (let i = 0; i < items.length; i += ENRICHMENT_CONCURRENCY) {
+    const batch = items.slice(i, i + ENRICHMENT_CONCURRENCY);
+    await Promise.all(
+      batch.map(async (item) => {
+        if (item.imdb_id) return;
+        const ids = await getExternalIds(apiKey, item.id, type);
+        if (ids?.imdb_id) {
+          item.imdb_id = ids.imdb_id;
+        }
+      })
+    );
+  }
+
+  return items;
+}
+
+export async function findByImdbId(
+  apiKey: string,
+  imdbId: string,
+  type: string = 'movie',
+  options: { language?: string } = {}
+): Promise<{ tmdbId: number } | null> {
+  const cacheKey = `find_${imdbId}`;
+  const negativeCacheKey = `find_neg_${imdbId}_${type}`;
+  const cache = getCache();
+
+  try {
+    const cached = (await cache.get(cacheKey)) as { tmdbId: number } | null;
+    if (cached) return cached;
+  } catch (e) {
+    log.debug('Cache get failed', { key: cacheKey, error: (e as Error).message });
+  }
+
+  try {
+    const negCached = await cache.get(negativeCacheKey);
+    if (negCached) return null;
+  } catch (err) {
+    logSwallowedError('tmdb:lookup:cache-get-negative', err);
+  }
+
+  const params: Record<string, string> = { external_source: 'imdb_id' };
+  if (options.language) params.language = options.language;
+
+  try {
+    const data = (await tmdbFetch(`/find/${imdbId}`, apiKey, params)) as TmdbFindResponse;
+    let result = null;
+
+    if (type === 'movie' && data.movie_results?.length > 0) {
+      result = data.movie_results[0];
+    } else if ((type === 'series' || type === 'tv') && data.tv_results?.length > 0) {
+      result = data.tv_results[0];
+    }
+
+    if (result) {
+      const found = { tmdbId: result.id };
+      try {
+        await cache.set(cacheKey, found, EXTERNAL_ID_TTL);
+      } catch (e) {
+        log.debug('Cache set failed', { key: cacheKey, error: (e as Error).message });
+      }
+      return found;
+    }
+
+    try {
+      await cache.set(negativeCacheKey, { notFound: true }, NEGATIVE_LOOKUP_TTL);
+    } catch (err) {
+      logSwallowedError('tmdb:lookup:cache-set-negative', err);
+    }
+
+    return null;
+  } catch (err) {
+    logSwallowedError('tmdb:lookup:find-by-imdb', err);
+    return null;
+  }
+}
+
+const RESOLVE_CONCURRENCY = CONCURRENCY.RESOLVE;
+
+export async function batchResolveImdbIds(
+  apiKey: string,
+  imdbIds: string[],
+  type: string,
+  options: { language?: string } = {}
+): Promise<Map<string, number>> {
+  const results = new Map<string, number>();
+
+  for (let i = 0; i < imdbIds.length; i += RESOLVE_CONCURRENCY) {
+    const batch = imdbIds.slice(i, i + RESOLVE_CONCURRENCY);
+    await Promise.all(
+      batch.map(async (imdbId) => {
+        try {
+          const found = await findByImdbId(apiKey, imdbId, type, options);
+          if (found?.tmdbId) results.set(imdbId, found.tmdbId);
+        } catch (err) {
+          logSwallowedError('tmdb:lookup:batch-resolve', err);
+        }
+      })
+    );
+  }
+
+  return results;
+}
+
+export async function batchResolveAndFetchDetails(
+  apiKey: string,
+  imdbIds: string[],
+  type: ContentType,
+  detailOptions: { displayLanguage?: string } = {},
+  options: { language?: string } = {}
+): Promise<{ resolvedIds: Map<string, number>; detailsMap: Map<number, unknown> }> {
+  const resolvedIds = new Map<string, number>();
+  const detailsMap = new Map<number, unknown>();
+
+  for (let i = 0; i < imdbIds.length; i += RESOLVE_CONCURRENCY) {
+    const batch = imdbIds.slice(i, i + RESOLVE_CONCURRENCY);
+
+    const batchResolved = await Promise.all(
+      batch.map(async (imdbId) => {
+        try {
+          const found = await findByImdbId(apiKey, imdbId, type, options);
+          if (found?.tmdbId) {
+            resolvedIds.set(imdbId, found.tmdbId);
+            return found.tmdbId;
+          }
+        } catch (err) {
+          logSwallowedError('tmdb:lookup:resolve-and-fetch', err);
+        }
+        return null;
+      })
+    );
+
+    const tmdbIds = batchResolved.filter((id): id is number => id !== null);
+    if (tmdbIds.length === 0) continue;
+
+    const batchDetails = await batchGetPreviewDetails(apiKey, tmdbIds, type, detailOptions);
+    for (const [tmdbId, details] of batchDetails) {
+      detailsMap.set(tmdbId, details);
+    }
+  }
+
+  return { resolvedIds, detailsMap };
+}

@@ -1,0 +1,2 @@
+import { lazy } from 'react';
+export const BINGEBASE_SOURCE={id:'bingebase',label:'Bingebase',supportedTypes:['movie','series'],defaultSortBy:'',defaultFilters:{bingebaseListUrl:''},movieOnlyFilterKeys:[],seriesOnlyFilterKeys:[],cleanFiltersOnSwitch(f){return {bingebaseListUrl:f.bingebaseListUrl||''};},computeActiveChips(f){return f.bingebaseListUrl?[{key:'bingebaseListUrl',label:'Bingebase list',section:'source'}]:[];},FilterPanelComponent:lazy(()=>import('../components/config/catalog/sources/bingebase/BingebaseFilterPanel').then(m=>({default:m.BingebaseFilterPanel})))};

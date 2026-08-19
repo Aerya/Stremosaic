@@ -1,0 +1,634 @@
+import { jwtDecode } from 'jwt-decode';
+
+const API_BASE = '/api';
+
+const TOKEN_KEY = 'stremosaic-session-token';
+const LEGACY_KEY = 'stremosaic-legacy-tmdb-key';
+
+class ApiService {
+  constructor() {
+    this._sessionToken = null;
+  }
+
+  _isTokenExpired(token) {
+    try {
+      const decoded = jwtDecode(token);
+      return decoded.exp ? decoded.exp * 1000 < Date.now() : false;
+    } catch {
+      return true;
+    }
+  }
+
+  getSessionToken() {
+    if (this._sessionToken) return this._sessionToken;
+    try {
+      return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY) || null;
+    } catch {
+      return null;
+    }
+  }
+
+  setSessionToken(token, rememberMe = true) {
+    this._sessionToken = token;
+    try {
+      localStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(TOKEN_KEY);
+      const storage = rememberMe ? localStorage : sessionStorage;
+      storage.setItem(TOKEN_KEY, token);
+    } catch (e) {
+      console.warn('Failed to persist session token:', e);
+    }
+  }
+
+  clearSession() {
+    this._sessionToken = null;
+    try {
+      localStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(TOKEN_KEY);
+    } catch (e) {
+      console.warn('Failed to clear session:', e);
+    }
+  }
+
+  getLegacyApiKey() {
+    try {
+      return localStorage.getItem(LEGACY_KEY) || null;
+    } catch {
+      return null;
+    }
+  }
+
+  clearLegacyApiKey() {
+    try {
+      localStorage.removeItem(LEGACY_KEY);
+    } catch (e) {
+      console.warn('Failed to clear legacy API key:', e);
+    }
+  }
+
+  getAuthHeaders() {
+    const token = this.getSessionToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
+  _buildAuthUrl(endpoint, apiKey, extraParams = {}) {
+    const token = this.getSessionToken();
+    const params = new URLSearchParams();
+    if (!token && apiKey) params.set('apiKey', apiKey);
+    Object.entries(extraParams).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== '') params.set(k, v);
+    });
+    const qs = params.toString();
+    return qs ? `${endpoint}?${qs}` : endpoint;
+  }
+
+  async request(endpoint, options = {}, _retry = 0) {
+    const url = `${API_BASE}${endpoint}`;
+    const { headers: optionHeaders, ...restOptions } = options;
+
+    let response;
+    try {
+      response = await fetch(url, {
+        ...restOptions,
+        headers: {
+          'Content-Type': 'application/json',
+          ...this.getAuthHeaders(),
+          ...optionHeaders,
+        },
+      });
+    } catch (err) {
+      if (_retry < 2 && err instanceof TypeError) {
+        await new Promise((r) => setTimeout(r, 1000 * Math.pow(2, _retry)));
+        return this.request(endpoint, options, _retry + 1);
+      }
+      throw err;
+    }
+
+    if (response.status >= 500 && _retry < 2) {
+      await new Promise((r) => setTimeout(r, 1000 * Math.pow(2, _retry)));
+      return this.request(endpoint, options, _retry + 1);
+    }
+
+    if (response.status === 401) {
+      this.clearSession();
+      window.dispatchEvent(new CustomEvent('auth:session-expired'));
+      const error = new Error('Session expired');
+      error.status = 401;
+      throw error;
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Request failed' }));
+      const err = new Error(errorData.error || 'Request failed');
+      err.status = response.status;
+      err.code = errorData.code;
+      throw err;
+    }
+
+    return response.json();
+  }
+
+  async login(apiKey, userId = null, rememberMe = true) {
+    const result = await this.request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ apiKey, userId, rememberMe }),
+      headers: {},
+    });
+
+    if (result.token) {
+      this.setSessionToken(result.token, rememberMe);
+    }
+
+    return result;
+  }
+
+  async verifySession() {
+    const token = this.getSessionToken();
+    if (!token) return { valid: false };
+
+    if (this._isTokenExpired(token)) {
+      this.clearSession();
+      return { valid: false };
+    }
+
+    try {
+      return await this.request('/auth/verify');
+    } catch (e) {
+      console.warn('Session verification failed:', e);
+      return { valid: false };
+    }
+  }
+
+  async logout() {
+    try {
+      await this.request('/auth/logout', { method: 'POST' });
+    } catch (e) {
+      console.warn('Logout request failed:', e);
+    }
+    this.clearSession();
+  }
+
+  async validateApiKey(apiKey) {
+    return this.request('/validate-key', {
+      method: 'POST',
+      body: JSON.stringify({ apiKey }),
+      headers: {},
+    });
+  }
+
+  async getStats() {
+    return this.request('/stats', { method: 'GET' });
+  }
+
+  async getGenres(apiKey, type = 'movie') {
+    return this.request(this._buildAuthUrl(`/genres/${type}`, apiKey));
+  }
+
+  async getLanguages(apiKey) {
+    return this.request(this._buildAuthUrl('/languages', apiKey));
+  }
+
+  async getOriginalLanguages(apiKey) {
+    return this.request(this._buildAuthUrl('/original-languages', apiKey));
+  }
+
+  async getCountries(apiKey) {
+    return this.request(this._buildAuthUrl('/countries', apiKey));
+  }
+
+  async getCertifications(apiKey, type = 'movie') {
+    return this.request(this._buildAuthUrl(`/certifications/${type}`, apiKey));
+  }
+
+  async getWatchProviders(apiKey, type = 'movie', region = 'US') {
+    return this.request(this._buildAuthUrl(`/watch-providers/${type}`, apiKey, { region }));
+  }
+
+  async getWatchRegions(apiKey) {
+    return this.request(this._buildAuthUrl('/watch-regions', apiKey));
+  }
+
+  async searchPerson(apiKey, query) {
+    return this.request(this._buildAuthUrl('/search/person', apiKey, { query }));
+  }
+
+  async searchCompany(apiKey, query) {
+    return this.request(this._buildAuthUrl('/search/company', apiKey, { query }));
+  }
+
+  async searchKeyword(apiKey, query) {
+    return this.request(this._buildAuthUrl('/search/keyword', apiKey, { query }));
+  }
+
+  async searchCollection(apiKey, query, page = 1, language = '') {
+    return this.request(
+      this._buildAuthUrl('/search/collection', apiKey, { query, page, language })
+    );
+  }
+
+  async getSortOptions() {
+    return this.request('/sort-options');
+  }
+
+  async getListTypes() {
+    return this.request('/list-types');
+  }
+
+  async getPresetCatalogs() {
+    return this.request('/preset-catalogs');
+  }
+
+  async getReleaseTypes() {
+    return this.request('/release-types');
+  }
+
+  async getTVStatuses() {
+    return this.request('/tv-statuses');
+  }
+
+  async getTVTypes() {
+    return this.request('/tv-types');
+  }
+
+  async getMonetizationTypes() {
+    return this.request('/monetization-types');
+  }
+
+  async getReferenceData() {
+    return this.request(`/reference-data?_=${Date.now()}`);
+  }
+
+  async getTVNetworks(apiKey = null, query = '') {
+    return this.request(this._buildAuthUrl('/tv-networks', apiKey, { query }));
+  }
+
+  async preview(
+    apiKey,
+    type,
+    filters,
+    page = 1,
+    previewPosterProvider = null,
+    previewPosterApiKey = null,
+    previewPosterCustomUrlPattern = null,
+    previewEnglishArtOnly = null,
+    previewOriginalLangFallback = null
+  ) {
+    const body = { type, filters, page };
+    if (previewPosterProvider) {
+      body.previewPosterProvider = previewPosterProvider;
+    }
+    if (previewPosterApiKey) {
+      body.previewPosterApiKey = previewPosterApiKey;
+    }
+    if (previewPosterCustomUrlPattern) {
+      body.previewPosterCustomUrlPattern = previewPosterCustomUrlPattern;
+    }
+    if (typeof previewEnglishArtOnly === 'boolean') {
+      body.previewEnglishArtOnly = previewEnglishArtOnly;
+    }
+    if (typeof previewOriginalLangFallback === 'boolean') {
+      body.previewOriginalLangFallback = previewOriginalLangFallback;
+    }
+    const token = this.getSessionToken();
+    if (!token && apiKey) {
+      body.apiKey = apiKey;
+    }
+    return this.request('/preview', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async getPersonById(apiKey, id) {
+    return this.request(this._buildAuthUrl(`/person/${encodeURIComponent(id)}`, apiKey));
+  }
+
+  async getCompanyById(apiKey, id) {
+    return this.request(this._buildAuthUrl(`/company/${encodeURIComponent(id)}`, apiKey));
+  }
+
+  async getKeywordById(apiKey, id) {
+    return this.request(this._buildAuthUrl(`/keyword/${encodeURIComponent(id)}`, apiKey));
+  }
+
+  async getNetworkById(apiKey, id) {
+    return this.request(this._buildAuthUrl(`/network/${encodeURIComponent(id)}`, apiKey));
+  }
+
+  async getCollectionById(apiKey, id, language = '') {
+    return this.request(
+      this._buildAuthUrl(`/collection/${encodeURIComponent(id)}`, apiKey, { language })
+    );
+  }
+
+  async previewImdbCatalog(
+    type,
+    filters,
+    previewPosterProvider = null,
+    previewPosterApiKey = null,
+    previewPosterCustomUrlPattern = null
+  ) {
+    const body = { type, filters };
+    if (previewPosterProvider) {
+      body.previewPosterProvider = previewPosterProvider;
+    }
+    if (previewPosterApiKey) {
+      body.previewPosterApiKey = previewPosterApiKey;
+    }
+    if (previewPosterCustomUrlPattern) {
+      body.previewPosterCustomUrlPattern = previewPosterCustomUrlPattern;
+    }
+    return this.request('/imdb/preview', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async previewAnilistCatalog(
+    type,
+    filters,
+    previewPosterProvider = null,
+    previewPosterApiKey = null,
+    previewPosterCustomUrlPattern = null
+  ) {
+    const body = { type, filters };
+    if (previewPosterProvider) {
+      body.previewPosterProvider = previewPosterProvider;
+    }
+    if (previewPosterApiKey) {
+      body.previewPosterApiKey = previewPosterApiKey;
+    }
+    if (previewPosterCustomUrlPattern) {
+      body.previewPosterCustomUrlPattern = previewPosterCustomUrlPattern;
+    }
+    return this.request('/anilist/preview', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async searchAnilistStudios(query) {
+    const result = await this.request(`/anilist/studios?q=${encodeURIComponent(query)}`);
+    return (result?.studios || []).map((s) => ({
+      id: s.id,
+      name: s.name,
+      isAnimationStudio: s.isAnimationStudio,
+    }));
+  }
+
+  async previewMalCatalog(
+    type,
+    filters,
+    previewPosterProvider = null,
+    previewPosterApiKey = null,
+    previewPosterCustomUrlPattern = null
+  ) {
+    const body = { type, filters };
+    if (previewPosterProvider) {
+      body.previewPosterProvider = previewPosterProvider;
+    }
+    if (previewPosterApiKey) {
+      body.previewPosterApiKey = previewPosterApiKey;
+    }
+    if (previewPosterCustomUrlPattern) {
+      body.previewPosterCustomUrlPattern = previewPosterCustomUrlPattern;
+    }
+    return this.request('/mal/preview', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async previewKitsuCatalog(
+    type,
+    filters,
+    previewPosterProvider = null,
+    previewPosterApiKey = null,
+    previewPosterCustomUrlPattern = null
+  ) {
+    const body = { type, filters };
+    if (previewPosterProvider) {
+      body.previewPosterProvider = previewPosterProvider;
+    }
+    if (previewPosterApiKey) {
+      body.previewPosterApiKey = previewPosterApiKey;
+    }
+    if (previewPosterCustomUrlPattern) {
+      body.previewPosterCustomUrlPattern = previewPosterCustomUrlPattern;
+    }
+    return this.request('/kitsu/preview', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async previewSimklCatalog(
+    type,
+    filters,
+    previewPosterProvider = null,
+    previewPosterApiKey = null,
+    previewPosterCustomUrlPattern = null
+  ) {
+    const body = { type, filters };
+    if (previewPosterProvider) {
+      body.previewPosterProvider = previewPosterProvider;
+    }
+    if (previewPosterApiKey) {
+      body.previewPosterApiKey = previewPosterApiKey;
+    }
+    if (previewPosterCustomUrlPattern) {
+      body.previewPosterCustomUrlPattern = previewPosterCustomUrlPattern;
+    }
+    return this.request('/simkl/preview', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async previewTraktCatalog(
+    type,
+    filters,
+    previewPosterProvider = null,
+    previewPosterApiKey = null,
+    previewPosterCustomUrlPattern = null
+  ) {
+    const body = { type, filters };
+    if (previewPosterProvider) {
+      body.previewPosterProvider = previewPosterProvider;
+    }
+    if (previewPosterApiKey) {
+      body.previewPosterApiKey = previewPosterApiKey;
+    }
+    if (previewPosterCustomUrlPattern) {
+      body.previewPosterCustomUrlPattern = previewPosterCustomUrlPattern;
+    }
+    return this.request('/trakt/preview', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async getTraktNetworks() {
+    return this.request('/trakt/networks');
+  }
+
+  async validateTraktKey(clientId) {
+    return this.request('/validate-trakt-key', {
+      method: 'POST',
+      body: JSON.stringify({ clientId }),
+    });
+  }
+
+  async validateMalKey(clientId) {
+    return this.request('/validate-mal-key', {
+      method: 'POST',
+      body: JSON.stringify({ clientId }),
+    });
+  }
+
+  async validateSimklKey(apiKey) {
+    return this.request('/validate-simkl-key', {
+      method: 'POST',
+      body: JSON.stringify({ apiKey }),
+    });
+  }
+
+  async validateTvdbKey(apiKey) {
+    return this.request('/validate-tvdb-key', {
+      method: 'POST',
+      body: JSON.stringify({ apiKey }),
+    });
+  }
+
+  async saveSourceKey(source, key) {
+    return this.request('/source-key', {
+      method: 'POST',
+      body: JSON.stringify({ source, key }),
+    });
+  }
+
+  async getSourceKeys() {
+    return this.request('/source-keys');
+  }
+
+  async searchImdb(query, type, limit = 20) {
+    const params = { query };
+    if (type) params.type = type;
+    if (limit) params.limit = String(limit);
+    const qs = new URLSearchParams(params).toString();
+    return this.request(`/imdb/search?${qs}`);
+  }
+
+  async searchImdbPeople(query, limit = 10) {
+    const qs = new URLSearchParams({ query, limit: String(limit) }).toString();
+    return this.request(`/imdb/search/people?${qs}`);
+  }
+
+  async searchImdbCompanies(query, limit = 10) {
+    const qs = new URLSearchParams({ query, limit: String(limit) }).toString();
+    return this.request(`/imdb/search/companies?${qs}`);
+  }
+
+  async searchImdbSuggestions(query) {
+    const qs = new URLSearchParams({ query }).toString();
+    return this.request(`/imdb/search/suggestions?${qs}`);
+  }
+
+  async searchCities(query, limit = 10) {
+    const qs = new URLSearchParams({ query, limit: String(limit) }).toString();
+    return this.request(`/geo/cities?${qs}`);
+  }
+
+  async saveConfig(config) {
+    return this.request('/config', {
+      method: 'POST',
+      body: JSON.stringify(config),
+    });
+  }
+
+  async getConfig(userId, apiKey = null) {
+    return this.request(this._buildAuthUrl(`/config/${userId}`, apiKey));
+  }
+
+  async updateConfig(userId, config) {
+    return this.request(`/config/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify(config),
+    });
+  }
+
+  async getConfigsByApiKey(apiKey) {
+    return this.request(this._buildAuthUrl('/configs', apiKey));
+  }
+
+  async deleteConfig(userId, apiKey) {
+    return this.request(this._buildAuthUrl(`/config/${userId}`, apiKey), { method: 'DELETE' });
+  }
+
+  async searchMarketplace({ q, source, type, genres, sort, page = 0, limit = 24 } = {}) {
+    const params = { q, type, sort, page: String(page), limit: String(limit) };
+    if (Array.isArray(source) && source.length) params.source = source.join(',');
+    else if (typeof source === 'string' && source) params.source = source;
+    if (Array.isArray(genres) && genres.length) params.genres = genres.join(',');
+    const qs = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== '')
+    ).toString();
+    return this.request(`/marketplace/search?${qs}`);
+  }
+
+  async getMarketplaceEntry(id) {
+    return this.request(`/marketplace/${encodeURIComponent(id)}`);
+  }
+
+  async publishCatalog(userId, catalogId, { description, tags } = {}) {
+    return this.request('/marketplace/publish', {
+      method: 'POST',
+      body: JSON.stringify({ userId, catalogId, description, tags }),
+    });
+  }
+
+  async unpublishCatalog(id) {
+    return this.request(`/marketplace/${encodeURIComponent(id)}/unpublish`, { method: 'POST' });
+  }
+
+  async installMarketplaceCatalog(id, targetUserId) {
+    return this.request(`/marketplace/${encodeURIComponent(id)}/install`, {
+      method: 'POST',
+      body: JSON.stringify({ targetUserId }),
+    });
+  }
+
+  async likeMarketplaceCatalog(id) {
+    return this.request(`/marketplace/${encodeURIComponent(id)}/like`, { method: 'POST' });
+  }
+
+  async unlikeMarketplaceCatalog(id) {
+    return this.request(`/marketplace/${encodeURIComponent(id)}/like`, { method: 'DELETE' });
+  }
+  async bingebaseDeviceCode(userId) {
+    return this.request(`/bingebase/${userId}/device/code`, { method: 'POST' });
+  }
+
+  async bingebaseDeviceToken(userId, deviceCode) {
+    return this.request(`/bingebase/${userId}/device/token`, {
+      method: 'POST',
+      body: JSON.stringify({ device_code: deviceCode }),
+    });
+  }
+
+  async bingebaseStatus(userId) {
+    return this.request(`/bingebase/${userId}/status`);
+  }
+
+  async bingebaseDisconnect(userId) {
+    return this.request(`/bingebase/${userId}/disconnect`, { method: 'POST' });
+  }
+
+  async bingebaseLists(userId, username) {
+    const qs = new URLSearchParams({ username }).toString();
+    return this.request(`/bingebase/${userId}/lists?${qs}`);
+  }
+
+}
+
+export const api = new ApiService();

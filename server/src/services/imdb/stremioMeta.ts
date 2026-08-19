@@ -1,0 +1,213 @@
+import { applyArtworkOverridesSync } from '../artworkService.ts';
+import type { ArtworkContext, NativeArtworkUrls } from '../artworkService.ts';
+import { metahubUrl, buildStremioSearchUrl, DISPLAY } from '../../constants.ts';
+import { formatRuntime, generateSlug } from '../common/stremioHelpers.ts';
+
+import type { ContentType } from '../../types/index.ts';
+import type { ImdbTitle, ImdbPosterOptions } from './types.ts';
+
+function mapImdbTypeToContentType(imdbType: string): ContentType {
+  if (['tvSeries', 'tvMiniSeries', 'tvSpecial', 'tvShort'].includes(imdbType)) {
+    return 'series';
+  }
+  return 'movie';
+}
+
+function buildYear(item: ImdbTitle): string {
+  if (item.releaseDate?.year) return String(item.releaseDate.year);
+  if (item.startYear) return String(item.startYear);
+  return '';
+}
+
+function buildReleaseInfo(item: ImdbTitle): string {
+  const year = buildYear(item);
+  if (item.endYear && item.endYear !== item.startYear) {
+    return `${item.startYear}–${item.endYear}`;
+  }
+  return year;
+}
+
+export function imdbToStremioMeta(
+  item: ImdbTitle,
+  type: ContentType,
+  artworkOptions: ImdbPosterOptions | null = null
+): Record<string, unknown> | null {
+  if (!item || !item.id) return null;
+
+  const stremioType = type || mapImdbTypeToContentType(item.type);
+  const year = buildYear(item);
+
+  const nativePoster = item.primaryImage?.url || null;
+  const nativeBackground = item.posterImages?.[0]?.url || null;
+
+  const artworkContext: ArtworkContext = {
+    imdbId: item.id,
+    type: stremioType,
+  };
+  const nativeUrls: NativeArtworkUrls = {
+    poster: nativePoster,
+    backdrop: nativeBackground,
+    logo: null,
+    landscape: nativeBackground,
+  };
+  const resolved = applyArtworkOverridesSync(artworkContext, nativeUrls, artworkOptions);
+  const poster = resolved.poster;
+  const background = resolved.backdrop;
+  const logo = resolved.logo;
+
+  const imdbRating = item.averageRating ? String(item.averageRating) : undefined;
+  const genres = item.genres || [];
+  const castNames =
+    item.cast
+      ?.slice(0, DISPLAY.CAST_FULL)
+      .map((c) => c.fullName)
+      .filter(Boolean) || [];
+  const directorNames = item.directors?.map((d) => d.fullName).filter(Boolean) || [];
+  const writerNames = item.writers?.map((w) => w.fullName).filter(Boolean) || [];
+
+  const links: Array<{ name: string; category: string; url: string }> = [];
+  links.push({
+    name: imdbRating ? `${imdbRating}/10` : 'IMDb',
+    category: 'imdb',
+    url: `https://www.imdb.com/title/${item.id}/`,
+  });
+  genres.forEach((genre) => {
+    links.push({
+      name: genre,
+      category: 'Genres',
+      url: buildStremioSearchUrl(genre),
+    });
+  });
+  castNames.slice(0, DISPLAY.CAST_LINKS).forEach((name) => {
+    links.push({
+      name,
+      category: 'Cast',
+      url: buildStremioSearchUrl(name),
+    });
+  });
+  directorNames.forEach((name) => {
+    links.push({
+      name,
+      category: 'Directors',
+      url: buildStremioSearchUrl(name),
+    });
+  });
+
+  return {
+    id: item.id,
+    tmdbId: null,
+    imdbId: item.id,
+    imdb_id: item.id,
+    type: stremioType,
+    name: item.primaryTitle || item.originalTitle || '',
+    slug: generateSlug(stremioType, item.primaryTitle, item.id),
+    poster,
+    posterShape: 'poster',
+    background,
+    fanart: resolved.landscape || background,
+    landscapePoster: resolved.landscape || background,
+    logo,
+    description: item.description || '',
+    year,
+    releaseInfo: buildReleaseInfo(item),
+    imdbRating,
+    genres,
+    runtime: formatRuntime(item.runtimeMinutes),
+    cast: castNames,
+    director: directorNames.join(', ') || undefined,
+    writer: writerNames.join(', ') || undefined,
+    links: links.length > 0 ? links : undefined,
+    contentRating: item.contentRating || undefined,
+    country: item.countriesOfOrigin?.join(', ') || undefined,
+    language: item.spokenLanguages?.[0] || undefined,
+    behaviorHints: {},
+  };
+}
+
+export function imdbToStremioFullMeta(
+  item: ImdbTitle,
+  type: ContentType,
+  artworkOptions: ImdbPosterOptions | null = null
+): Record<string, unknown> | null {
+  const base = imdbToStremioMeta(item, type, artworkOptions);
+  if (!base) return null;
+
+  const links: Array<{ name: string; category: string; url: string }> = [];
+
+  if (item.averageRating) {
+    links.push({
+      name: `${item.averageRating}/10`,
+      category: 'imdb',
+      url: `https://www.imdb.com/title/${item.id}/`,
+    });
+  }
+
+  if (item.genres) {
+    item.genres.forEach((genre) => {
+      links.push({ name: genre, category: 'Genres', url: `stremio:///discover` });
+    });
+  }
+
+  if (item.cast) {
+    item.cast.slice(0, DISPLAY.CAST_DETAILED).forEach((c) => {
+      const name = c.characters?.length ? `${c.fullName} as ${c.characters[0]}` : c.fullName;
+      links.push({ name, category: 'Cast', url: `https://www.imdb.com/name/${c.id}/` });
+    });
+  }
+
+  if (item.directors) {
+    item.directors.forEach((d) => {
+      links.push({
+        name: d.fullName,
+        category: 'Directors',
+        url: `https://www.imdb.com/name/${d.id}/`,
+      });
+    });
+  }
+
+  if (item.writers) {
+    item.writers.forEach((w) => {
+      links.push({
+        name: w.fullName,
+        category: 'Writers',
+        url: `https://www.imdb.com/name/${w.id}/`,
+      });
+    });
+  }
+
+  const trailerStreams: Array<{ title: string; ytId: string }> = [];
+  if (item.trailer) {
+    trailerStreams.push({ title: 'Trailer', ytId: item.trailer });
+  }
+
+  const appExtras = {
+    cast:
+      item.cast?.slice(0, DISPLAY.CAST_FULL).map((c) => ({
+        name: c.fullName,
+        character: c.characters?.[0] || '',
+        photo: c.primaryImage?.url || null,
+      })) || [],
+    directors:
+      item.directors?.map((d) => ({
+        name: d.fullName,
+        photo: d.primaryImage?.url || null,
+      })) || [],
+    writers:
+      item.writers?.map((w) => ({
+        name: w.fullName,
+        photo: w.primaryImage?.url || null,
+      })) || [],
+    seasonPosters: [],
+    releaseDates: null,
+    certification: item.contentRating || null,
+  };
+
+  return {
+    ...base,
+    links,
+    trailerStreams: trailerStreams.length > 0 ? trailerStreams : undefined,
+    app_extras: appExtras,
+    released: item.releaseDate?.date || undefined,
+    status: item.endYear ? 'Ended' : null,
+  };
+}
