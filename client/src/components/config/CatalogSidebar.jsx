@@ -12,7 +12,7 @@ import {
   ChevronDown,
   Trophy,
   Award,
-  Paramètres,
+  Settings,
   Heart,
 } from 'lucide-react';
 import { SocialButtons } from '../social/SocialButtons.jsx';
@@ -21,7 +21,7 @@ import { useState, useEffect, lazy, Suspense, memo } from 'react';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { useCatalog, useTMDBData, useAppActions } from '../../context/AppContext';
 import { CatalogListSkeleton } from '../layout/Skeleton';
-import { ParamètresModal } from '../modals/ParamètresModal';
+import { SettingsModal } from '../modals/SettingsModal';
 import { ImportSelectModal } from '../modals/ImportSelectModal';
 import { ExportSelectModal } from '../modals/ExportSelectModal';
 
@@ -78,8 +78,8 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
   const [importData, setImportData] = useState(null);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
-  const [showParamètresModal, setShowParamètresModal] = useState(false);
-  const [settingsInitialSection, setParamètresInitialSection] = useState('data');
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [settingsInitialSection, setSettingsInitialSection] = useState('data');
 
   useEffect(() => {
     setMoviePresetsCollapsed(isMobile);
@@ -87,19 +87,19 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
   }, [isMobile]);
 
   useEffect(() => {
-    const handleOpenPréférences = (event) => {
+    const handleOpenPreferences = (event) => {
       const requestedSection = event?.detail?.section;
-      setParamètresInitialSection(
+      setSettingsInitialSection(
         typeof requestedSection === 'string' && requestedSection.length > 0
           ? requestedSection
           : 'data'
       );
-      setShowParamètresModal(true);
+      setShowSettingsModal(true);
     };
 
-    window.addEventListener('open-preferences', handleOpenPréférences);
+    window.addEventListener('open-preferences', handleOpenPreferences);
     return () => {
-      window.removeEventListener('open-preferences', handleOpenPréférences);
+      window.removeEventListener('open-preferences', handleOpenPreferences);
     };
   }, []);
 
@@ -144,13 +144,13 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
           <button
             className="btn btn-secondary btn-sm sidebar-settings-btn"
             onClick={() => {
-              setParamètresInitialSection('data');
-              setShowParamètresModal(true);
+              setSettingsInitialSection('data');
+              setShowSettingsModal(true);
             }}
             aria-label="Paramètres"
             title="Préférences globales"
           >
-            <Paramètres size={16} />
+            <Settings size={16} />
             <span className="settings-text">Préférences</span>
           </button>
         </div>
@@ -351,10 +351,10 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
           }}
         />
       )}
-      {showParamètresModal && (
-        <ParamètresModal
-          isOpen={showParamètresModal}
-          onClose={() => setShowParamètresModal(false)}
+      {showSettingsModal && (
+        <SettingsModal
+          isOpen={showSettingsModal}
+          onClose={() => setShowSettingsModal(false)}
           onShowExport={setShowExportModal}
           initialSection={settingsInitialSection}
           onImportData={(data) => {
