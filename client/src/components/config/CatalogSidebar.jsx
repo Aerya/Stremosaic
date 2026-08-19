@@ -111,7 +111,7 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
     presetCatalogs = { movie: [], series: [] },
     imdbPresetCatalogs = [],
     imdbEnabled = false,
-    getUatchProviders,,
+    getWatchProviders,
     getWatchProviders
   } = useTMDBData();
   const { addToast, setShowNewCatalogModal } = useAppActions();
