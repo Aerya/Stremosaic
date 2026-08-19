@@ -249,7 +249,7 @@ export function KitsuFilterPanel({
       {!isTrending && (
         <FilterSection
           id="genres"
-          title="Categories"
+          title="Catégories"
           description="Filtrer selon les catégories d’anime Kitsu"
           icon={Sparkles}
           isOpen={expandedSections?.genres}
@@ -285,7 +285,7 @@ export function KitsuFilterPanel({
           {availableSubtypes.length > 0 && (
             <div className="filter-group">
               <LabelWithTooltip
-                label="Subtype"
+                label="Sous-type"
                 tooltip="Filtrer selon le format : TV, film, OVA, ONA, spécial."
               />
               <AnimeFormatSelector
@@ -319,7 +319,7 @@ export function KitsuFilterPanel({
       {!isTrending && type !== 'movie' && (
         <FilterSection
           id="season"
-          title="Season"
+          title="Saison"
           description="Filtrer selon la saison et l’année de l’anime"
           icon={Calendar}
           isOpen={expandedSections?.season}
@@ -341,7 +341,7 @@ export function KitsuFilterPanel({
       <FilterSection
         id="options"
         title="Options"
-        description="Additional display options"
+        description="Options d’affichage supplémentaires"
         icon={Eye}
         isOpen={expandedSections?.options}
         onToggle={onToggleSection}
@@ -351,7 +351,7 @@ export function KitsuFilterPanel({
           <Checkbox
             checked={!!filters.randomize}
             onChange={(checked) => onFiltersChange('randomize', checked || undefined)}
-            label="Randomize results"
+            label="Résultats aléatoires"
           />
         </div>
       </FilterSection>

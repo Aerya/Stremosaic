@@ -191,8 +191,8 @@ describe('source registry', () => {
     expect(getSource('tmdb').id).toBe('tmdb');
   });
 
-  it('getSource returns IMDb for imdb id', () => {
-    expect(getSource('imdb').id).toBe('imdb');
+  it('getSource returns AniList for anilist id', () => {
+    expect(getSource('anilist').id).toBe('anilist');
   });
 
   it('getSource returns TMDB for undefined', () => {
@@ -206,7 +206,7 @@ describe('source registry', () => {
   it('getAllSources returns all registered sources', () => {
     const all = getAllSources();
     expect(all.map((s) => s.id)).toContain('tmdb');
-    expect(all.map((s) => s.id)).toContain('imdb');
+    expect(all.map((s) => s.id)).toContain('anilist');
   });
 });
 
@@ -234,7 +234,7 @@ describe('TRAKT_SOURCE descriptor', () => {
       {}
     );
 
-    expect(chips.find((chip) => chip.key === 'traktCalendarSort')?.label).toContain('Ascending');
+    expect(chips.find((chip) => chip.key === 'traktCalendarSort')?.label).toContain('Croissant');
 
     const defaultCalendarChips = TRAKT_SOURCE.computeActiveChips(
       {

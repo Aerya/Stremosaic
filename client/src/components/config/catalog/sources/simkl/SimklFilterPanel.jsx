@@ -98,7 +98,7 @@ export function SimklFilterPanel({
 
         {listType === 'trending' && simklTrendingPeriods.length > 0 && (
           <div className="filter-group">
-            <LabelWithTooltip label="Period" tooltip="Période utilisée pour les tendances anime." />
+            <LabelWithTooltip label="Période" tooltip="Période utilisée pour les tendances anime." />
             <AnimeFormatSelector
               selected={[filters.simklTrendingPeriod || 'week']}
               options={simklTrendingPeriods}
@@ -120,7 +120,7 @@ export function SimklFilterPanel({
               options={simklBestFilters}
               value={filters.simklBestFilter || 'all'}
               onChange={(value) => onFiltersChange('simklBestFilter', value)}
-              placeholder="All Time"
+              placeholder="Tous les temps"
               searchPlaceholder="Rechercher..."
               labelKey="label"
               valueKey="value"
@@ -151,7 +151,7 @@ export function SimklFilterPanel({
                   options={simklSortOptions}
                   value={filters.simklSort || 'rank'}
                   onChange={(value) => onFiltersChange('simklSort', value)}
-                  placeholder="Rank"
+                  placeholder="Rang"
                   searchPlaceholder="Rechercher..."
                   labelKey="label"
                   valueKey="value"
@@ -169,8 +169,8 @@ export function SimklFilterPanel({
           title="Type d’anime"
           description={
             localCatalog?.type === 'series'
-              ? 'Filter by anime format: TV, OVA, ONA'
-              : 'Filter by anime format: TV, Movie, OVA, ONA'
+              ? 'Filtrer selon le format anime : TV, OVA, ONA'
+              : 'Filtrer selon le format anime : TV, Film, OVA, ONA'
           }
           icon={Layers}
           isOpen={expandedSections?.animeType}
@@ -225,7 +225,7 @@ export function SimklFilterPanel({
               {filters.randomize && <Check size={14} />}
             </div>
             <LabelWithTooltip
-              label="Randomize Results"
+              label="Résultats aléatoires"
               tooltip="Charger une page aléatoire parmi les résultats et les mélanger."
             />
           </label>

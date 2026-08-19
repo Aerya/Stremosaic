@@ -317,7 +317,7 @@ export function AnilistFilterPanel({
       {type === 'series' && (
         <FilterSection
           id="season"
-          title="Season"
+          title="Saison"
           description="Filtrer selon la saison et l’année de l’anime"
           icon={Calendar}
           isOpen={expandedSections?.season}
@@ -326,7 +326,7 @@ export function AnilistFilterPanel({
         >
           <div className="filter-group">
             <LabelWithTooltip
-              label="Seasonal Anime"
+              label="Anime saisonnier"
               tooltip="Filtrer selon la saison (hiver, printemps, été, automne) et l’année."
             />
             <AnimeSeasonSelector
@@ -342,7 +342,7 @@ export function AnilistFilterPanel({
 
       <FilterSection
         id="score"
-        title="Score, Popularity & Length"
+        title="Score, Popularité & Durée"
         description="Filtrer selon la note, la popularité, les épisodes et la durée"
         icon={Star}
         isOpen={expandedSections?.score}
@@ -350,7 +350,7 @@ export function AnilistFilterPanel({
         badgeCount={getScoreBadge()}
       >
         <RangeSlider
-          label="Average Score"
+          label="Score moyen"
           min={0}
           max={100}
           step={1}
@@ -373,7 +373,7 @@ export function AnilistFilterPanel({
         <div className="filter-spacer" />
 
         <RangeSlider
-          label="Episode Count"
+          label="Nombre d'épisodes"
           tooltip="Filtrer selon le nombre d’épisodes."
           min={0}
           max={150}
@@ -385,7 +385,7 @@ export function AnilistFilterPanel({
         <div className="filter-spacer" />
 
         <RangeSlider
-          label="Duration (minutes per episode)"
+          label="Durée (minutes par épisode)"
           tooltip="Filtrer selon la durée des épisodes en minutes."
           min={0}
           max={180}
@@ -451,7 +451,7 @@ export function AnilistFilterPanel({
       <FilterSection
         id="options"
         title="Options"
-        description="Adult content settings"
+        description="Paramètres de contenu adulte"
         icon={Eye}
         isOpen={expandedSections?.options}
         onToggle={onToggleSection}

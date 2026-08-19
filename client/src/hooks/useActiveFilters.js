@@ -15,81 +15,81 @@ import {
 } from '../sources/traktCapabilities';
 
 const KITSU_SORT_LABELS = {
-  '-averageRating': 'Highest Rated',
-  '-userCount': 'Most Popular',
-  '-favoritesCount': 'Most Favorited',
-  '-startDate': 'Newest',
-  startDate: 'Oldest',
-  '-episodeCount': 'Most Episodes',
+  '-averageRating': 'Mieux notés',
+  '-userCount': 'Plus populaires',
+  '-favoritesCount': 'Plus aimés',
+  '-startDate': 'Plus récents',
+  startDate: 'Plus anciens',
+  '-episodeCount': 'Plus d´épisodes',
 };
 
 const KITSU_SUBTYPE_LABELS = {
   TV: 'TV',
-  movie: 'Movie',
+  movie: 'Film',
   OVA: 'OVA',
   ONA: 'ONA',
-  special: 'Special',
-  music: 'Music',
+  special: 'Spécial',
+  music: 'Musique',
 };
 
 const KITSU_STATUS_LABELS = {
-  current: 'Currently Airing',
-  finished: 'Finished',
-  tba: 'TBA',
-  unreleased: 'Unreleased',
-  upcoming: 'Upcoming',
+  current: 'En cours',
+  finished: 'Terminé',
+  tba: 'À annoncer',
+  unreleased: 'Non sorti',
+  upcoming: 'À venir',
 };
 
 const KITSU_AGE_RATING_LABELS = {
-  G: 'G - All Ages',
-  PG: 'PG - Children',
+  G: 'G - Tout public',
+  PG: 'PG - Enfants',
   R: 'R - 17+',
 };
 
 const KITSU_CATEGORY_LABELS = {
   action: 'Action',
-  adventure: 'Adventure',
-  comedy: 'Comedy',
-  drama: 'Drama',
-  'sci-fi': 'Sci-Fi',
-  space: 'Space',
-  mystery: 'Mystery',
-  magic: 'Magic',
-  supernatural: 'Supernatural',
-  fantasy: 'Fantasy',
-  sports: 'Sports',
+  adventure: 'Aventure',
+  comedy: 'Comédie',
+  drama: 'Drame',
+  'sci-fi': 'Science-fiction',
+  space: 'Espace',
+  mystery: 'Mystère',
+  magic: 'Magie',
+  supernatural: 'Surnaturel',
+  fantasy: 'Fantaisie',
+  sports: 'Sport',
   romance: 'Romance',
-  'slice-of-life': 'Slice of Life',
-  horror: 'Horror',
-  psychological: 'Psychological',
+  'slice-of-life': 'Tranche de vie',
+  horror: 'Horreur',
+  psychological: 'Psychologique',
   thriller: 'Thriller',
-  'martial-arts': 'Martial Arts',
-  'super-power': 'Super Power',
-  school: 'School',
+  'martial-arts': 'Arts martiaux',
+  'super-power': 'Super-pouvoirs',
+  school: 'École',
   ecchi: 'Ecchi',
-  historical: 'Historical',
-  military: 'Military',
+  historical: 'Historique',
+  military: 'Militaire',
   mecha: 'Mecha',
-  demons: 'Demons',
+  demons: 'Démons',
   harem: 'Harem',
-  music: 'Music',
+  music: 'Musique',
   shounen: 'Shounen',
   shoujo: 'Shoujo',
   seinen: 'Seinen',
   josei: 'Josei',
   isekai: 'Isekai',
-  kids: 'Kids',
-  parody: 'Parody',
+  kids: 'Enfants',
+  parody: 'Parodie',
 };
 
 const DATE_TAG_LABELS = {
-  today: 'Today',
-  'today-30d': 'Today − 30d',
-  'today-90d': 'Today − 90d',
-  'today-6mo': 'Today − 6mo',
-  'today-12mo': 'Today − 12mo',
-  'today+30d': 'Today + 30d',
-  'today+3mo': 'Today + 3mo',
+  today: "Aujourd'hui",
+  'today-30d': "Aujourd'hui − 30j",
+  'today-90d': "Aujourd'hui − 90j",
+  'today-6mo': "Aujourd'hui − 6 mois",
+  'today-12mo': "Aujourd'hui − 12 mois",
+  'today+30d': "Aujourd'hui + 30j",
+  'today+3mo': "Aujourd'hui + 3 mois",
 };
 
 export function useActiveFilters({
@@ -202,9 +202,9 @@ export function useActiveFilters({
           return false;
         },
         label: (filters) => {
-          if (isImdb) return `Sort: ${resolveSortLabel(imdbSortOptions, filters.sortBy)}`;
-          if (isAnilist) return `Sort: ${resolveSortLabel(anilistSortOptions, filters.sortBy)}`;
-          return `Sort: ${resolveSortLabel(sortOpts, filters.sortBy)}`;
+          if (isImdb) return `Tri : ${resolveSortLabel(imdbSortOptions, filters.sortBy)}`;
+          if (isAnilist) return `Tri : ${resolveSortLabel(anilistSortOptions, filters.sortBy)}`;
+          return `Tri : ${resolveSortLabel(sortOpts, filters.sortBy)}`;
         },
         section: 'filters',
         clear: () =>
@@ -229,7 +229,7 @@ export function useActiveFilters({
             })
             .slice(0, 2);
           const extra = filters.genres.length > 2 ? ` +${filters.genres.length - 2}` : '';
-          return `Genres: ${genreNames.join(', ')}${extra}`;
+          return `Genres : ${genreNames.join(', ')}${extra}`;
         },
         section: 'genres',
         clear: () => update({ genres: [] }),
@@ -246,7 +246,7 @@ export function useActiveFilters({
             .slice(0, 2);
           const extra =
             filters.excludeGenres.length > 2 ? ` +${filters.excludeGenres.length - 2}` : '';
-          return `Exclude: ${excNames.join(', ')}${extra}`;
+          return `Exclure : ${excNames.join(', ')}${extra}`;
         },
         section: 'genres',
         clear: () => update({ excludeGenres: [] }),
@@ -264,7 +264,7 @@ export function useActiveFilters({
         isActive: (filters) => !!filters.language,
         label: (filters) => {
           const lang = originalLanguages.find((l) => l.iso_639_1 === filters.language);
-          return `Language: ${lang?.english_name || filters.language}`;
+          return `Langue : ${lang?.english_name || filters.language}`;
         },
         section: 'filters',
         clear: () => update({ language: undefined }),
@@ -286,7 +286,7 @@ export function useActiveFilters({
             .map((code) => countries.find((c) => c.iso_3166_1 === code)?.english_name || code)
             .slice(0, 2);
           const extra = countriesArr.length > 2 ? ` +${countriesArr.length - 2}` : '';
-          return `Country: ${countryNames.join(', ')}${extra}`;
+          return `Pays : ${countryNames.join(', ')}${extra}`;
         },
         section: 'filters',
         clear: () => update({ countries: [] }),
@@ -303,7 +303,7 @@ export function useActiveFilters({
             .slice(0, 2);
           const extra =
             filters.imdbCountries.length > 2 ? ` +${filters.imdbCountries.length - 2}` : '';
-          return `IMDb Countries: ${countryNames.join(', ')}${extra}`;
+          return `Pays IMDb : ${countryNames.join(', ')}${extra}`;
         },
         section: 'region',
         clear: () => update({ imdbCountries: [] }),
@@ -312,9 +312,9 @@ export function useActiveFilters({
         key: 'year',
         isActive: (filters) => !!(filters.yearFrom || filters.yearTo),
         label: (filters) => {
-          const from = filters.yearFrom || 'Any';
-          const to = filters.yearTo || 'Now';
-          return `Year: ${from}–${to}`;
+          const from = filters.yearFrom || 'Toutes';
+          const to = filters.yearTo || 'Présent';
+          return `Année : ${from}–${to}`;
         },
         section: 'filters',
         clear: () => update({ yearFrom: undefined, yearTo: undefined }),
@@ -323,21 +323,21 @@ export function useActiveFilters({
         key: 'rating',
         isActive: (filters) =>
           filters.ratingMin > 0 || (filters.ratingMax != null && filters.ratingMax < 10),
-        label: (filters) => `Rating: ${filters.ratingMin || 0}–${filters.ratingMax ?? 10}`,
+        label: (filters) => `Note : ${filters.ratingMin || 0}–${filters.ratingMax ?? 10}`,
         section: 'filters',
         clear: () => update({ ratingMin: 0, ratingMax: 10 }),
       },
       {
         key: 'runtime',
         isActive: (filters) => !!(filters.runtimeMin || filters.runtimeMax),
-        label: (filters) => `Runtime: ${filters.runtimeMin || 0}–${filters.runtimeMax || '∞'}min`,
+        label: (filters) => `Durée : ${filters.runtimeMin || 0}–${filters.runtimeMax || '∞'} min`,
         section: 'filters',
         clear: () => update({ runtimeMin: undefined, runtimeMax: undefined }),
       },
       {
         key: 'voteCountMin',
         isActive: (filters) => filters.voteCountMin > 0,
-        label: (filters) => `Min votes: ${filters.voteCountMin.toLocaleString()}`,
+        label: (filters) => `Votes min. : ${filters.voteCountMin.toLocaleString()}`,
         section: 'filters',
         clear: () => update({ voteCountMin: 0 }),
       },
@@ -346,7 +346,7 @@ export function useActiveFilters({
         isActive: (filters) => !!filters.datePreset,
         label: (filters) => {
           const presetMatch = DATE_PRESETS.find((p) => p.value === filters.datePreset);
-          return `Date: ${presetMatch ? presetMatch.label : filters.datePreset}`;
+          return `Date : ${presetMatch ? presetMatch.label : filters.datePreset}`;
         },
         section: 'release',
         clear: () =>
@@ -374,7 +374,7 @@ export function useActiveFilters({
           const rawTo = filters.releaseDateTo || filters.airDateTo || '…';
           const from = DATE_TAG_LABELS[rawFrom] || rawFrom;
           const to = DATE_TAG_LABELS[rawTo] || rawTo;
-          return `${isMovieType ? 'Release' : 'Air'}: ${from} – ${to}`;
+          return `${isMovieType ? 'Sortie' : 'Diffusion'} : ${from} – ${to}`;
         },
         section: 'release',
         clear: () =>
@@ -390,21 +390,21 @@ export function useActiveFilters({
         isActive: (filters) =>
           !isMovieType && !!(filters.firstAirDateFrom || filters.firstAirDateTo),
         label: (filters) =>
-          `Premiered: ${filters.firstAirDateFrom || '…'} – ${filters.firstAirDateTo || '…'}`,
+          `Première : ${filters.firstAirDateFrom || '…'} – ${filters.firstAirDateTo || '…'}`,
         section: 'release',
         clear: () => update({ firstAirDateFrom: undefined, firstAirDateTo: undefined }),
       },
       {
         key: 'firstAirDateYear',
         isActive: (filters) => !!filters.firstAirDateYear,
-        label: (filters) => `First air year: ${filters.firstAirDateYear}`,
+        label: (filters) => `Année de première : ${filters.firstAirDateYear}`,
         section: 'release',
         clear: () => update({ firstAirDateYear: undefined }),
       },
       {
         key: 'primaryReleaseYear',
         isActive: (filters) => !!filters.primaryReleaseYear,
-        label: (filters) => `Release year: ${filters.primaryReleaseYear}`,
+        label: (filters) => `Année de sortie : ${filters.primaryReleaseYear}`,
         section: 'release',
         clear: () => update({ primaryReleaseYear: undefined }),
       },
@@ -414,7 +414,7 @@ export function useActiveFilters({
         label: (filters) => {
           const regionLabel =
             countries.find((c) => c.iso_3166_1 === filters.region)?.english_name || filters.region;
-          return `${isMovieType ? 'Release region' : 'Regional appearance'}: ${regionLabel}`;
+          return `${isMovieType ? 'Région de sortie' : 'Apparence régionale'} : ${regionLabel}`;
         },
         section: 'release',
         clear: () => update({ region: undefined, releaseTypes: [] }),
@@ -423,14 +423,14 @@ export function useActiveFilters({
         key: 'releaseTypes',
         isActive: (filters) => filters.releaseTypes?.length > 0,
         label: (filters) =>
-          `${filters.releaseTypes.length} ${isMovieType ? 'release type(s)' : 'regional type(s)'}`,
+          `${filters.releaseTypes.length} ${isMovieType ? 'type(s) de sortie' : 'type(s) régional/aux'}`,
         section: 'release',
         clear: () => update({ releaseTypes: [] }),
       },
       {
         key: 'certifications',
         isActive: (filters) => filters.certifications?.length > 0,
-        label: (filters) => `Rating: ${filters.certifications.join(', ')}`,
+        label: (filters) => `Classification : ${filters.certifications.join(', ')}`,
         section: 'release',
         clear: () => update({ certifications: [] }),
       },
@@ -438,7 +438,7 @@ export function useActiveFilters({
         key: 'certificationRange',
         isActive: (filters) => !!(filters.certificationMin || filters.certificationMax),
         label: (filters) =>
-          `Age range: ${filters.certificationMin || 'Any'}–${filters.certificationMax || 'Any'}`,
+          `Tranche d'âge : ${filters.certificationMin || 'Toutes'}–${filters.certificationMax || 'Toutes'}`,
         section: 'release',
         clear: () => update({ certificationMin: undefined, certificationMax: undefined }),
       },
@@ -450,7 +450,7 @@ export function useActiveFilters({
           const certCountryLabel =
             countries.find((c) => c.iso_3166_1 === filters.certificationCountry)?.english_name ||
             filters.certificationCountry;
-          return `Rating country: ${certCountryLabel}`;
+          return `Pays de classification : ${certCountryLabel}`;
         },
         section: 'release',
         clear: () => update({ certificationCountry: undefined }),
@@ -458,21 +458,21 @@ export function useActiveFilters({
       {
         key: 'timezone',
         isActive: (filters) => !!filters.timezone,
-        label: (filters) => `Timezone: ${filters.timezone}`,
+        label: (filters) => `Fuseau horaire : ${filters.timezone}`,
         section: 'release',
         clear: () => update({ timezone: undefined }),
       },
       {
         key: 'tvStatus',
         isActive: (filters) => !isMovieType && !!filters.tvStatus,
-        label: (filters) => `Status: ${resolveOptionLabel(tvStatuses, filters.tvStatus)}`,
+        label: (filters) => `Statut : ${resolveOptionLabel(tvStatuses, filters.tvStatus)}`,
         section: 'release',
         clear: () => update({ tvStatus: undefined }),
       },
       {
         key: 'tvType',
         isActive: (filters) => !isMovieType && !!filters.tvType,
-        label: (filters) => `Type: ${resolveOptionLabel(tvTypes, filters.tvType)}`,
+        label: (filters) => `Type : ${resolveOptionLabel(tvTypes, filters.tvType)}`,
         section: 'release',
         clear: () => update({ tvType: undefined }),
       },
@@ -483,7 +483,7 @@ export function useActiveFilters({
           const regionLabel =
             watchRegions.find((r) => r.iso_3166_1 === filters.watchRegion)?.english_name ||
             filters.watchRegion;
-          return `Stream region: ${regionLabel}`;
+          return `Région streaming : ${regionLabel}`;
         },
         section: 'streaming',
         clear: () => update({ watchRegion: undefined }),
@@ -491,7 +491,7 @@ export function useActiveFilters({
       {
         key: 'watchProviders',
         isActive: (filters) => filters.watchProviders?.length > 0,
-        label: (filters) => `${filters.watchProviders.length} streaming service(s)`,
+        label: (filters) => `${filters.watchProviders.length} service(s) de streaming`,
         section: 'streaming',
         clear: () => update({ watchProviders: [] }),
       },
@@ -502,7 +502,7 @@ export function useActiveFilters({
           const labels = filters.watchMonetizationTypes
             .map((v) => monetizationTypes.find((m) => m.value === v)?.label || v)
             .join(', ');
-          return `Monetization: ${labels}`;
+          return `Monétisation : ${labels}`;
         },
         section: 'streaming',
         clear: () => update({ watchMonetizationTypes: undefined }),
@@ -512,7 +512,7 @@ export function useActiveFilters({
         isActive: (filters) => !!filters.withNetworks,
         label: (filters) => {
           const count = filters.withNetworks.split('|').filter(Boolean).length;
-          return `${count} network(s)`;
+          return `${count} chaîne(s)`;
         },
         section: 'streaming',
         clear: () => update({ withNetworks: undefined }),
@@ -523,7 +523,7 @@ export function useActiveFilters({
         label: () => {
           const names = selectedPeople.slice(0, 2).map((p) => p.name);
           const extra = selectedPeople.length > 2 ? ` +${selectedPeople.length - 2}` : '';
-          return `Cast/Crew: ${names.join(', ')}${extra}`;
+          return `Acteurs/Équipe : ${names.join(', ')}${extra}`;
         },
         section: 'people',
         clear: () => setSelectedPeople([]),
@@ -534,7 +534,7 @@ export function useActiveFilters({
         label: () => {
           const names = selectedCompanies.slice(0, 2).map((c) => c.name);
           const extra = selectedCompanies.length > 2 ? ` +${selectedCompanies.length - 2}` : '';
-          return `Studio: ${names.join(', ')}${extra}`;
+          return `Studio : ${names.join(', ')}${extra}`;
         },
         section: 'people',
         clear: () => setSelectedCompanies([]),
@@ -542,7 +542,7 @@ export function useActiveFilters({
       {
         key: 'imdbExcludeCompanies',
         isActive: () => isImdbExcludeCompaniesActive(),
-        label: () => `Exclude IMDb studios: ${selectedImdbExcludeCompanies.length}`,
+        label: () => `Exclure studios IMDb : ${selectedImdbExcludeCompanies.length}`,
         section: 'people',
         clear: () => {
           update({ excludeCompanies: [] });
@@ -552,7 +552,7 @@ export function useActiveFilters({
       {
         key: 'excludeCompanies',
         isActive: () => !isImdbExcludeCompaniesActive() && excludeCompanies.length > 0,
-        label: () => `Exclude ${excludeCompanies.length} studio(s)`,
+        label: () => `Exclure ${excludeCompanies.length} studio(s)`,
         section: 'people',
         clear: () => setExcludeCompanies([]),
       },
@@ -563,11 +563,11 @@ export function useActiveFilters({
           if (isImdbKeywordsActive(filters)) {
             const names = filters.keywords.slice(0, 2);
             const extra = filters.keywords.length > 2 ? ` +${filters.keywords.length - 2}` : '';
-            return `Keywords: ${names.join(', ')}${extra}`;
+            return `Mots-clés : ${names.join(', ')}${extra}`;
           }
           const names = selectedKeywords.slice(0, 2).map((k) => k.name);
           const extra = selectedKeywords.length > 2 ? ` +${selectedKeywords.length - 2}` : '';
-          return `Keywords: ${names.join(', ')}${extra}`;
+          return `Mots-clés : ${names.join(', ')}${extra}`;
         },
         section: (filters) => (isImdbKeywordsActive(filters) ? 'keywords' : 'people'),
         clear: () => {
@@ -583,9 +583,9 @@ export function useActiveFilters({
             const names = filters.excludeKeywords.slice(0, 2);
             const extra =
               filters.excludeKeywords.length > 2 ? ` +${filters.excludeKeywords.length - 2}` : '';
-            return `Exclude: ${names.join(', ')}${extra}`;
+            return `Exclure : ${names.join(', ')}${extra}`;
           }
-          return `Exclude ${excludeKeywords.length} keyword(s)`;
+          return `Exclure ${excludeKeywords.length} mot(s)-clé(s)`;
         },
         section: (filters) => (isImdbExcludeKeywordsActive(filters) ? 'keywords' : 'people'),
         clear: () => {
@@ -596,56 +596,56 @@ export function useActiveFilters({
       {
         key: 'includeAdult',
         isActive: (filters) => !!filters.includeAdult,
-        label: () => 'Adult content',
+        label: () => 'Contenu adulte',
         section: 'options',
         clear: () => update({ includeAdult: undefined }),
       },
       {
         key: 'includeVideo',
         isActive: (filters) => !!filters.includeVideo,
-        label: () => 'Include video',
+        label: () => 'Inclure vidéos',
         section: 'options',
         clear: () => update({ includeVideo: undefined }),
       },
       {
         key: 'randomize',
         isActive: (filters) => !!filters.randomize,
-        label: () => 'Randomized',
+        label: () => 'Aléatoire',
         section: 'options',
         clear: () => update({ randomize: undefined }),
       },
       {
         key: 'discoverOnly',
         isActive: (filters) => !!filters.discoverOnly,
-        label: () => 'Discover only',
+        label: () => 'Découverte uniquement',
         section: 'options',
         clear: () => update({ discoverOnly: undefined }),
       },
       {
         key: 'includeNullFirstAirDates',
         isActive: (filters) => !!filters.includeNullFirstAirDates,
-        label: () => 'Unknown air dates',
+        label: () => 'Dates de diffusion inconnues',
         section: 'options',
         clear: () => update({ includeNullFirstAirDates: undefined }),
       },
       {
         key: 'screenedTheatrically',
         isActive: (filters) => !!filters.screenedTheatrically,
-        label: () => 'Screened theatrically',
+        label: () => 'Projeté en salle',
         section: 'options',
         clear: () => update({ screenedTheatrically: undefined }),
       },
       {
         key: 'releasedOnly',
         isActive: (filters) => !!filters.releasedOnly,
-        label: () => 'Released only',
+        label: () => 'Déjà sortis uniquement',
         section: 'release',
         clear: () => update({ releasedOnly: undefined }),
       },
       {
         key: 'lastXYears',
         isActive: (filters) => !!filters.lastXYears,
-        label: (filters) => `Last ${filters.lastXYears} years`,
+        label: (filters) => `Derniers ${filters.lastXYears} an(s)`,
         section: 'release',
         clear: () =>
           update({
@@ -659,21 +659,21 @@ export function useActiveFilters({
       {
         key: 'creditedNames',
         isActive: (filters) => filters.creditedNames?.length > 0,
-        label: (filters) => `IMDb People: ${filters.creditedNames.length}`,
+        label: (filters) => `Personnes IMDb : ${filters.creditedNames.length}`,
         section: 'people',
         clear: () => update({ creditedNames: [] }),
       },
       {
         key: 'imdbCompanies',
         isActive: (filters) => filters.companies?.length > 0 && isImdb,
-        label: (filters) => `IMDb Studios: ${filters.companies.length}`,
+        label: (filters) => `Studios IMDb : ${filters.companies.length}`,
         section: 'people',
         clear: () => update({ companies: [] }),
       },
       {
         key: 'inTheaters',
         isActive: (filters) => !!filters.inTheatersLat,
-        label: () => 'In Theatres',
+        label: () => 'En salle',
         section: 'theatres',
         clear: () =>
           update({
@@ -685,49 +685,49 @@ export function useActiveFilters({
       {
         key: 'imdbCertificates',
         isActive: (filters) => filters.certificates?.length > 0,
-        label: (filters) => `Certificates: ${filters.certificates.length}`,
+        label: (filters) => `Certifications : ${filters.certificates.length}`,
         section: 'certificates',
         clear: () => update({ certificates: [], certificateCountry: undefined }),
       },
       {
         key: 'rankedLists',
         isActive: (filters) => filters.rankedLists?.length > 0,
-        label: (filters) => `Ranked Lists: ${filters.rankedLists.length}`,
+        label: (filters) => `Listes classées : ${filters.rankedLists.length}`,
         section: 'rankedLists',
         clear: () => update({ rankedLists: [] }),
       },
       {
         key: 'excludeRankedLists',
         isActive: (filters) => filters.excludeRankedLists?.length > 0,
-        label: (filters) => `Exclude Lists: ${filters.excludeRankedLists.length}`,
+        label: (filters) => `Exclure listes : ${filters.excludeRankedLists.length}`,
         section: 'rankedLists',
         clear: () => update({ excludeRankedLists: [] }),
       },
       {
         key: 'explicitContent',
         isActive: (filters) => !!filters.explicitContent,
-        label: (filters) => `Explicit: ${filters.explicitContent}`,
+        label: (filters) => `Explicite : ${filters.explicitContent}`,
         section: 'advanced',
         clear: () => update({ explicitContent: undefined }),
       },
       {
         key: 'plot',
         isActive: (filters) => !!filters.plot,
-        label: (filters) => `Plot: "${filters.plot}"`,
+        label: (filters) => `Intrigue : "${filters.plot}"`,
         section: 'textSearch',
         clear: () => update({ plot: undefined }),
       },
       {
         key: 'filmingLocations',
         isActive: (filters) => !!filters.filmingLocations,
-        label: (filters) => `Filmed in: "${filters.filmingLocations}"`,
+        label: (filters) => `Tourné en : "${filters.filmingLocations}"`,
         section: 'textSearch',
         clear: () => update({ filmingLocations: undefined }),
       },
       {
         key: 'withData',
         isActive: (filters) => filters.withData?.length > 0,
-        label: (filters) => `Must have: ${filters.withData.length} data type(s)`,
+        label: (filters) => `Doit contenir : ${filters.withData.length} type(s)`,
         section: 'advanced',
         clear: () => update({ withData: [] }),
       },
@@ -736,35 +736,35 @@ export function useActiveFilters({
       {
         key: 'format',
         isActive: (filters) => isAnilist && filters.format?.length > 0,
-        label: (filters) => `Format: ${getLabelSummary(anilistFormatOptions, filters.format)}`,
+        label: (filters) => `Format : ${getLabelSummary(anilistFormatOptions, filters.format)}`,
         section: 'filters',
         clear: () => update({ format: [] }),
       },
       {
         key: 'status',
         isActive: (filters) => isAnilist && filters.status?.length > 0,
-        label: (filters) => `Status: ${getLabelSummary(anilistStatusOptions, filters.status)}`,
+        label: (filters) => `Statut : ${getLabelSummary(anilistStatusOptions, filters.status)}`,
         section: 'filters',
         clear: () => update({ status: [] }),
       },
       {
         key: 'season',
         isActive: (filters) => isAnilist && !!filters.season,
-        label: (filters) => `Season: ${getOptionLabel(anilistSeasonOptions, filters.season)}`,
+        label: (filters) => `Saison : ${getOptionLabel(anilistSeasonOptions, filters.season)}`,
         section: 'filters',
         clear: () => update({ season: undefined }),
       },
       {
         key: 'seasonYear',
         isActive: (filters) => isAnilist && !!filters.seasonYear,
-        label: (filters) => `Year: ${filters.seasonYear}`,
+        label: (filters) => `Année : ${filters.seasonYear}`,
         section: 'filters',
         clear: () => update({ seasonYear: undefined }),
       },
       {
         key: 'popularityMin',
         isActive: (filters) => isAnilist && filters.popularityMin > 0,
-        label: (filters) => `Min popularity: ${filters.popularityMin.toLocaleString()}`,
+        label: (filters) => `Popularité min. : ${filters.popularityMin.toLocaleString()}`,
         section: 'filters',
         clear: () => update({ popularityMin: undefined }),
       },
@@ -773,7 +773,7 @@ export function useActiveFilters({
         isActive: (filters) =>
           isAnilist && (filters.averageScoreMin > 0 || filters.averageScoreMax < 100),
         label: (filters) =>
-          `Score: ${filters.averageScoreMin || 0}-${filters.averageScoreMax || 100}`,
+          `Score : ${filters.averageScoreMin || 0}–${filters.averageScoreMax || 100}`,
         section: 'filters',
         clear: () => update({ averageScoreMin: undefined, averageScoreMax: undefined }),
       },
@@ -781,7 +781,7 @@ export function useActiveFilters({
         key: 'countryOfOrigin',
         isActive: (filters) => isAnilist && !!filters.countryOfOrigin,
         label: (filters) =>
-          `Country: ${getOptionLabel(anilistCountryOptions, filters.countryOfOrigin)}`,
+          `Pays : ${getOptionLabel(anilistCountryOptions, filters.countryOfOrigin)}`,
         section: 'filters',
         clear: () => update({ countryOfOrigin: undefined }),
       },
@@ -789,7 +789,7 @@ export function useActiveFilters({
         key: 'sourceMaterial',
         isActive: (filters) => isAnilist && filters.sourceMaterial?.length > 0,
         label: (filters) =>
-          `Source: ${getLabelSummary(anilistSourceOptions, filters.sourceMaterial)}`,
+          `Source : ${getLabelSummary(anilistSourceOptions, filters.sourceMaterial)}`,
         section: 'filters',
         clear: () => update({ sourceMaterial: [] }),
       },
@@ -797,7 +797,7 @@ export function useActiveFilters({
         key: 'tags',
         isActive: (filters) => isAnilist && filters.tags?.length > 0,
         label: (filters) =>
-          `Tags: ${filters.tags.slice(0, 2).join(', ')}${filters.tags.length > 2 ? ` +${filters.tags.length - 2}` : ''}`,
+          `Tags : ${filters.tags.slice(0, 2).join(', ')}${filters.tags.length > 2 ? ` +${filters.tags.length - 2}` : ''}`,
         section: 'filters',
         clear: () => update({ tags: undefined }),
       },
@@ -805,14 +805,14 @@ export function useActiveFilters({
         key: 'excludeTags',
         isActive: (filters) => isAnilist && filters.excludeTags?.length > 0,
         label: (filters) =>
-          `Exclude tags: ${filters.excludeTags.slice(0, 2).join(', ')}${filters.excludeTags.length > 2 ? ` +${filters.excludeTags.length - 2}` : ''}`,
+          `Exclure tags : ${filters.excludeTags.slice(0, 2).join(', ')}${filters.excludeTags.length > 2 ? ` +${filters.excludeTags.length - 2}` : ''}`,
         section: 'filters',
         clear: () => update({ excludeTags: undefined }),
       },
       {
         key: 'episodes',
         isActive: (filters) => isAnilist && !!(filters.episodesMin || filters.episodesMax),
-        label: (filters) => `Episodes: ${filters.episodesMin || 0}-${filters.episodesMax || '∞'}`,
+        label: (filters) => `Épisodes : ${filters.episodesMin || 0}–${filters.episodesMax || '∞'}`,
         section: 'score',
         clear: () => update({ episodesMin: undefined, episodesMax: undefined }),
       },
@@ -820,14 +820,14 @@ export function useActiveFilters({
         key: 'duration',
         isActive: (filters) => isAnilist && !!(filters.durationMin || filters.durationMax),
         label: (filters) =>
-          `Duration: ${filters.durationMin || 0}-${filters.durationMax || '∞'} min`,
+          `Durée : ${filters.durationMin || 0}–${filters.durationMax || '∞'} min`,
         section: 'score',
         clear: () => update({ durationMin: undefined, durationMax: undefined }),
       },
       {
         key: 'isAdult',
         isActive: (filters) => isAnilist && !!filters.isAdult,
-        label: () => 'Adult content',
+        label: () => 'Contenu adulte',
         section: 'options',
         clear: () => update({ isAdult: undefined }),
       },
@@ -837,21 +837,21 @@ export function useActiveFilters({
         key: 'malRankingType',
         isActive: (filters) =>
           source === 'mal' && !!filters.malRankingType && filters.malRankingType !== 'all',
-        label: (filters) => `Ranking: ${getOptionLabel(malRankingTypes, filters.malRankingType)}`,
+        label: (filters) => `Classement : ${getOptionLabel(malRankingTypes, filters.malRankingType)}`,
         section: 'filters',
         clear: () => update({ malRankingType: undefined }),
       },
       {
         key: 'malSeason',
         isActive: (filters) => source === 'mal' && !!filters.malSeason,
-        label: (filters) => `Season: ${toTitleCase(filters.malSeason)}`,
+        label: (filters) => `Saison : ${toTitleCase(filters.malSeason)}`,
         section: 'filters',
         clear: () => update({ malSeason: undefined }),
       },
       {
         key: 'malSeasonYear',
         isActive: (filters) => source === 'mal' && !!filters.malSeasonYear,
-        label: (filters) => `Year: ${filters.malSeasonYear}`,
+        label: (filters) => `Année : ${filters.malSeasonYear}`,
         section: 'filters',
         clear: () => update({ malSeasonYear: undefined }),
       },
@@ -859,56 +859,56 @@ export function useActiveFilters({
         key: 'malSort',
         isActive: (filters) =>
           source === 'mal' && !!filters.malSort && filters.malSort !== 'anime_num_list_users',
-        label: (filters) => `Sort: ${getOptionLabel(malSortOptions, filters.malSort)}`,
+        label: (filters) => `Tri : ${getOptionLabel(malSortOptions, filters.malSort)}`,
         section: 'filters',
         clear: () => update({ malSort: undefined }),
       },
       {
         key: 'malGenres',
         isActive: (filters) => source === 'mal' && filters.malGenres?.length > 0,
-        label: (filters) => `Genres: ${filters.malGenres.length}`,
+        label: (filters) => `Genres : ${filters.malGenres.length}`,
         section: 'genres',
         clear: () => update({ malGenres: [] }),
       },
       {
         key: 'malExcludeGenres',
         isActive: (filters) => source === 'mal' && filters.malExcludeGenres?.length > 0,
-        label: (filters) => `Excluded: ${filters.malExcludeGenres.length}`,
+        label: (filters) => `Exclus : ${filters.malExcludeGenres.length}`,
         section: 'genres',
         clear: () => update({ malExcludeGenres: [] }),
       },
       {
         key: 'malMediaType',
         isActive: (filters) => source === 'mal' && filters.malMediaType?.length > 0,
-        label: (filters) => `Type: ${filters.malMediaType.join(', ')}`,
+        label: (filters) => `Type : ${filters.malMediaType.join(', ')}`,
         section: 'format',
         clear: () => update({ malMediaType: [] }),
       },
       {
         key: 'malStatus',
         isActive: (filters) => source === 'mal' && filters.malStatus?.length > 0,
-        label: (filters) => `Status: ${filters.malStatus.join(', ')}`,
+        label: (filters) => `Statut : ${filters.malStatus.join(', ')}`,
         section: 'format',
         clear: () => update({ malStatus: [] }),
       },
       {
         key: 'malRating',
         isActive: (filters) => source === 'mal' && !!filters.malRating,
-        label: (filters) => `Rating: ${filters.malRating}`,
+        label: (filters) => `Classification : ${filters.malRating}`,
         section: 'format',
         clear: () => update({ malRating: undefined }),
       },
       {
         key: 'malScore',
         isActive: (filters) => source === 'mal' && !!(filters.malScoreMin || filters.malScoreMax),
-        label: (filters) => `Score: ${filters.malScoreMin || 0}-${filters.malScoreMax || 10}`,
+        label: (filters) => `Score : ${filters.malScoreMin || 0}–${filters.malScoreMax || 10}`,
         section: 'score',
         clear: () => update({ malScoreMin: undefined, malScoreMax: undefined }),
       },
       {
         key: 'malOrderBy',
         isActive: (filters) => source === 'mal' && !!filters.malOrderBy,
-        label: (filters) => `Order: ${filters.malOrderBy}`,
+        label: (filters) => `Ordre : ${filters.malOrderBy}`,
         section: 'score',
         clear: () => update({ malOrderBy: undefined }),
       },
@@ -917,7 +917,7 @@ export function useActiveFilters({
       {
         key: 'kitsuListType',
         isActive: (filters) => source === 'kitsu' && filters.kitsuListType === 'trending',
-        label: () => 'Trending',
+        label: () => 'Tendances',
         section: 'filters',
         clear: () => update({ kitsuListType: 'browse' }),
       },
@@ -929,7 +929,7 @@ export function useActiveFilters({
           filters.kitsuSort !== '-averageRating' &&
           filters.kitsuListType !== 'trending',
         label: (filters) =>
-          `Sort: ${KITSU_SORT_LABELS[filters.kitsuSort] || humanizeSortValue(filters.kitsuSort)}`,
+          `Tri : ${KITSU_SORT_LABELS[filters.kitsuSort] || humanizeSortValue(filters.kitsuSort)}`,
         section: 'filters',
         clear: () => update({ kitsuSort: '-averageRating' }),
       },
@@ -942,7 +942,7 @@ export function useActiveFilters({
             .map((slug) => KITSU_CATEGORY_LABELS[slug] || slug);
           const extra =
             filters.kitsuCategories.length > 2 ? ` +${filters.kitsuCategories.length - 2}` : '';
-          return `Categories: ${names.join(', ')}${extra}`;
+          return `Catégories : ${names.join(', ')}${extra}`;
         },
         section: 'genres',
         clear: () => update({ kitsuCategories: [] }),
@@ -958,7 +958,7 @@ export function useActiveFilters({
             filters.kitsuExcludeCategories.length > 2
               ? ` +${filters.kitsuExcludeCategories.length - 2}`
               : '';
-          return `Exclude: ${names.join(', ')}${extra}`;
+          return `Exclure : ${names.join(', ')}${extra}`;
         },
         section: 'genres',
         clear: () => update({ kitsuExcludeCategories: [] }),
@@ -968,7 +968,7 @@ export function useActiveFilters({
         isActive: (filters) => source === 'kitsu' && filters.kitsuSubtype?.length > 0,
         label: (filters) => {
           const names = filters.kitsuSubtype.map((value) => KITSU_SUBTYPE_LABELS[value] || value);
-          return `Type: ${names.join(', ')}`;
+          return `Type : ${names.join(', ')}`;
         },
         section: 'format',
         clear: () => update({ kitsuSubtype: [] }),
@@ -978,7 +978,7 @@ export function useActiveFilters({
         isActive: (filters) => source === 'kitsu' && filters.kitsuStatus?.length > 0,
         label: (filters) => {
           const names = filters.kitsuStatus.map((value) => KITSU_STATUS_LABELS[value] || value);
-          return `Status: ${names.join(', ')}`;
+          return `Statut : ${names.join(', ')}`;
         },
         section: 'format',
         clear: () => update({ kitsuStatus: [] }),
@@ -990,7 +990,7 @@ export function useActiveFilters({
           const names = filters.kitsuAgeRating.map(
             (value) => KITSU_AGE_RATING_LABELS[value] || value
           );
-          return `Rating: ${names.join(', ')}`;
+          return `Classification : ${names.join(', ')}`;
         },
         section: 'format',
         clear: () => update({ kitsuAgeRating: [] }),
@@ -1000,8 +1000,8 @@ export function useActiveFilters({
         isActive: (filters) => source === 'kitsu' && !!filters.kitsuSeason,
         label: (filters) =>
           filters.kitsuSeasonYear
-            ? `Season: ${toTitleCase(filters.kitsuSeason)} ${filters.kitsuSeasonYear}`
-            : `Season: ${toTitleCase(filters.kitsuSeason)}`,
+            ? `Saison : ${toTitleCase(filters.kitsuSeason)} ${filters.kitsuSeasonYear}`
+            : `Saison : ${toTitleCase(filters.kitsuSeason)}`,
         section: 'season',
         clear: () => update({ kitsuSeason: undefined, kitsuSeasonYear: undefined }),
       },
@@ -1009,7 +1009,7 @@ export function useActiveFilters({
         key: 'kitsuSeasonYear',
         isActive: (filters) =>
           source === 'kitsu' && !filters.kitsuSeason && !!filters.kitsuSeasonYear,
-        label: (filters) => `Year: ${filters.kitsuSeasonYear}`,
+        label: (filters) => `Année : ${filters.kitsuSeasonYear}`,
         section: 'season',
         clear: () => update({ kitsuSeasonYear: undefined }),
       },
@@ -1019,7 +1019,7 @@ export function useActiveFilters({
         key: 'simklListType',
         isActive: (filters) =>
           source === 'simkl' && !!filters.simklListType && filters.simklListType !== 'trending',
-        label: (filters) => `List: ${getOptionLabel(simklListTypes, filters.simklListType)}`,
+        label: (filters) => `Liste : ${getOptionLabel(simklListTypes, filters.simklListType)}`,
         section: 'filters',
         clear: () => update({ simklListType: undefined }),
       },
@@ -1030,7 +1030,7 @@ export function useActiveFilters({
           !!filters.simklTrendingPeriod &&
           filters.simklTrendingPeriod !== 'week',
         label: (filters) =>
-          `Period: ${getOptionLabel(simklTrendingPeriods, filters.simklTrendingPeriod)}`,
+          `Période : ${getOptionLabel(simklTrendingPeriods, filters.simklTrendingPeriod)}`,
         section: 'filters',
         clear: () => update({ simklTrendingPeriod: undefined }),
       },
@@ -1038,14 +1038,14 @@ export function useActiveFilters({
         key: 'simklBestFilter',
         isActive: (filters) =>
           source === 'simkl' && !!filters.simklBestFilter && filters.simklBestFilter !== 'all',
-        label: (filters) => `Best: ${getOptionLabel(simklBestFilters, filters.simklBestFilter)}`,
+        label: (filters) => `Meilleur : ${getOptionLabel(simklBestFilters, filters.simklBestFilter)}`,
         section: 'filters',
         clear: () => update({ simklBestFilter: undefined }),
       },
       {
         key: 'simklGenre',
         isActive: (filters) => source === 'simkl' && !!filters.simklGenre,
-        label: (filters) => `Genre: ${filters.simklGenre}`,
+        label: (filters) => `Genre : ${filters.simklGenre}`,
         section: 'filters',
         clear: () => update({ simklGenre: undefined }),
       },
@@ -1053,7 +1053,7 @@ export function useActiveFilters({
         key: 'simklSort',
         isActive: (filters) =>
           source === 'simkl' && !!filters.simklSort && filters.simklSort !== 'rank',
-        label: (filters) => `Sort: ${getOptionLabel(simklSortOptions, filters.simklSort)}`,
+        label: (filters) => `Tri : ${getOptionLabel(simklSortOptions, filters.simklSort)}`,
         section: 'filters',
         clear: () => update({ simklSort: undefined }),
       },
@@ -1065,7 +1065,7 @@ export function useActiveFilters({
           !!filters.simklType &&
           filters.simklType !== 'all' &&
           localCatalog?.type !== 'movie',
-        label: (filters) => `Type: ${getOptionLabel(simklAnimeTypes, filters.simklType)}`,
+        label: (filters) => `Type : ${getOptionLabel(simklAnimeTypes, filters.simklType)}`,
         section: 'filters',
         clear: () => update({ simklType: undefined }),
       },
@@ -1080,7 +1080,7 @@ export function useActiveFilters({
         label: (filters) => {
           const listType = normalizeTraktListType(filters.traktListType);
           const allOptions = [...traktListTypes, ...traktCommunityMetrics];
-          return `List: ${getOptionLabel(allOptions, listType)}`;
+          return `Liste : ${getOptionLabel(allOptions, listType)}`;
         },
         section: 'filters',
         clear: () =>
@@ -1104,7 +1104,7 @@ export function useActiveFilters({
             filters.traktPeriod !== 'weekly'
           );
         },
-        label: (filters) => `Period: ${humanizeFilterValue(filters.traktPeriod)}`,
+        label: (filters) => `Période : ${humanizeFilterValue(filters.traktPeriod)}`,
         section: 'filters',
         clear: () => update({ traktPeriod: undefined }),
       },
@@ -1116,7 +1116,7 @@ export function useActiveFilters({
           return supportsTraktCalendarSettings(listType) && !!filters.traktCalendarType;
         },
         label: (filters) =>
-          `Feed: ${getOptionLabel(traktCalendarTypes, filters.traktCalendarType)}`,
+          `Calendrier : ${getOptionLabel(traktCalendarTypes, filters.traktCalendarType)}`,
         section: 'filters',
         clear: () => update({ traktCalendarType: undefined }),
       },
@@ -1133,7 +1133,7 @@ export function useActiveFilters({
           );
         },
         label: (filters) =>
-          `Date Order: ${filters.traktCalendarSort === 'desc' ? 'Descending' : 'Ascending'}`,
+          `Ordre dates : ${filters.traktCalendarSort === 'desc' ? 'Décroissant' : 'Croissant'}`,
         section: 'filters',
         clear: () => update({ traktCalendarSort: undefined }),
       },
@@ -1148,7 +1148,7 @@ export function useActiveFilters({
           );
         },
         label: (filters) =>
-          `Range: ${filters.traktCalendarStartDate || '...'} to ${filters.traktCalendarEndDate || '...'}`,
+          `Période : ${filters.traktCalendarStartDate || '...'} au ${filters.traktCalendarEndDate || '...'}`,
         section: 'filters',
         clear: () => update({ traktCalendarStartDate: undefined, traktCalendarEndDate: undefined }),
       },
@@ -1193,7 +1193,7 @@ export function useActiveFilters({
         key: 'traktLanguages',
         isActive: (filters) => source === 'trakt' && filters.traktLanguages?.length,
         label: (filters) =>
-          `Languages: ${filters.traktLanguages.map((c) => c.toUpperCase()).join(', ')}`,
+          `Langues : ${filters.traktLanguages.map((c) => c.toUpperCase()).join(', ')}`,
         section: 'filters',
         clear: () => update({ traktLanguages: undefined }),
       },
@@ -1201,7 +1201,7 @@ export function useActiveFilters({
         key: 'traktCountries',
         isActive: (filters) => source === 'trakt' && filters.traktCountries?.length,
         label: (filters) =>
-          `Countries: ${filters.traktCountries.map((c) => c.toUpperCase()).join(', ')}`,
+          `Pays : ${filters.traktCountries.map((c) => c.toUpperCase()).join(', ')}`,
         section: 'filters',
         clear: () => update({ traktCountries: undefined }),
       },
@@ -1216,7 +1216,7 @@ export function useActiveFilters({
           });
           const shown = names.slice(0, 2).join(', ');
           const extra = names.length > 2 ? ` +${names.length - 2}` : '';
-          return `Networks: ${shown}${extra}`;
+          return `Réseaux : ${shown}${extra}`;
         },
         section: 'network',
         clear: () => update({ traktNetworkIds: undefined }),
@@ -1224,14 +1224,14 @@ export function useActiveFilters({
       {
         key: 'traktGenres',
         isActive: (filters) => source === 'trakt' && filters.traktGenres?.length,
-        label: (filters) => `Genres: ${filters.traktGenres.length}`,
+        label: (filters) => `Genres : ${filters.traktGenres.length}`,
         section: 'genres',
         clear: () => update({ traktGenres: undefined }),
       },
       {
         key: 'traktExcludeGenres',
         isActive: (filters) => source === 'trakt' && filters.traktExcludeGenres?.length,
-        label: (filters) => `Excluded: ${filters.traktExcludeGenres.length}`,
+        label: (filters) => `Exclus : ${filters.traktExcludeGenres.length}`,
         section: 'genres',
         clear: () => update({ traktExcludeGenres: undefined }),
       },
@@ -1240,7 +1240,7 @@ export function useActiveFilters({
         isActive: (filters) =>
           source === 'trakt' && (filters.traktYearMin != null || filters.traktYearMax != null),
         label: (filters) =>
-          `Year: ${filters.traktYearMin ?? '...'}–${filters.traktYearMax ?? '...'}`,
+          `Année : ${filters.traktYearMin ?? '...'}–${filters.traktYearMax ?? '...'}`,
         section: 'filters',
         clear: () => update({ traktYearMin: undefined, traktYearMax: undefined }),
       },
@@ -1249,14 +1249,14 @@ export function useActiveFilters({
         isActive: (filters) =>
           source === 'trakt' && !!(filters.traktRatingMin || filters.traktRatingMax),
         label: (filters) =>
-          `Rating: ${filters.traktRatingMin ?? 0}–${filters.traktRatingMax ?? 100}`,
+          `Note : ${filters.traktRatingMin ?? 0}–${filters.traktRatingMax ?? 100}`,
         section: 'filters',
         clear: () => update({ traktRatingMin: undefined, traktRatingMax: undefined }),
       },
       {
         key: 'traktVotesMin',
         isActive: (filters) => source === 'trakt' && !!filters.traktVotesMin,
-        label: (filters) => `Min Votes: ${filters.traktVotesMin}`,
+        label: (filters) => `Votes min. : ${filters.traktVotesMin}`,
         section: 'ratings',
         clear: () => update({ traktVotesMin: undefined }),
       },
@@ -1266,14 +1266,14 @@ export function useActiveFilters({
           source === 'trakt' &&
           (filters.traktAiredEpisodesMin != null || filters.traktAiredEpisodesMax != null),
         label: (filters) =>
-          `Aired Episodes: ${filters.traktAiredEpisodesMin ?? '...'}–${filters.traktAiredEpisodesMax ?? '...'}`,
+          `Épisodes diffusés : ${filters.traktAiredEpisodesMin ?? '...'}–${filters.traktAiredEpisodesMax ?? '...'}`,
         section: 'filters',
         clear: () => update({ traktAiredEpisodesMin: undefined, traktAiredEpisodesMax: undefined }),
       },
       {
         key: 'traktExcludeSingleSeason',
         isActive: (filters) => source === 'trakt' && !!filters.traktExcludeSingleSeason,
-        label: () => 'Hide New / Single-Season Shows',
+        label: () => 'Masquer les nouvelles séries / à saison unique',
         section: 'filters',
         clear: () => update({ traktExcludeSingleSeason: undefined }),
       },

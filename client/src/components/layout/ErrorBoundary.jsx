@@ -39,11 +39,11 @@ export class ErrorBoundary extends Component {
             >
               <h2 style={{ fontSize: '24px' }}>Une erreur est survenue</h2>
               <p style={{ color: 'var(--text-muted)', maxWidth: '400px' }}>
-                An unexpected error occurred. Please reload the page to try again.
+                Une erreur inattendue s’est produite. Veuillez recharger la page pour réessayer.
               </p>
               <button className="btn btn-primary" onClick={this.handleReset}>
                 <RefreshCw size={18} />
-                Reload
+                Recharger
               </button>
             </div>
           </main>

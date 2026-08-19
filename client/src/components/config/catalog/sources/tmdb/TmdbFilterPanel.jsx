@@ -230,7 +230,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
           {!isStudioMode && (
             <>
               <div className="filter-group">
-                <span className="filter-label">Find collection</span>
+                <span className="filter-label">Trouver une collection</span>
                 <SearchInput
                   type="collection"
                   placeholder="Rechercher des collections TMDB..."
@@ -268,12 +268,12 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
               </div>
 
               <div className="filter-group" style={{ marginTop: 12 }}>
-                <span className="filter-label">Collection order</span>
+                <span className="filter-label">Ordre de la collection</span>
                 <SearchableSelect
                   options={collectionSortOptions}
                   value={localCatalog?.filters?.sortBy || 'collection_order'}
                   onChange={(value) => onFiltersChange('sortBy', value)}
-                  placeholder="Collection Order"
+                  placeholder="Ordre de la collection"
                   searchPlaceholder="Rechercher..."
                   labelKey="label"
                   valueKey="value"
@@ -286,7 +286,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
           {isStudioMode && (
             <>
               <div className="filter-group">
-                <span className="filter-label">Find studio</span>
+                <span className="filter-label">Trouver un studio</span>
                 <SearchInput
                   type="company"
                   placeholder="Rechercher des studios TMDB..."

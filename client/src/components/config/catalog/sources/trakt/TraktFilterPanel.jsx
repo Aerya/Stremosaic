@@ -37,17 +37,17 @@ import {
 
 const CURRENT_YEAR = new Date().getFullYear();
 const RECENTLY_AIRED_DAY_PRESETS = [
-  { value: '30', label: '1 Month' },
-  { value: '90', label: '3 Months' },
-  { value: '180', label: '6 Months' },
-  { value: '365', label: '12 Months' },
-  { value: '1095', label: '3 Years' },
-  { value: '1825', label: '5 Years' },
-  { value: '3650', label: '10 Years' },
+  { value: '30', label: '1 mois' },
+  { value: '90', label: '3 mois' },
+  { value: '180', label: '6 mois' },
+  { value: '365', label: '12 mois' },
+  { value: '1095', label: '3 ans' },
+  { value: '1825', label: '5 ans' },
+  { value: '3650', label: '10 ans' },
 ];
 const CALENDAR_SORT_OPTIONS = [
-  { value: 'desc', label: 'Descending (Newest → Oldest)' },
-  { value: 'asc', label: 'Ascending (Oldest → Newest)' },
+  { value: 'desc', label: 'Décroissant (Plus récent → Plus ancien)' },
+  { value: 'asc', label: 'Croissant (Plus ancien → Plus récent)' },
 ];
 
 function getDaysUntilEndOfYearUtc() {
@@ -188,9 +188,9 @@ export function TraktFilterPanel({
   const upcomingDayPresets = useMemo(() => {
     const daysToYearEnd = getDaysUntilEndOfYearUtc();
     return [
-      { value: '7', label: 'Next Week Releases' },
-      { value: '30', label: 'Next Month' },
-      { value: String(daysToYearEnd), label: 'This Year' },
+      { value: '7', label: 'Sorties de la semaine prochaine' },
+      { value: '30', label: 'Mois prochain' },
+      { value: String(daysToYearEnd), label: 'Cette année' },
     ];
   }, []);
   const calendarDayPresetOptions =
@@ -961,10 +961,10 @@ export function TraktFilterPanel({
               label="Option"
               tooltip={
                 activeBrowseType === 'calendar'
-                  ? 'Calendar options combine timeframe (upcoming/recently aired) and feed type.'
+                  ? 'Les options du calendrier combinent la période (à venir / récemment diffusé) et le type de flux.'
                   : activeListType === 'recommended'
-                    ? 'Shows titles most often recommended by the Trakt community in the selected period. This is community-aggregated data — not your personal Trakt recommendations (those require account OAuth which is not supported).'
-                    : 'Select the specific list option within the chosen browse type.'
+                    ? 'Affiche les contenus les plus souvent recommandés par la communauté Trakt sur la période choisie. Il s’agit de données agrégées par la communauté, pas de vos recommandations Trakt personnelles.'
+                    : 'Sélectionner l’option spécifique de la liste dans le type de navigation choisi.'
               }
             />
             <SearchableSelect
@@ -979,7 +979,7 @@ export function TraktFilterPanel({
             />
             {activeBrowseType === 'calendar' && (
               <span className="filter-label-hint" style={{ marginTop: '4px' }}>
-                Example: Upcoming • Movie Releases, or Recently Aired • Season Premieres.
+                Exemple : À venir • Films, ou Récemment diffusé • Premières de saison.
               </span>
             )}
           </div>
@@ -987,7 +987,7 @@ export function TraktFilterPanel({
 
         {showPeriod && traktPeriods.length > 0 && (
           <div className="filter-group">
-            <LabelWithTooltip label="Period" tooltip="Time range for this list." />
+            <LabelWithTooltip label="Période" tooltip="Intervalle de temps pour cette liste." />
             <AnimeFormatSelector
               selected={[filters.traktPeriod || 'weekly']}
               options={traktPeriods}
@@ -1023,11 +1023,11 @@ export function TraktFilterPanel({
             />
 
             <LabelWithTooltip
-              label="Window"
+              label="Fenêtre"
               tooltip={
                 activeListType === 'calendar'
-                  ? 'Pick a future preset for upcoming releases (next week, next month, this year).'
-                  : 'Pick a past preset ending today for recently aired titles.'
+                  ? 'Choisir un préréglage futur pour les sorties à venir (semaine prochaine, mois prochain, cette année).'
+                  : 'Choisir un préréglage passé se terminant aujourd\'hui pour les contenus récemment diffusés.'
               }
             />
             <AnimeFormatSelector
@@ -1097,7 +1097,7 @@ export function TraktFilterPanel({
         {showAdvancedFilters && !isMovie && (
           <>
             <RangeSlider
-              label="Aired Episodes"
+              label="Épisodes diffusés"
               min={0}
               max={1000}
               step={1}
@@ -1131,10 +1131,10 @@ export function TraktFilterPanel({
                 }}
               >
                 <div className="released-only-content">
-                  <span className="released-only-title">Hide New / Single-Season Shows</span>
+                  <span className="released-only-title">Masquer nouvelles séries / à saison unique</span>
                   <span className="released-only-desc">
-                    Exclude brand new series, premieres, or miniseries that only have one season
-                    available.
+                    Exclure les nouvelles séries, premières, ou mini-séries qui n'ont qu'une seule saison
+                    disponible.
                   </span>
                 </div>
                 <div className="released-only-toggle">
@@ -1238,8 +1238,8 @@ export function TraktFilterPanel({
       {(showAdvancedFilters || showCoreRatingVoteFilters) && (
         <FilterSection
           id="ratings"
-          title="Ratings & Votes"
-          description="IMDb, TMDB, Rotten Tomatoes, Metacritic, vote counts"
+          title="Notes & Votes"
+          description="IMDb, TMDB, Rotten Tomatoes, Metacritic, nombre de votes"
           icon={Star}
           isOpen={expandedSections?.ratings}
           onToggle={onToggleSection}
@@ -1317,7 +1317,7 @@ export function TraktFilterPanel({
 
           <div className="filter-grid">
             <div className="filter-group">
-              <LabelWithTooltip label="Trakt Min Votes" tooltip="Nombre minimum de votes Trakt." />
+              <LabelWithTooltip label="Votes Trakt minimum" tooltip="Nombre minimum de votes Trakt." />
               <input
                 type="number"
                 className="input"
@@ -1334,7 +1334,7 @@ export function TraktFilterPanel({
 
             {externalRatingSupport.imdbVotes && (
               <div className="filter-group">
-                <LabelWithTooltip label="IMDb Min Votes" tooltip="Nombre minimum de votes IMDb." />
+                <LabelWithTooltip label="Votes IMDb minimum" tooltip="Nombre minimum de votes IMDb." />
                 <input
                   type="number"
                   className="input"
@@ -1352,7 +1352,7 @@ export function TraktFilterPanel({
 
             {externalRatingSupport.tmdbVotes && (
               <div className="filter-group">
-                <LabelWithTooltip label="TMDB Min Votes" tooltip="Nombre minimum de votes TMDB." />
+                <LabelWithTooltip label="Votes TMDB minimum" tooltip="Nombre minimum de votes TMDB." />
                 <input
                   type="number"
                   className="input"
@@ -1460,7 +1460,7 @@ export function TraktFilterPanel({
         <Checkbox
           checked={!!filters.randomize}
           onChange={(checked) => onFiltersChange('randomize', checked || undefined)}
-          label="Randomize Results"
+          label="Aléatoire"
           tooltip="Charger une page aléatoire parmi les résultats et les mélanger."
         />
 

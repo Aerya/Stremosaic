@@ -150,7 +150,7 @@ export const KITSU_SOURCE = {
     if (filters.kitsuListType === 'trending') {
       active.push({
         key: 'kitsuListType',
-        label: 'Trending',
+        label: 'Tendances',
         section: 'filters',
       });
     }
@@ -158,7 +158,7 @@ export const KITSU_SOURCE = {
     if (filters.kitsuSort && filters.kitsuSort !== '-averageRating') {
       active.push({
         key: 'kitsuSort',
-        label: `Sort: ${resolveSortLabel(kitsuSortOptions, filters.kitsuSort)}`,
+        label: `Tri : ${resolveSortLabel(kitsuSortOptions, filters.kitsuSort)}`,
         section: 'filters',
       });
     }
@@ -172,7 +172,7 @@ export const KITSU_SOURCE = {
         filters.kitsuCategories.length > 2 ? ` +${filters.kitsuCategories.length - 2}` : '';
       active.push({
         key: 'kitsuCategories',
-        label: `Categories: ${names.join(', ')}${extra}`,
+        label: `Catégories : ${names.join(', ')}${extra}`,
         section: 'genres',
       });
     }
@@ -188,7 +188,7 @@ export const KITSU_SOURCE = {
           : '';
       active.push({
         key: 'kitsuExcludeCategories',
-        label: `Exclude: ${names.join(', ')}${extra}`,
+        label: `Exclure : ${names.join(', ')}${extra}`,
         section: 'genres',
       });
     }
@@ -197,7 +197,7 @@ export const KITSU_SOURCE = {
       const names = filters.kitsuSubtype.map((v) => resolveOptionLabel(kitsuSubtypes, v));
       active.push({
         key: 'kitsuSubtype',
-        label: `Type: ${names.join(', ')}`,
+        label: `Type : ${names.join(', ')}`,
         section: 'format',
       });
     }
@@ -206,7 +206,7 @@ export const KITSU_SOURCE = {
       const names = filters.kitsuStatus.map((v) => resolveOptionLabel(kitsuStatuses, v));
       active.push({
         key: 'kitsuStatus',
-        label: `Status: ${names.join(', ')}`,
+        label: `Statut : ${names.join(', ')}`,
         section: 'format',
       });
     }
@@ -215,7 +215,7 @@ export const KITSU_SOURCE = {
       const names = filters.kitsuAgeRating.map((v) => resolveOptionLabel(kitsuAgeRatings, v));
       active.push({
         key: 'kitsuAgeRating',
-        label: `Rating: ${names.join(', ')}`,
+        label: `Classification : ${names.join(', ')}`,
         section: 'format',
       });
     }
@@ -223,13 +223,13 @@ export const KITSU_SOURCE = {
     if (filters.kitsuSeason && filters.kitsuSeasonYear) {
       active.push({
         key: 'kitsuSeason',
-        label: `Season: ${filters.kitsuSeason} ${filters.kitsuSeasonYear}`,
+        label: `Saison : ${filters.kitsuSeason} ${filters.kitsuSeasonYear}`,
         section: 'season',
       });
     }
 
     if (filters.randomize) {
-      active.push({ key: 'randomize', label: 'Randomize', section: 'options' });
+      active.push({ key: 'randomize', label: 'Aléatoire', section: 'options' });
     }
 
     return active;

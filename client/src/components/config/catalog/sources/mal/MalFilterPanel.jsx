@@ -264,7 +264,7 @@ export function MalFilterPanel({
       {type === 'series' && (
         <FilterSection
           id="season"
-          title="Season"
+          title="Saison"
           description="Filtrer selon la saison et l’année de l’anime"
           icon={Calendar}
           isOpen={expandedSections?.season}
@@ -274,7 +274,7 @@ export function MalFilterPanel({
           <div className="filter-grid">
             <div className="filter-group">
               <LabelWithTooltip
-                label="Seasonal Anime"
+                label="Anime saisonnier"
                 tooltip="Filtrer selon la saison. Lorsqu’une saison est sélectionnée, le classement et les filtres avancés sont ignorés."
               />
               <AnimeSeasonSelector
@@ -285,7 +285,7 @@ export function MalFilterPanel({
                 seasonOptions={MAL_SEASON_OPTIONS}
               />
               <p className="text-secondary" style={{ fontSize: '11px', marginTop: '6px' }}>
-                When a season is selected, ranking/browse filters are overridden
+                Lorsqu’une saison est sélectionnée, le classement et les filtres de navigation sont ignorés.
               </p>
             </div>
 
@@ -296,7 +296,7 @@ export function MalFilterPanel({
                   options={malSortOptions}
                   value={filters.malSort || 'anime_num_list_users'}
                   onChange={(value) => onFiltersChange('malSort', value)}
-                  placeholder="Most Listed"
+                  placeholder="Plus ajoutés aux listes"
                   searchPlaceholder="Rechercher..."
                   labelKey="label"
                   valueKey="value"
@@ -310,7 +310,7 @@ export function MalFilterPanel({
 
       <FilterSection
         id="score"
-        title="Score & Sorting"
+        title="Score & Tri"
         description="Filtrer selon la note et trier les résultats"
         icon={Star}
         isOpen={expandedSections?.score}
@@ -318,7 +318,7 @@ export function MalFilterPanel({
         badgeCount={getScoreBadge()}
       >
         <RangeSlider
-          label="Score Range"
+          label="Tranche de score"
           min={0}
           max={10}
           step={0.5}
@@ -338,7 +338,7 @@ export function MalFilterPanel({
               options={malOrderByOptions}
               value={filters.malOrderBy || ''}
               onChange={(val) => onFiltersChange('malOrderBy', val || undefined)}
-              placeholder="Score (default)"
+              placeholder="Score (par défaut)"
               searchPlaceholder="Rechercher..."
               labelKey="label"
               valueKey="value"

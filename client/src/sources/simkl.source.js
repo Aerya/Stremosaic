@@ -131,7 +131,7 @@ export const SIMKL_SOURCE = {
     if (filters.simklListType && filters.simklListType !== 'trending') {
       active.push({
         key: 'simklListType',
-        label: `List: ${resolveOptionLabel(simklListTypes, filters.simklListType)}`,
+        label: `Liste : ${resolveOptionLabel(simklListTypes, filters.simklListType)}`,
         section: 'filters',
       });
     }
@@ -139,20 +139,20 @@ export const SIMKL_SOURCE = {
     if (filters.simklTrendingPeriod && filters.simklTrendingPeriod !== 'week') {
       active.push({
         key: 'simklTrendingPeriod',
-        label: `Period: ${resolveOptionLabel(simklTrendingPeriods, filters.simklTrendingPeriod)}`,
+        label: `Période : ${resolveOptionLabel(simklTrendingPeriods, filters.simklTrendingPeriod)}`,
         section: 'filters',
       });
     }
 
     if (filters.simklGenre) {
-      active.push({ key: 'simklGenre', label: `Genre: ${filters.simklGenre}`, section: 'genres' });
+      active.push({ key: 'simklGenre', label: `Genre : ${filters.simklGenre}`, section: 'genres' });
     }
 
     if (filters.simklType && filters.simklType !== 'all') {
       if (catalogType !== 'movie' || filters.simklType === 'movies') {
         active.push({
           key: 'simklType',
-          label: `Type: ${resolveOptionLabel(simklAnimeTypes, filters.simklType)}`,
+          label: `Type : ${resolveOptionLabel(simklAnimeTypes, filters.simklType)}`,
           section: 'filters',
         });
       }
@@ -161,13 +161,13 @@ export const SIMKL_SOURCE = {
     if (filters.simklBestFilter) {
       active.push({
         key: 'simklBestFilter',
-        label: `Best: ${resolveOptionLabel(simklBestFilters, filters.simklBestFilter)}`,
+        label: `Meilleur : ${resolveOptionLabel(simklBestFilters, filters.simklBestFilter)}`,
         section: 'filters',
       });
     }
 
     if (filters.randomize) {
-      active.push({ key: 'randomize', label: 'Randomized', section: 'options' });
+      active.push({ key: 'randomize', label: 'Aléatoire', section: 'options' });
     }
 
     return active;

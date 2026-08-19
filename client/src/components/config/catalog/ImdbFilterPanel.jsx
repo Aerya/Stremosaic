@@ -576,7 +576,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
         <div className="filter-spacer">
           <RangeSlider
-            label="Vote Count"
+            label="Nombre de votes"
             tooltip="Filtrer selon le nombre d’évaluations afin de distinguer les titres populaires des œuvres plus confidentielles."
             min={0}
             max={1000000}
@@ -600,7 +600,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <div className="filter-grid">
           <div className="filter-group">
             <LabelWithTooltip
-              label="Languages"
+              label="Langues"
               tooltip="Filtrer selon la langue originale du contenu. Plusieurs choix possibles."
             />
             <SearchableSelect
@@ -635,7 +635,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
           <div className="filter-group">
             <LabelWithTooltip
-              label="Countries"
+              label="Pays"
               tooltip="Filtrer selon le pays d’origine. Plusieurs choix possibles."
             />
             <SearchableSelect
@@ -778,7 +778,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
       <FilterSection
         id="keywords"
-        title="Keywords"
+        title="Mots-clés"
         description="Saisissez un mot-clé pour filtrer."
         icon={Tag}
         isOpen={localExpandedSections.keywords}
@@ -786,7 +786,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         badgeCount={(filters.keywords || []).length + (filters.excludeKeywords || []).length}
       >
         <div className="filter-group mb-4">
-          <LabelWithTooltip label="Mots-clés à inclure" tooltip="Results must match these keywords." />
+          <LabelWithTooltip label="Mots-clés à inclure" tooltip="Les résultats doivent correspondre à ces mots-clés." />
           <div>
             <input
               type="text"
@@ -818,7 +818,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <div className="filter-group mt-6">
           <LabelWithTooltip
             label="Mots-clés à exclure"
-            tooltip="Results must NOT match these keywords."
+            tooltip="Les résultats ne doivent pas correspondre à ces mots-clés."
           />
           <div>
             <input
@@ -857,7 +857,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       {imdbAwards.length > 0 && (
         <FilterSection
           id="awards"
-          title="Awards"
+          title="Récompenses"
           description="Filtrer selon les récompenses ou nominations"
           icon={Award}
           isOpen={localExpandedSections.awards}
@@ -908,7 +908,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       {/* People & Studios */}
       <FilterSection
         id="people"
-        title="People & Studios"
+        title="Personnes et studios"
         description="Filtrer selon les personnes créditées et les sociétés de production"
         icon={Users}
         isOpen={localExpandedSections.people}
@@ -921,7 +921,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       >
         <div className="filter-group mb-4">
           <LabelWithTooltip
-            label="Credited People"
+            label="Personnes créditées"
             tooltip="Rechercher des acteurs, réalisateurs, scénaristes, etc. par nom à partir des données IMDb."
           />
           {onSearchImdbPeople && (
@@ -939,7 +939,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
         <div className="filter-group mt-6">
           <LabelWithTooltip
-            label="Production Companies"
+            label="Sociétés de production"
             tooltip="Rechercher des sociétés de production, studios et distributeurs."
           />
           {onSearchImdbCompanies && (
@@ -978,8 +978,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       {isMovieCatalog && (
         <FilterSection
           id="theatres"
-          title="In Theatres"
-          description="Find titles currently in theatres near a city"
+          title="Au cinéma"
+          description="Trouver les titres actuellement au cinéma près d'une ville"
           icon={MapPin}
           isOpen={localExpandedSections.theatres}
           onToggle={toggleSection}
@@ -987,7 +987,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         >
           <div className="filter-group mb-4">
             <LabelWithTooltip
-              label="City"
+              label="Ville"
               tooltip="Rechercher une ville pour trouver les titres actuellement à l’affiche à proximité."
             />
             {onSearchCities && (
@@ -1007,7 +1007,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
                 />
                 {selectedCity && (
                   <p className="text-xs text-gray-400 mt-2">
-                    Selected: {selectedCity.name}
+                    Sélectionné : {selectedCity.name}
                     {selectedCity.knownFor ? ` (${selectedCity.knownFor})` : ''}
                   </p>
                 )}
@@ -1017,7 +1017,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
           <div className="filter-group">
             <LabelWithTooltip
-              label="Radius (km)"
+              label="Rayon (km)"
               tooltip="Rayon de recherche autour de la ville sélectionnée, en kilomètres. Valeur par défaut : 50 km."
             />
             <SingleSlider
@@ -1037,7 +1037,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       {certificateCountryOptions.length > 0 && (
         <FilterSection
           id="certificates"
-          title="Certificates"
+          title="Classifications"
           description="Filtrer selon la classification du contenu (PG, R, etc.)"
           icon={Shield}
           isOpen={localExpandedSections.certificates}
@@ -1066,7 +1066,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       {visibleRankedLists.length > 0 && (
         <FilterSection
           id="rankedLists"
-          title="Ranked Lists"
+          title="Listes classées"
           description="Filtrer selon les classements IMDb (mieux notés / moins bien notés)."
           icon={ListOrdered}
           isOpen={localExpandedSections.rankedLists}
@@ -1188,7 +1188,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       >
         <div className="filter-group mb-4">
           <LabelWithTooltip
-            label="Plot Keywords"
+            label="Mots-clés de l'intrigue"
             tooltip="Rechercher les titres contenant ces mots dans leur résumé."
           />
           <div>
@@ -1269,7 +1269,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       {imdbWithDataOptions.length > 0 && (
         <FilterSection
           id="advanced"
-          title="Advanced Filters"
+          title="Filtres avancés"
           description="Contenu explicite et disponibilité des données"
           icon={Database}
           isOpen={localExpandedSections.advanced}
