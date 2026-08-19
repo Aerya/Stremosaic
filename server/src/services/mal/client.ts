@@ -11,7 +11,7 @@ const JIKAN_API_ORIGIN = new URL(JIKAN_API_BASE).origin;
 const MIN_INTERVAL_MS = 350; // ~3 req/s to respect Jikan rate limits
 const JIKAN_HEADERS = {
   Accept: 'application/json',
-  'User-Agent': `TMDB-Discover-Plus/${ADDON_VERSION} (+https://github.com/semi-column/stremosaic)`,
+  'User-Agent': `Stremosaic/${ADDON_VERSION} (+https://github.com/Aerya/Stremosaic)`,
 } as const;
 
 let lastRequestTime = 0;

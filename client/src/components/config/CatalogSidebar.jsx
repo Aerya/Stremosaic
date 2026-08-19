@@ -12,7 +12,7 @@ import {
   ChevronDown,
   Trophy,
   Award,
-  Settings,
+  Paramètres,
   Heart,
 } from 'lucide-react';
 import { SocialButtons } from '../social/SocialButtons.jsx';
@@ -21,8 +21,7 @@ import { useState, useEffect, lazy, Suspense, memo } from 'react';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { useCatalog, useTMDBData, useAppActions } from '../../context/AppContext';
 import { CatalogListSkeleton } from '../layout/Skeleton';
-import { DonateModal } from '../modals/DonateModal';
-import { SettingsModal } from '../modals/SettingsModal';
+import { ParamètresModal } from '../modals/ParamètresModal';
 import { ImportSelectModal } from '../modals/ImportSelectModal';
 import { ExportSelectModal } from '../modals/ExportSelectModal';
 
@@ -79,9 +78,8 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
   const [importData, setImportData] = useState(null);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [settingsInitialSection, setSettingsInitialSection] = useState('data');
-  const [isDonateOpen, setIsDonateOpen] = useState(false);
+  const [showParamètresModal, setShowParamètresModal] = useState(false);
+  const [settingsInitialSection, setParamètresInitialSection] = useState('data');
 
   useEffect(() => {
     setMoviePresetsCollapsed(isMobile);
@@ -89,19 +87,19 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
   }, [isMobile]);
 
   useEffect(() => {
-    const handleOpenPreferences = (event) => {
+    const handleOpenPréférences = (event) => {
       const requestedSection = event?.detail?.section;
-      setSettingsInitialSection(
+      setParamètresInitialSection(
         typeof requestedSection === 'string' && requestedSection.length > 0
           ? requestedSection
           : 'data'
       );
-      setShowSettingsModal(true);
+      setShowParamètresModal(true);
     };
 
-    window.addEventListener('open-preferences', handleOpenPreferences);
+    window.addEventListener('open-preferences', handleOpenPréférences);
     return () => {
-      window.removeEventListener('open-preferences', handleOpenPreferences);
+      window.removeEventListener('open-preferences', handleOpenPréférences);
     };
   }, []);
 
@@ -120,7 +118,7 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
     if (safeCatalogs.length > 0 && safeCatalogs[0].name) {
       return safeCatalogs[0].name;
     }
-    return 'Untitled Config';
+    return 'Configuration sans titre';
   };
 
   return (
@@ -139,27 +137,27 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
           <button
             className="btn btn-primary btn-sm sidebar-add-btn"
             onClick={onAddCatalog}
-            title="Add custom catalog"
+            title="Ajouter un catalogue personnalisé"
           >
-            <Plus size={16} /> <span>New Catalog</span>
+            <Plus size={16} /> <span>Nouveau catalogue</span>
           </button>
           <button
             className="btn btn-secondary btn-sm sidebar-settings-btn"
             onClick={() => {
-              setSettingsInitialSection('data');
-              setShowSettingsModal(true);
+              setParamètresInitialSection('data');
+              setShowParamètresModal(true);
             }}
-            aria-label="Settings"
-            title="Global Preferences"
+            aria-label="Paramètres"
+            title="Préférences globales"
           >
-            <Settings size={16} />
-            <span className="settings-text">Preferences</span>
+            <Paramètres size={16} />
+            <span className="settings-text">Préférences</span>
           </button>
         </div>
       </div>
 
       <div className="sidebar-support sidebar-support--top">
-        <SocialButtons onDonateClick={() => setIsDonateOpen(true)} />
+        <SocialButtons />
       </div>
 
       <div className="catalog-list">
@@ -168,8 +166,8 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
             <div className="empty-state-icon">
               <Film size={32} />
             </div>
-            <p>No catalogs yet</p>
-            <p className="text-sm">Add a custom catalog or use presets below</p>
+            <p>Aucun catalogue</p>
+            <p className="text-sm">Ajoutez un catalogue personnalisé ou utilisez les presets ci-dessous</p>
           </div>
         ) : (
           <Suspense fallback={<CatalogListSkeleton count={safeCatalogs.length || 3} />}>
@@ -187,7 +185,7 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
       </div>
 
       <div className="sidebar-section">
-        <h4 className="sidebar-section-title">Quick Add Presets</h4>
+        <h4 className="sidebar-section-title">Ajout rapide</h4>
 
         {imdbEnabled && (
           <div className="source-tabs" style={{ marginBottom: '12px' }}>
@@ -223,7 +221,7 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
             tabIndex={0}
           >
             <Film size={14} />
-            <span>Movies</span>
+            <span>Films</span>
             <ChevronDown size={14} className="chevron" />
           </div>
           <div className="preset-list">
@@ -250,7 +248,7 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
                   className={`preset-item ${source === 'imdb' ? 'preset-item--imdb' : ''} ${isAdded ? 'added' : ''}`}
                   onClick={() => !isAdded && onAddPresetCatalog(type, preset, source)}
                   disabled={isAdded}
-                  title={isAdded ? 'Already added' : preset.description}
+                  title={isAdded ? 'Déjà ajouté' : preset.description}
                 >
                   <IconComponent size={14} />
                   <span>{preset.label.replace(/^[^\s]+\s/, '')}</span>
@@ -276,7 +274,7 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
             tabIndex={0}
           >
             <Tv size={14} />
-            <span>TV Shows</span>
+            <span>Séries</span>
             <ChevronDown size={14} className="chevron" />
           </div>
           <div className="preset-list">
@@ -303,7 +301,7 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
                   className={`preset-item ${source === 'imdb' ? 'preset-item--imdb' : ''} ${isAdded ? 'added' : ''}`}
                   onClick={() => !isAdded && onAddPresetCatalog(type, preset, source)}
                   disabled={isAdded}
-                  title={isAdded ? 'Already added' : preset.description}
+                  title={isAdded ? 'Déjà ajouté' : preset.description}
                 >
                   <IconComponent size={14} />
                   <span>{preset.label.replace(/^[^\s]+\s/, '')}</span>
@@ -353,10 +351,10 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
           }}
         />
       )}
-      {showSettingsModal && (
-        <SettingsModal
-          isOpen={showSettingsModal}
-          onClose={() => setShowSettingsModal(false)}
+      {showParamètresModal && (
+        <ParamètresModal
+          isOpen={showParamètresModal}
+          onClose={() => setShowParamètresModal(false)}
           onShowExport={setShowExportModal}
           initialSection={settingsInitialSection}
           onImportData={(data) => {
@@ -365,7 +363,6 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
           }}
         />
       )}
-      <DonateModal isOpen={isDonateOpen} onClose={() => setIsDonateOpen(false)} />
     </aside>
   );
 });

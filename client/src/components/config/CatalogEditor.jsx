@@ -389,35 +389,9 @@ export const CatalogEditor = memo(function CatalogEditor() {
 
   const imdbSourceDisabledNotice = (
     <div className="empty-state">
-      <div
-        className="empty-state-icon"
-        style={{
-          color: 'var(--accent-primary)',
-          opacity: 0.8,
-          background: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
-        }}
-      >
-        <AlertTriangle size={48} />
-      </div>
-      <h3>IMDb Source Unavailable</h3>
-      <p style={{ maxWidth: '400px', margin: '0 auto', lineHeight: '1.5' }}>
-        IMDb catalogs are disabled on the nightly build due to resource constraints. Please switch
-        to the{' '}
-        <a
-          href="https://stremosaic.elfhosted.com/"
-          style={{
-            color: 'var(--accent-primary)',
-            fontWeight: 600,
-            textDecoration: 'none',
-          }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          stable version
-        </a>{' '}
-        to manage and edit IMDb catalogs.
-      </p>
+      <div className="empty-state-icon"><AlertTriangle size={48} /></div>
+      <h3>Source IMDb indisponible</h3>
+      <p>IMDb est conservé uniquement pour les identifiants et l’enrichissement. Les catalogues IMDb ne sont pas proposés comme source.</p>
     </div>
   );
 

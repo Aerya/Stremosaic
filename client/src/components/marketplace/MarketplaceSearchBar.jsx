@@ -18,7 +18,7 @@ export function MarketplaceSearchBar({
   value = '',
   onChange,
   id = 'marketplace-search',
-  placeholder = 'Search catalogs...',
+  placeholder = 'Rechercher des catalogues…',
 }) {
   const handleInput = (e) => onChange?.(e.target.value);
   const handleClear = () => onChange?.('');

@@ -402,13 +402,7 @@ router.get('/configs', requireAuth, resolveApiKey, async (req, res) => {
 router.get('/reference-data', requireAuth, resolveApiKey, async (req, res) => {
   try {
     const apiKey = getApiKey(req);
-    const configs = await getConfigsByApiKey(apiKey).catch(() => []);
-    const userConfig = configs[0] || null;
-    const traktClientId =
-      config.traktApi.clientId ||
-      (userConfig ? getTraktKeyFromConfig(userConfig) : null) ||
-      undefined;
-    const traktHasKey = !!config.traktApi.clientId || !!userConfig?.traktClientIdEncrypted;
+    // Reference data must remain available even when optional providers are absent.
 
     const [
       movieGenres,
@@ -435,32 +429,10 @@ router.get('/reference-data', requireAuth, resolveApiKey, async (req, res) => {
       }),
     ]);
 
-    const imdbEnabled = imdb.isImdbApiEnabled();
     const commonCertificateRatingsByCountry = buildCommonCertificateRatingsByCountry(
       movieCertifications,
       seriesCertifications
     );
-
-    let imdbData = null;
-    if (imdbEnabled) {
-      const presets = imdb.getPresetCatalogs();
-
-      imdbData = {
-        enabled: true,
-        genres: await imdb.getGenres(),
-        keywords: imdb.getKeywords(),
-        awards: [...imdb.IMDB_AWARDS],
-        sortOptions: imdb.getSortOptions(),
-        titleTypes: imdb.getTitleTypeOptions(),
-        presetCatalogs: [
-          ...presets.movie.map((p) => ({ ...p, type: 'movie' })),
-          ...presets.series.map((p) => ({ ...p, type: 'series' })),
-        ],
-        certificateRatings: commonCertificateRatingsByCountry,
-        rankedLists: imdb.getRankedLists(),
-        withDataOptions: imdb.getWithDataOptions(),
-      };
-    }
 
     const data = {
       genres: { movie: movieGenres, series: seriesGenres },
@@ -484,11 +456,11 @@ router.get('/reference-data', requireAuth, resolveApiKey, async (req, res) => {
           logo: n.logo || n.logoPath || null,
         })
       ),
-      imdb: imdbData,
+      imdb: null,
       anilist: {
         enabled: true,
         genres: anilist.getGenres(),
-        tags: await anilist.getTagsFromApi(),
+        tags: await anilist.getTagsFromApi().catch(() => []),
         sortOptions: anilist.getSortOptions(),
         formatOptions: anilist.getFormatOptions(),
         statusOptions: anilist.getStatusOptions(),
@@ -514,19 +486,6 @@ router.get('/reference-data', requireAuth, resolveApiKey, async (req, res) => {
         trendingPeriods: simkl.getTrendingPeriods(),
         bestFilters: simkl.getBestFilters(),
         animeTypes: simkl.getAnimeTypes(),
-      },
-      trakt: {
-        enabled: trakt.isTraktEnabled(),
-        genres: await trakt.getGenresByType(traktClientId).catch(() => trakt.getGenresByType()),
-        listTypes: trakt.getListTypes(),
-        periods: trakt.getPeriods(),
-        calendarTypes: trakt.getCalendarTypes(),
-        showStatuses: trakt.getShowStatuses(),
-        certificationsMovie: trakt.getCertifications('movie'),
-        certificationsSeries: trakt.getCertifications('series'),
-        communityMetrics: trakt.getCommunityMetrics(),
-        networks: await trakt.getNetworks(traktClientId).catch(() => []),
-        hasKey: traktHasKey,
       },
     };
 

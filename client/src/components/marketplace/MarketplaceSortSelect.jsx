@@ -2,11 +2,11 @@
  * Allowed marketplace sort modes (Requirement 8.1).
  */
 const SORT_OPTIONS = [
-  { value: 'relevance', label: 'Relevance' },
-  { value: 'popular', label: 'Most Popular' },
-  { value: 'most-installed', label: 'Most Installed' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'trending', label: 'Trending' },
+  { value: 'relevance', label: 'Pertinence' },
+  { value: 'popular', label: 'Plus populaires' },
+  { value: 'most-installed', label: 'Plus installés' },
+  { value: 'newest', label: 'Plus récents' },
+  { value: 'trending', label: 'Tendances' },
 ];
 
 /**
@@ -27,7 +27,7 @@ export function MarketplaceSortSelect({ value = 'relevance', onChange, id = 'mar
       className="select marketplace-sort-select"
       value={value}
       onChange={(e) => onChange?.(e.target.value)}
-      aria-label="Sort marketplace results"
+      aria-label="Trier les résultats du Marketplace"
     >
       {SORT_OPTIONS.map((opt) => (
         <option key={opt.value} value={opt.value}>

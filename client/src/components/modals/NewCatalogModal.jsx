@@ -4,10 +4,12 @@ import { useModalA11y } from '../../hooks/useModalA11y';
 import { getSource } from '../../sources';
 
 const SOURCES = [
-  { id: 'tmdb', desc: 'Standard TMDB discovery', alwaysVisible: true },
-  { id: 'anilist', desc: 'AniList anime database', alwaysVisible: true },
-  { id: 'kitsu', desc: 'Kitsu anime catalogs', alwaysVisible: true },
-  { id: 'simkl', desc: 'Simkl anime discovery', alwaysVisible: true },
+  { id: 'tmdb', desc: 'Découverte TMDB avancée', alwaysVisible: true },
+  { id: 'anilist', desc: 'Base anime AniList', alwaysVisible: true },
+  { id: 'mal', desc: 'Catalogues MyAnimeList', alwaysVisible: true },
+  { id: 'kitsu', desc: 'Catalogues anime Kitsu', alwaysVisible: true },
+  { id: 'simkl', desc: 'Découverte Simkl', alwaysVisible: true },
+  { id: 'bingebase', desc: 'Listes Bingebase', alwaysVisible: true },
 ];
 
 export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false }) {
@@ -62,13 +64,14 @@ export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false })
   };
 
   const placeholders = {
-    tmdb: 'e.g., My Sci-Fi Collection, Netflix Picks',
+    tmdb: 'ex. Science-fiction, Sélection Netflix',
     imdb: 'e.g., Oscar Winners, IMDb Top Rated',
-    anilist: 'e.g., Top Anime, Trending This Season',
-    mal: 'e.g., MAL Top Ranked, Seasonal Anime',
-    kitsu: 'e.g., Kitsu Trending, Top Rated Anime',
-    simkl: 'e.g., Trending Anime, Best of 2024',
-    trakt: 'e.g., Trending Movies, Most Watched',
+    anilist: 'ex. Top Anime, Tendances de la saison',
+    mal: 'ex. Top MAL, Anime de saison',
+    kitsu: 'ex. Tendances Kitsu, Anime les mieux notés',
+    simkl: 'ex. Anime tendances, Meilleurs de 2024',
+    bingebase: 'ex. Ma liste Bingebase',
+    trakt: 'e.g., Trending Films, Most Watched',
   };
 
   return (
@@ -84,15 +87,15 @@ export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false })
         ref={modalRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Create New Catalog"
+        aria-label="Créer un catalogue"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div className="modal-header" style={{ paddingBottom: '8px' }}>
           <div>
-            <h3 className="modal-title">Create New Catalog</h3>
+            <h3 className="modal-title">Créer un catalogue</h3>
             <p className="text-secondary" style={{ fontSize: '13px', marginTop: '4px' }}>
-              Choose a content type and source to get started
+              Choisissez une source et un type de contenu
             </p>
           </div>
           <button className="btn btn-ghost btn-icon" onClick={onClose}>
@@ -121,9 +124,9 @@ export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false })
               </div>
             </div>
 
-            {/* Content Type Toggle */}
+            {/* Type de contenu Toggle */}
             <div className="filter-group" style={{ marginTop: '16px' }}>
-              <span className="filter-label">Content Type</span>
+              <span className="filter-label">Type de contenu</span>
               <div className="content-type-toggle" style={{ marginBottom: 0 }}>
                 <button
                   type="button"
@@ -131,7 +134,7 @@ export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false })
                   onClick={() => setType('movie')}
                 >
                   <Film size={16} />
-                  Movies
+                  Films
                 </button>
                 <button
                   type="button"
@@ -139,7 +142,7 @@ export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false })
                   onClick={() => setType('series')}
                 >
                   <Tv size={16} />
-                  Series
+                  Séries
                 </button>
                 {supportedTypes.includes('anime') && (
                   <button
@@ -164,10 +167,10 @@ export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false })
               </div>
             </div>
 
-            {/* Catalog Name */}
+            {/* Nom du catalogue */}
             <div className="filter-group" style={{ marginTop: '16px' }}>
               <label className="filter-label" htmlFor="new-catalog-name">
-                Catalog Name
+                Nom du catalogue
               </label>
               <input
                 id="new-catalog-name"
@@ -184,10 +187,10 @@ export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false })
 
           <div className="modal-footer">
             <button type="button" className="btn btn-ghost" onClick={onClose}>
-              Cancel
+              Annuler
             </button>
             <button type="submit" className="btn btn-primary" disabled={!name.trim()}>
-              Create Catalog
+              Créer le catalogue
             </button>
           </div>
         </form>

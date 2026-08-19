@@ -12,6 +12,8 @@ Stremosaic est un addon de catalogues Stremio multi-sources, basé sur l'archite
 
 ## WebUI
 
+Interface en français, branding Stremosaic, logo/favicon dédiés et footer Aerya (GitHub, Blog, Ko-fi). Le panneau ElfHosted et les anciens liens Discord/Donate ont été retirés.
+
 La WebUI est protégée par l'authentification déjà présente dans la base TMDB Discover+ : une clé API TMDB valide ouvre une session JWT et les configurations associées restent privées. Les secrets sont chiffrés côté serveur.
 
 ## Docker
@@ -25,6 +27,10 @@ services:
 ```
 
 Le `docker-compose.yml` complet du dépôt utilise PostgreSQL + Redis et l'image GHCR `:latest`.
+
+## Marketplace
+
+Le Marketplace est amorcé localement avec des catalogues prêts à l’emploi TMDB, AniList, MAL, Kitsu et Simkl, puis enrichi par les catalogues publics des utilisateurs. Les presets rapides TMDB sont disponibles sans dépendre de Trakt ou d’IMDb.
 
 ## Bingebase
 

@@ -7,6 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { config, validateRequiredConfig } from './config.ts';
 import { initStorage, getStorage } from './services/storage/index.ts';
+import { seedBuiltinMarketplace } from './services/builtinMarketplace.ts';
 import { initCache, getCacheStatus } from './services/cache/index.ts';
 import { addonRouter } from './routes/addon.ts';
 import { apiRouter } from './routes/api.ts';
@@ -124,7 +125,6 @@ const CSP_POLICY = {
   'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
   'img-src': [
     "'self'",
-    'https://docs.elfhosted.com',
     'https://image.tmdb.org',
     'https://api.ratingposterdb.com',
     'https://api.top-streaming.stream',
@@ -523,6 +523,9 @@ async function start() {
     }
 
     await initStorage();
+    await seedBuiltinMarketplace().catch((err) => {
+      log.warn('Built-in marketplace seed failed (non-critical)', { error: err instanceof Error ? err.message : 'unknown' });
+    });
 
     serverStatus.healthy = true;
     serverStatus.startedAt = new Date().toISOString();

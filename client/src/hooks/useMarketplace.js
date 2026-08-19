@@ -18,8 +18,6 @@ const entryId = (entry) => entry?.marketplaceId ?? entry?.id ?? null;
 function previewBySource(entry, apiKey) {
   const { source, type, filters } = entry;
   switch (source) {
-    case 'imdb':
-      return api.previewImdbCatalog(type, filters);
     case 'anilist':
       return api.previewAnilistCatalog(type, filters);
     case 'mal':
@@ -28,8 +26,8 @@ function previewBySource(entry, apiKey) {
       return api.previewKitsuCatalog(type, filters);
     case 'simkl':
       return api.previewSimklCatalog(type, filters);
-    case 'trakt':
-      return api.previewTraktCatalog(type, filters);
+    case 'kitsu':
+      return api.previewKitsuCatalog(type, filters);
     case 'tmdb':
     default:
       return api.preview(apiKey, type, filters);

@@ -99,7 +99,7 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
         setPreviewData(data);
       } catch (err) {
         if (requestId !== previewRequestRef.current) return;
-        setPreviewError(err?.message || 'Preview failed');
+        setPreviewError(err?.message || 'Échec de la prévisualisation');
       } finally {
         if (requestId === previewRequestRef.current) setPreviewLoading(false);
       }
@@ -151,9 +151,9 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
               <Store size={20} className="text-secondary" />
             </div>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <h2 style={{ margin: 0, fontSize: '18px' }}>Catalog Marketplace</h2>
+              <h2 style={{ margin: 0, fontSize: '18px' }}>Marketplace de catalogues</h2>
               <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                Discover, preview, and add catalogs shared by the community
+                Découvrez, prévisualisez et ajoutez des catalogues prêts à l’emploi
               </div>
             </div>
           </div>
@@ -171,7 +171,7 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
 
           <div className="marketplace-results-header" style={{ margin: '16px 0 8px' }}>
             <span className="filter-label">
-              {total > 0 ? `${total.toLocaleString()} catalogs` : 'Results'}
+              {total > 0 ? `${total.toLocaleString()} catalogues` : 'Résultats'}
             </span>
           </div>
 
@@ -187,7 +187,7 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
           {!error && results.length === 0 && !loading && (
             <div className="preview-empty" style={{ textAlign: 'center', padding: '32px 12px' }}>
               <SearchX size={32} style={{ marginBottom: '12px', opacity: 0.5 }} />
-              <p style={{ margin: 0, fontSize: '0.875rem' }}>No catalogs found.</p>
+              <p style={{ margin: 0, fontSize: '0.875rem' }}>Aucun catalogue trouvé.</p>
             </div>
           )}
 
@@ -223,7 +223,7 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
                   style={{ textAlign: 'center', padding: '16px 0' }}
                 >
                   <button type="button" className="btn btn-secondary" onClick={loadMore}>
-                    Load more
+                    Charger plus
                   </button>
                 </div>
               )}

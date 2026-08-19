@@ -10,12 +10,11 @@ import { MarketplaceBrowser } from './components/marketplace/MarketplaceBrowser'
 import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import { useAppController } from './hooks/useAppController';
 import { api } from './services/api';
-import { Expand, Shrink, Download, Settings, Loader, Coffee, Heart, Store } from 'lucide-react';
-import { DonateModal } from './components/modals/DonateModal';
+import { Expand, Shrink, Download, Loader, Store } from 'lucide-react';
 import { FilterPanelSkeleton, CatalogListSkeleton } from './components/layout/Skeleton';
 import { PanelErrorBoundary } from './components/layout/PanelErrorBoundary';
-import { CreditsBanner } from './components/layout/CreditsBanner';
 import { SocialButtons } from './components/social/SocialButtons.jsx';
+import { Footer } from './components/layout/Footer';
 import { AppProviders } from './context/AppContext';
 
 import './styles/globals.css';
@@ -54,7 +53,6 @@ function App() {
   } = state;
 
   const [stats, setStats] = useState(null);
-  const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
   const [isMarketplaceMode, setIsMarketplaceMode] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
 
@@ -148,7 +146,7 @@ function App() {
   return (
     <div className={`app ${isFocusMode ? 'focus-mode' : ''}`}>
       <a href="#main-content" className="skip-to-content">
-        Skip to content
+        Aller au contenu
       </a>
       <Header userId={config.userId} stats={stats} />
 
@@ -160,12 +158,12 @@ function App() {
           <div className="container">
             <div className="builder-toolbar">
               <div className="builder-title-area">
-                <h2>Catalog Builder</h2>
-                <p className="text-secondary">Create and customize your Stremio catalogs</p>
+                <h2>Créateur de catalogues</h2>
+                <p className="text-secondary">Créez et personnalisez vos catalogues Stremio</p>
 
                 {tmdb.error && (
                   <div className="tmdb-error-banner" role="alert">
-                    Failed to load TMDB data: {tmdb.error}
+                    Impossible de charger les données TMDB : {tmdb.error}
                     <button
                       className="btn btn-sm btn-secondary"
                       onClick={tmdb.refresh}
@@ -179,24 +177,22 @@ function App() {
                 {stats && (
                   <div className="mobile-stats-pill">
                     <span>
-                      <strong>{stats.totalUsers.toLocaleString()}</strong> Users
+                      <strong>{stats.totalUsers.toLocaleString()}</strong> utilisateurs
                     </span>
                     <span className="divider">•</span>
                     <span>
-                      <strong>{stats.totalCatalogs.toLocaleString()}</strong> Catalogs
+                      <strong>{stats.totalCatalogs.toLocaleString()}</strong> catalogues
                     </span>
                   </div>
                 )}
               </div>
 
-              <CreditsBanner addonVariant={stats?.addonVariant ?? null} />
-
               <div className="actions-toolbar">
                 <button
                   className="btn btn-secondary"
                   onClick={() => setIsFocusMode(!isFocusMode)}
-                  title={isFocusMode ? 'Exit focus mode' : 'Enter focus mode for more editor space'}
-                  aria-label="Toggle focus mode"
+                  title={isFocusMode ? 'Quitter le mode focus' : 'Mode focus'}
+                  aria-label="Basculer le mode focus"
                 >
                   {isFocusMode ? <Shrink size={18} /> : <Expand size={18} />}
                 </button>
@@ -204,8 +200,8 @@ function App() {
                 <button
                   className={`btn marketplace-toolbar-toggle ${isMarketplaceMode ? 'btn-primary' : 'btn-secondary'}`}
                   onClick={() => setIsMarketplaceMode((m) => !m)}
-                  title="Browse the catalog marketplace"
-                  aria-label="Toggle catalog marketplace"
+                  title="Parcourir le Marketplace"
+                  aria-label="Afficher le Marketplace"
                   aria-pressed={isMarketplaceMode}
                 >
                   <Store size={18} />
@@ -240,35 +236,32 @@ function App() {
                       ) : (
                         <Download size={18} />
                       )}
-                      Save & Install
+                      Enregistrer & installer
                     </button>
                   </div>
                 )}
               </div>
 
-              <SocialButtons
-                onDonateClick={() => setIsDonateModalOpen(true)}
-                className="mobile-support-under-actions"
-              />
+              <SocialButtons className="mobile-support-under-actions" />
             </div>
 
             <div className="builder-layout">
-              <PanelErrorBoundary fallbackMessage="The sidebar encountered an error.">
+              <PanelErrorBoundary fallbackMessage="Une erreur est survenue dans la barre latérale.">
                 <CatalogSidebar />
               </PanelErrorBoundary>
 
               <button
                 className={`btn mobile-marketplace-toggle ${isMarketplaceMode ? 'btn-primary' : 'btn-secondary'}`}
                 onClick={() => setIsMarketplaceMode((m) => !m)}
-                title="Browse the catalog marketplace"
-                aria-label="Toggle catalog marketplace"
+                title="Parcourir le Marketplace"
+                aria-label="Afficher le Marketplace"
                 aria-pressed={isMarketplaceMode}
               >
                 <Store size={18} />
                 Marketplace
               </button>
 
-              <PanelErrorBoundary fallbackMessage="The editor encountered an error.">
+              <PanelErrorBoundary fallbackMessage="Une erreur est survenue dans l’éditeur.">
                 {isMarketplaceMode ? (
                   <MarketplaceBrowser
                     userId={config.userId}
@@ -306,7 +299,6 @@ function App() {
           onClose={() => state.setShowInstallModal(false)}
           installUrl={installData?.installUrl}
           stremioUrl={installData?.stremioUrl}
-          onDonateClick={() => setIsDonateModalOpen(true)}
         />
 
         <ConfigMismatchModal
@@ -315,9 +307,8 @@ function App() {
           onLoginNew={actions.handleConfigMismatchLoginNew}
         />
 
-        <DonateModal isOpen={isDonateModalOpen} onClose={() => setIsDonateModalOpen(false)} />
-
         <ToastContainer toasts={toasts} removeToast={actions.removeToast} />
+        <Footer />
       </AppProviders>
     </div>
   );

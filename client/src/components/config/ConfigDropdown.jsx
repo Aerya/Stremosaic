@@ -33,23 +33,23 @@ export function ConfigDropdown({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [resetDelete]);
 
-  const getCatalogCount = (catalogs) => {
-    if (!catalogs || catalogs.length === 0) return 'Empty';
-    const count = catalogs.length;
-    return `${count} catalog${count !== 1 ? 's' : ''}`;
+  const getCatalogCount = (catalogueues) => {
+    if (!catalogueues || catalogueues.length === 0) return 'Vide';
+    const count = catalogueues.length;
+    return `${count} catalogue${count !== 1 ? 's' : ''}`;
   };
 
-  const getCatalogStats = (catalogs) => {
-    if (!catalogs || catalogs.length === 0) return { movies: 0, series: 0, anime: 0 };
+  const getCatalogStats = (catalogueues) => {
+    if (!catalogueues || catalogueues.length === 0) return { movies: 0, series: 0, anime: 0 };
     return {
-      movies: catalogs.filter((c) => c.type === 'movie').length,
-      series: catalogs.filter((c) => c.type === 'series').length,
-      anime: catalogs.filter((c) => c.type === 'anime').length,
+      movies: catalogueues.filter((c) => c.type === 'movie').length,
+      series: catalogueues.filter((c) => c.type === 'series').length,
+      anime: catalogueues.filter((c) => c.type === 'anime').length,
     };
   };
 
-  const getConfigName = (config, index, isCurrentLive = false) => {
-    if (isCurrentLive && currentConfigName) {
+  const getConfigName = (config, index, isActiveLive = false) => {
+    if (isActiveLive && currentConfigName) {
       return currentConfigName.length <= 20
         ? currentConfigName
         : currentConfigName.substring(0, 17) + '...';
@@ -59,9 +59,9 @@ export function ConfigDropdown({
         ? config.configName
         : config.configName.substring(0, 17) + '...';
     }
-    const catalogs = isCurrentLive ? currentCatalogs : config.catalogs;
-    if (catalogs && catalogs.length > 0 && catalogs[0].name) {
-      const firstName = catalogs[0].name;
+    const catalogueues = isActiveLive ? currentCatalogs : config.catalogueues;
+    if (catalogueues && catalogueues.length > 0 && catalogueues[0].name) {
+      const firstName = catalogueues[0].name;
       if (firstName.length <= 20) {
         return firstName;
       }
@@ -78,7 +78,7 @@ export function ConfigDropdown({
       <div className="config-dropdown">
         <button className="btn btn-secondary config-dropdown-trigger" disabled>
           <Loader size={18} className="animate-spin" />
-          Loading...
+          Chargement…
         </button>
       </div>
     );
@@ -102,11 +102,11 @@ export function ConfigDropdown({
                 {getConfigName(currentConfig, currentIndex, true)}
               </span>
               <span className="config-dropdown-count">
-                ({getCatalogCount(currentCatalogs || currentConfig.catalogs)})
+                ({getCatalogCount(currentCatalogs || currentConfig.catalogueues)})
               </span>
             </>
           ) : (
-            'Select Config'
+            'Choisir une configuration'
           )}
         </span>
         {configs.length > 1 && (
@@ -118,7 +118,7 @@ export function ConfigDropdown({
       {isOpen && (
         <div className="config-dropdown-menu">
           <div className="config-dropdown-header">
-            <span>Your Configurations ({configs.length})</span>
+            <span>Vos configurations ({configs.length})</span>
           </div>
           <div className="config-dropdown-list">
             {configs.map((config, index) => (
@@ -153,14 +153,14 @@ export function ConfigDropdown({
                   <div className="config-dropdown-item-name">
                     <span className="config-name">{getConfigName(config, index)}</span>
                     {config.userId === currentUserId && (
-                      <span className="config-dropdown-item-badge">Current</span>
+                      <span className="config-dropdown-item-badge">Active</span>
                     )}
                   </div>
                   <div className="config-dropdown-item-stats">
                     {(() => {
-                      const stats = getCatalogStats(config.catalogs);
+                      const stats = getCatalogStats(config.catalogueues);
                       if (stats.movies === 0 && stats.series === 0 && stats.anime === 0) {
-                        return <span className="empty-stats">Empty</span>;
+                        return <span className="empty-stats">Vide</span>;
                       }
                       return (
                         <>
@@ -192,7 +192,7 @@ export function ConfigDropdown({
                         className="btn btn-icon confirm-btn-yes"
                         onClick={(e) => requestDelete(config.userId, e)}
                         disabled={deletingId === config.userId}
-                        title="Confirm Delete"
+                        title="Confirmer la suppression"
                       >
                         {deletingId === config.userId ? (
                           <Loader size={14} className="animate-spin" />
@@ -206,7 +206,7 @@ export function ConfigDropdown({
                           e.stopPropagation();
                           resetDelete();
                         }}
-                        title="Cancel"
+                        title="Annuler"
                       >
                         <X size={14} />
                       </button>
@@ -216,7 +216,7 @@ export function ConfigDropdown({
                       className="btn btn-icon config-dropdown-delete"
                       onClick={(e) => requestDelete(config.userId, e)}
                       disabled={deletingId === config.userId}
-                      title="Delete configuration"
+                      title="Supprimer la configuration"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -235,7 +235,7 @@ export function ConfigDropdown({
                 }}
               >
                 <Plus size={16} />
-                <span>New Configuration</span>
+                <span>Nouvelle configuration</span>
               </button>
             </div>
           )}

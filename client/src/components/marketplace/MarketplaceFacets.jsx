@@ -1,9 +1,7 @@
 import { getAllSources } from '../../sources';
 import { MARKETPLACE_TYPES as TYPES } from '../../constants/marketplaceTypes';
 
-const SOURCES = getAllSources()
-  .filter((s) => s.id !== 'mal')
-  .map((s) => ({ id: s.id, label: s.label }));
+const SOURCES = getAllSources().map((s) => ({ id: s.id, label: s.label }));
 
 /**
  * MarketplaceFacets — source/type facet controls for marketplace search.
@@ -43,9 +41,9 @@ export function MarketplaceFacets({ source, type, onChange }) {
             className={`source-pill ${activeSources.length === 0 ? 'active' : ''}`}
             onClick={() => emit({ source: [] })}
             aria-pressed={activeSources.length === 0}
-            title="Search across all sources"
+            title="Rechercher dans toutes les sources"
           >
-            All sources
+            Toutes les sources
           </button>
           {SOURCES.map((s) => (
             <button

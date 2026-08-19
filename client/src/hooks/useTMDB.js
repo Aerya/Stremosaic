@@ -72,11 +72,9 @@ function reducer(state, action) {
     case 'FETCH_START':
       return { ...state, loading: true, error: null };
     case 'FETCH_SUCCESS': {
-      const imdbData = action.payload.imdb || {};
       const anilistData = action.payload.anilist || {};
       const malData = action.payload.mal || {};
       const simklData = action.payload.simkl || {};
-      const traktData = action.payload.trakt || {};
       return {
         ...state,
         genres: action.payload.genres || initialState.genres,
@@ -94,17 +92,16 @@ function reducer(state, action) {
         certificateRatingsByCountry: action.payload.certificateRatingsByCountry || {},
         watchRegions: action.payload.watchRegions || [],
         tvNetworks: action.payload.tvNetworks || [],
-        imdbEnabled: imdbData.enabled || false,
-        imdbGenres: imdbData.genres || [],
-        imdbKeywords: imdbData.keywords || [],
-        imdbAwards: imdbData.awards || [],
-        imdbSortOptions: imdbData.sortOptions || [],
-        imdbTitleTypes: imdbData.titleTypes || [],
-        imdbPresetCatalogs: imdbData.presetCatalogs || [],
-        imdbCertificateRatings:
-          action.payload.certificateRatingsByCountry || imdbData.certificateRatings || {},
-        imdbRankedLists: imdbData.rankedLists || [],
-        imdbWithDataOptions: imdbData.withDataOptions || [],
+        imdbEnabled: false,
+        imdbGenres: [],
+        imdbKeywords: [],
+        imdbAwards: [],
+        imdbSortOptions: [],
+        imdbTitleTypes: [],
+        imdbPresetCatalogs: [],
+        imdbCertificateRatings: action.payload.certificateRatingsByCountry || {},
+        imdbRankedLists: [],
+        imdbWithDataOptions: [],
         // AniList data
         anilistEnabled: true,
         anilistGenres: anilistData.genres || [],
@@ -132,19 +129,18 @@ function reducer(state, action) {
         simklTrendingPeriods: simklData.trendingPeriods || [],
         simklBestFilters: simklData.bestFilters || [],
         simklAnimeTypes: simklData.animeTypes || [],
-        // Trakt data
-        traktEnabled: traktData.enabled || false,
-        traktGenres: traktData.genres || [],
-        traktListTypes: traktData.listTypes || [],
-        traktPeriods: traktData.periods || [],
-        traktCalendarTypes: traktData.calendarTypes || [],
-
-        traktShowStatuses: traktData.showStatuses || [],
-        traktCertificationsMovie: traktData.certificationsMovie || [],
-        traktCertificationsSeries: traktData.certificationsSeries || [],
-        traktCommunityMetrics: traktData.communityMetrics || [],
-        traktNetworks: traktData.networks || [],
-        traktHasKey: traktData.hasKey || false,
+        // Trakt intentionally removed from Stremosaic
+        traktEnabled: false,
+        traktGenres: [],
+        traktListTypes: [],
+        traktPeriods: [],
+        traktCalendarTypes: [],
+        traktShowStatuses: [],
+        traktCertificationsMovie: [],
+        traktCertificationsSeries: [],
+        traktCommunityMetrics: [],
+        traktNetworks: [],
+        traktHasKey: false,
         loading: false,
         error: null,
       };

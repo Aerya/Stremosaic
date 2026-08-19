@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Key, Loader, ArrowRight, ExternalLink, Eye, EyeOff, Coffee, Heart } from 'lucide-react';
+import { Key, Loader, ArrowRight, ExternalLink, Eye, EyeOff } from 'lucide-react';
 import { SocialButtons } from '../social/SocialButtons.jsx';
-import { DonateModal } from '../modals/DonateModal';
 import { api } from '../../services/api';
 
 export function ApiKeySetup({ onLogin, isSessionExpired = false, returnUserId = null }) {
@@ -10,21 +9,20 @@ export function ApiKeySetup({ onLogin, isSessionExpired = false, returnUserId = 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
-  const [isDonateOpen, setIsDonateOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const trimmed = apiKey.trim();
     if (!trimmed) {
-      setError('Please enter your TMDB API key');
+      setError('Veuillez saisir votre clé API TMDB');
       return;
     }
     if (!/^[a-f0-9]+$/i.test(trimmed)) {
-      setError('API key must contain only hexadecimal characters (0-9, a-f)');
+      setError('La clé API doit contenir uniquement des caractères hexadécimaux (0-9, a-f)');
       return;
     }
     if (trimmed.length !== 32) {
-      setError(`API key must be 32 characters (currently ${trimmed.length})`);
+      setError(`La clé API doit contenir 32 caractères (actuellement ${trimmed.length})`);
       return;
     }
 
@@ -37,7 +35,7 @@ export function ApiKeySetup({ onLogin, isSessionExpired = false, returnUserId = 
         onLogin(result.userId, result.configs || []);
       }
     } catch (err) {
-      setError(err.message || 'Failed to authenticate');
+      setError(err.message || 'Échec de l’authentification');
     } finally {
       setLoading(false);
     }
@@ -50,23 +48,23 @@ export function ApiKeySetup({ onLogin, isSessionExpired = false, returnUserId = 
           <Key size={40} />
         </div>
 
-        <h2>{isSessionExpired ? 'Session Expired' : 'Get Started'}</h2>
+        <h2>{isSessionExpired ? 'Session expirée' : 'Connexion'}</h2>
         <p>
           {isSessionExpired
-            ? 'Your session has expired. Please re-enter your API key to continue.'
-            : "Enter your TMDB API key to start creating custom catalogs. It's free and takes just a minute to get one."}
+            ? 'Votre session a expiré. Saisissez à nouveau votre clé API pour continuer.'
+            : "Saisissez votre clé API TMDB pour accéder à Stremosaic et créer vos catalogues."}
         </p>
 
         <form className="api-key-form" onSubmit={handleSubmit}>
           <div className="input-group">
-            <label htmlFor="apiKey">TMDB API Key</label>
+            <label htmlFor="apiKey">Clé API TMDB</label>
             <div className="input-wrapper">
               <Key size={18} className="input-icon input-icon-overlay" />
               <input
                 id="apiKey"
                 type={showApiKey ? 'text' : 'password'}
                 className={`input input-with-icons ${error ? 'error' : ''}`}
-                placeholder="Enter your API key..."
+                placeholder="Saisissez votre clé API…"
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 autoComplete="off"
@@ -75,7 +73,7 @@ export function ApiKeySetup({ onLogin, isSessionExpired = false, returnUserId = 
                 type="button"
                 onClick={() => setShowApiKey(!showApiKey)}
                 className="input-toggle-btn"
-                title={showApiKey ? 'Hide API key' : 'Show API key'}
+                title={showApiKey ? 'Masquer la clé API' : 'Afficher la clé API'}
               >
                 {showApiKey ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -86,7 +84,7 @@ export function ApiKeySetup({ onLogin, isSessionExpired = false, returnUserId = 
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Get a free API key <ExternalLink size={12} style={{ verticalAlign: 'middle' }} />
+                Obtenir une clé API gratuite <ExternalLink size={12} style={{ verticalAlign: 'middle' }} />
               </a>
             </p>
             {error && <p className="error-message">{error}</p>}
@@ -100,7 +98,7 @@ export function ApiKeySetup({ onLogin, isSessionExpired = false, returnUserId = 
                 onChange={(e) => setRememberMe(e.target.checked)}
                 style={{ accentColor: 'var(--primary)' }}
               />
-              Remember me
+              Se souvenir de moi
             </label>
           </div>
 
@@ -108,22 +106,21 @@ export function ApiKeySetup({ onLogin, isSessionExpired = false, returnUserId = 
             {loading ? (
               <>
                 <Loader size={18} className="animate-spin" />
-                Authenticating...
+                Connexion…
               </>
             ) : (
               <>
-                Continue
+                Continuer
                 <ArrowRight size={18} />
               </>
             )}
           </button>
 
           <div className="setup-support-row">
-            <SocialButtons onDonateClick={() => setIsDonateOpen(true)} />
+            <SocialButtons />
           </div>
         </form>
       </div>
-      <DonateModal isOpen={isDonateOpen} onClose={() => setIsDonateOpen(false)} />
     </div>
   );
 }
