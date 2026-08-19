@@ -112,7 +112,7 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
     imdbPresetCatalogs = [],
     imdbEnabled = false,
     getWatchProviders,
-    getWatchProviders
+    
   } = useTMDBData();
   const { addToast, setShowNewCatalogModal } = useAppActions();
 
