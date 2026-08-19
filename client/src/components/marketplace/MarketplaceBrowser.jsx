@@ -7,6 +7,7 @@ import { MarketplaceFacets } from './MarketplaceFacets';
 import { MarketplaceSortSelect } from './MarketplaceSortSelect';
 import { MarketplaceCard } from './MarketplaceCard';
 import { CatalogPreview } from '../config/catalog/CatalogPreview';
+import { api } from '../../services/api';
 
 /**
  * MarketplaceBrowser — the catalog marketplace rendered inline in the builder
@@ -55,6 +56,26 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
   const previewRequestRef = useRef(0);
   const lastPreviewEntryRef = useRef(null);
   const [installingId, setInstallingId] = useState(null);
+  const [bingebaseConnected, setBingebaseConnected] = useState(null);
+
+  useEffect(() => {
+    if (!userId || !source.includes('bingebase')) {
+      setBingebaseConnected(null);
+      return;
+    }
+    let cancelled = false;
+    api.bingebaseStatus(userId)
+      .then((status) => {
+        if (!cancelled) setBingebaseConnected(Boolean(status?.connected));
+      })
+      .catch(() => {
+        if (!cancelled) setBingebaseConnected(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [userId, source]);
+
 
   // Initial browse on mount (empty query => trending).
   useEffect(() => {
@@ -132,6 +153,15 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
     );
   }, []);
 
+  const handleOpenBingebase = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    window.dispatchEvent(
+      new CustomEvent('open-preferences', {
+        detail: { section: 'bingebase' },
+      })
+    );
+  }, []);
+
   return (
     <div className="editor-container marketplace-browser">
       <div className="editor-panel marketplace-panel">
@@ -187,7 +217,19 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
           {!error && results.length === 0 && !loading && (
             <div className="preview-empty" style={{ textAlign: 'center', padding: '32px 12px' }}>
               <SearchX size={32} style={{ marginBottom: '12px', opacity: 0.5 }} />
-              <p style={{ margin: 0, fontSize: '0.875rem' }}>Aucun catalogue trouvé.</p>
+              {source.includes('bingebase') && bingebaseConnected === false ? (
+                <>
+                  <p style={{ margin: 0, fontSize: '0.875rem' }}>Aucun catalogue Bingebase trouvé.</p>
+                  <p style={{ margin: '8px 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                    Connectez votre compte Bingebase dans les Préférences pour accéder à vos listes.
+                  </p>
+                  <button type="button" className="btn btn-secondary" onClick={handleOpenBingebase}>
+                    Ouvrir Préférences → Bingebase
+                  </button>
+                </>
+              ) : (
+                <p style={{ margin: 0, fontSize: '0.875rem' }}>Aucun catalogue trouvé.</p>
+              )}
             </div>
           )}
 

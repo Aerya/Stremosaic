@@ -22,7 +22,8 @@ const SERVICE_OPTIONS = [
   { id: 'tvdb', name: 'TVDB', kinds: ['poster', 'backdrop', 'logo', 'landscape', 'episode'] },
   { id: 'fanart', name: 'Fanart.tv', kinds: ['poster', 'backdrop', 'logo', 'landscape'] },
   { id: 'rpdb', name: 'RPDB', kinds: ['poster', 'backdrop', 'logo', 'landscape'] },
-  { id: 'topPosters', name: 'Affiches principales', kinds: ['poster', 'logo', 'episode'] },
+  { id: 'topPosters', name: 'Top Posters', kinds: ['poster', 'logo', 'episode'] },
+  { id: 'postersPlus', name: 'PostersPlus', kinds: ['poster'] },
   {
     id: 'customUrl',
     name: 'Modèle d’URL personnalisée',
@@ -152,7 +153,7 @@ function getArtworkServiceOptions(artKind) {
   return [
     {
       id: 'none',
-      name: DEFAULT_PROVIDER_LABELS[artKind] || 'Default (Source metadata)',
+      name: DEFAULT_PROVIDER_LABELS[artKind] || 'Par défaut (métadonnées de la source)',
     },
     ...available.map(({ id, name }) => ({ id, name })),
   ];
@@ -193,7 +194,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
         name: 'TMDB',
         url: 'https://www.themoviedb.org',
         requiresKey: false,
-        note: 'Fallback artwork from The Movie Database. No configuration needed.',
+        note: 'Illustrations de secours depuis The Movie Database. Aucune configuration requise.',
       };
     }
     if (service === 'imdb') {
@@ -201,7 +202,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
         name: 'IMDb',
         url: 'https://www.imdb.com',
         requiresKey: false,
-        note: 'Artwork directly from IMDb. No configuration needed.',
+        note: 'Illustrations récupérées directement depuis IMDb. Aucune configuration requise.',
       };
     }
     if (service === 'tvdb') {
@@ -209,7 +210,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
         name: 'TVDB',
         url: 'https://thetvdb.com',
         requiresKey: true,
-        note: 'High-quality fallback artwork from TheTVDB.',
+        note: 'Illustrations de secours haute qualité depuis TheTVDB.',
       };
     }
     if (service === 'fanart') {
@@ -217,7 +218,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
         name: 'Fanart.tv',
         url: 'https://fanart.tv',
         requiresKey: true,
-        note: 'Community artwork provider for posters, backdrops, logos, and landscape art.',
+        note: 'Source communautaire pour affiches, arrière-plans, logos et visuels paysage.',
       };
     }
     if (service === 'rpdb') {
@@ -225,22 +226,30 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
         name: 'RPDB',
         url: 'https://ratingposterdb.com',
         requiresKey: true,
-        note: 'Rating Poster Database with custom posters, plus paid backdrops and logos.',
+        note: 'Rating Poster Database : affiches personnalisées, avec arrière-plans et logos selon l’offre.',
       };
     }
     if (service === 'topPosters') {
       return {
-        name: 'Affiches principales',
-        url: 'https://api.top-streaming.stream',
+        name: 'Top Posters',
+        url: 'https://top-posters.com',
         requiresKey: true,
-        note: 'Supports posters and logos. Premium tier also supports episode thumbnails.',
+        note: 'Prend en charge les affiches et logos. Certaines fonctions nécessitent une offre supérieure.',
+      };
+    }
+    if (service === 'postersPlus') {
+      return {
+        name: 'PostersPlus',
+        url: 'https://github.com/UmbraProjects/PostersPlus',
+        requiresKey: false,
+        note: 'Utilise le modèle d’URL généré par votre instance PostersPlus. L’URL reste dans votre configuration privée.',
       };
     }
     return null;
   };
 
   const serviceInfo = getServiceInfo(currentProvider);
-  const isCustomService = currentProvider === 'customUrl';
+  const isCustomService = currentProvider === 'customUrl' || currentProvider === 'postersPlus';
   const premiumRequiredForKind = isPremiumRequiredForKind(currentProvider, artKind);
   const providerRequiresApiKey = artworkProviderRequiresApiKey(currentProvider);
   const needsApiKey = providerRequiresApiKey || isCustomService;
@@ -331,22 +340,24 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
                 htmlFor={`${contentType}-${artKind}-custom-url`}
                 className="artwork-input-label"
               >
-                Modèle d’URL personnalisée
+                {currentProvider === 'postersPlus' ? 'URL de modèle PostersPlus' : 'Modèle d’URL personnalisée'}
               </label>
               <input
                 id={`${contentType}-${artKind}-custom-url`}
                 type="text"
                 className="input"
                 placeholder={
-                  artKind === 'episode'
-                    ? 'https://example.com/{imdb_id}/s{season}e{episode}.jpg'
-                    : 'https://example.com/{type}/{imdb_id}.jpg'
+                  currentProvider === 'postersPlus'
+                    ? 'https://votre-instance.example/poster?tmdb_id={tmdb_id}&stremio_id={id}&type={type}&…'
+                    : artKind === 'episode'
+                      ? 'https://example.com/{imdb_id}/s{season}e{episode}.jpg'
+                      : 'https://example.com/{type}/{imdb_id}.jpg'
                 }
                 value={customUrlPattern}
                 onChange={(e) => updateValue({ customUrlPattern: e.target.value })}
               />
               <div className="artwork-placeholders-note">
-                Variables : {'{asset}'}, {'{type}'}, {'{imdb_id}'}, {'{tmdb_id}'}, {'{rating_id}'}
+                Variables : {'{id}'}, {'{asset}'}, {'{type}'}, {'{imdb_id}'}, {'{tmdb_id}'}, {'{rating_id}'}
                 , {'{rating_id_type}'}, {'{season}'}, {'{episode}'}, {'{season_number}'},{' '}
                 {'{episode_number}'}, {'{api_key}'}, {'{api_key_urlencoded}'}, {'{language}'},{' '}
                 {'{language_short}'}

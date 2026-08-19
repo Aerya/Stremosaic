@@ -787,7 +787,7 @@ router.get('/tv-networks', optionalAuth, async (req, res) => {
 
 type PreviewPosterProvider = Extract<
   PosterServiceType,
-  'tmdb' | 'imdb' | 'tvdb' | 'fanart' | 'rpdb' | 'topPosters' | 'customUrl'
+  'tmdb' | 'imdb' | 'tvdb' | 'fanart' | 'rpdb' | 'topPosters' | 'postersPlus' | 'customUrl'
 >;
 
 const PREVIEW_POSTER_PROVIDERS = new Set<PreviewPosterProvider>([
@@ -797,6 +797,7 @@ const PREVIEW_POSTER_PROVIDERS = new Set<PreviewPosterProvider>([
   'fanart',
   'rpdb',
   'topPosters',
+  'postersPlus',
   'customUrl',
 ]);
 
@@ -1044,7 +1045,7 @@ async function resolvePreviewCustomUrlPattern(req: Request): Promise<string | nu
     const prefs = preferences as Record<string, unknown>;
 
     if (
-      prefs.posterService === 'customUrl' &&
+      (prefs.posterService === 'customUrl' || prefs.posterService === 'postersPlus') &&
       typeof prefs.posterCustomUrlPattern === 'string' &&
       prefs.posterCustomUrlPattern.trim()
     ) {
@@ -1066,7 +1067,7 @@ async function resolvePreviewCustomUrlPattern(req: Request): Promise<string | nu
         : null;
 
     if (
-      fromContentTypePoster?.provider === 'customUrl' &&
+      (fromContentTypePoster?.provider === 'customUrl' || fromContentTypePoster?.provider === 'postersPlus') &&
       typeof fromContentTypePoster.customUrlPattern === 'string' &&
       fromContentTypePoster.customUrlPattern.trim()
     ) {
@@ -1078,7 +1079,7 @@ async function resolvePreviewCustomUrlPattern(req: Request): Promise<string | nu
         ? (artworkObj.poster as Record<string, unknown>)
         : null;
     if (
-      legacyPoster?.provider === 'customUrl' &&
+      (legacyPoster?.provider === 'customUrl' || legacyPoster?.provider === 'postersPlus') &&
       typeof legacyPoster.customUrlPattern === 'string' &&
       legacyPoster.customUrlPattern.trim()
     ) {
@@ -1160,7 +1161,7 @@ async function buildPreviewPosterOption(
     };
   }
 
-  if (provider === 'customUrl') {
+  if (provider === 'customUrl' || provider === 'postersPlus') {
     const customUrlPattern = await resolvePreviewCustomUrlPattern(req);
     if (!customUrlPattern) {
       log.warn('Custom URL preview provider selected without configured URL pattern');
@@ -1169,7 +1170,7 @@ async function buildPreviewPosterOption(
 
     const customUrlApiKey = await resolvePreviewProviderApiKey(req, 'customUrl');
     return {
-      service: 'customUrl',
+      service: provider,
       customUrlPattern,
       ...(customUrlApiKey ? { apiKey: customUrlApiKey } : {}),
     };
@@ -2275,12 +2276,12 @@ router.post('/preview', requireAuth, resolveApiKey, async (req, res) => {
     );
 
     const previewCustomUrlPattern =
-      previewPosterProvider === 'customUrl' ? await resolvePreviewCustomUrlPattern(req) : null;
+      (previewPosterProvider === 'customUrl' || previewPosterProvider === 'postersPlus') ? await resolvePreviewCustomUrlPattern(req) : null;
 
     const previewProviderNeedsImdbIds =
       previewPosterProvider === 'imdb' ||
       previewPosterProvider === 'tvdb' ||
-      (previewPosterProvider === 'customUrl' &&
+      ((previewPosterProvider === 'customUrl' || previewPosterProvider === 'postersPlus') &&
         customUrlPatternRequiresImdbId(previewCustomUrlPattern));
 
     const shouldEnrichWithImdbIds = !isCompanyFilmographyIdsOnly && previewProviderNeedsImdbIds;

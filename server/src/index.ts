@@ -127,7 +127,7 @@ const CSP_POLICY = {
     "'self'",
     'https://image.tmdb.org',
     'https://api.ratingposterdb.com',
-    'https://api.top-streaming.stream',
+    'https://api.top-posters.com',
     'https://assets.fanart.tv',
     'https://artworks.thetvdb.com',
     'https://thetvdb.com',

@@ -63,6 +63,7 @@ const SUPPORTED_PREVIEW_POSTER_PROVIDERS = new Set([
   'fanart',
   'rpdb',
   'topPosters',
+  'postersPlus',
   'customUrl',
 ]);
 
@@ -79,8 +80,8 @@ function resolveGlobalPreviewPosterProvider(preferences, contentType) {
     return 'tmdb';
   }
 
-  if (provider === 'customUrl') {
-    return getPreviewCustomPosterPattern(preferences, contentType) ? 'customUrl' : 'tmdb';
+  if (provider === 'customUrl' || provider === 'postersPlus') {
+    return getPreviewCustomPosterPattern(preferences, contentType) ? provider : 'tmdb';
   }
 
   return SUPPORTED_PREVIEW_POSTER_PROVIDERS.has(provider) ? provider : 'tmdb';
@@ -392,7 +393,7 @@ export function useCatalogEditorHandlers({
         ? preferences?.apiKeys?.[selectedPreviewPosterProvider] || null
         : null;
       const selectedPreviewPosterCustomUrlPattern =
-        selectedPreviewPosterProvider === 'customUrl'
+        selectedPreviewPosterProvider === 'customUrl' || selectedPreviewPosterProvider === 'postersPlus'
           ? getPreviewCustomPosterPattern(preferences, localCatalog.type)
           : null;
       const previewArtworkLanguagePreferences = getPreviewArtworkLanguagePreferences(preferences);

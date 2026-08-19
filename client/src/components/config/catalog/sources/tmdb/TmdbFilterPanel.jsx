@@ -438,11 +438,11 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
       {supportsFullFilters && (
         <FilterSection
           id="people"
-          title={isMovie ? 'People & Studios' : 'Studios & Keywords'}
+          title={isMovie ? 'Personnes et studios' : 'Studios et mots-clés'}
           description={
             isMovie
-              ? 'Filter by cast, crew, or production company'
-              : 'Filter by production companies and keywords'
+              ? 'Filtrer par distribution, équipe ou société de production'
+              : 'Filtrer par sociétés de production et mots-clés'
           }
           icon={Users}
           isOpen={expandedSections.people}
@@ -488,7 +488,7 @@ export const TmdbFilterPanel = memo(function TmdbFilterPanel({
           <div className="preset-empty-state">
             <Sparkles size={32} className="preset-empty-icon" />
             <span className="preset-empty-text">
-              This is a curated preset from TMDB and cannot be modified.
+              Ce catalogue prédéfini est fourni par TMDB et ne peut pas être modifié.
             </span>
           </div>
         )
