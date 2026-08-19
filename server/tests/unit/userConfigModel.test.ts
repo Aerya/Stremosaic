@@ -80,7 +80,7 @@ describe('UserConfig preferences schema', () => {
     // Authoritative list — must equal SourceType union in src/types/config.ts.
     // Compile-time check: every literal here is assignable to SourceType, and the
     // tuple's element type is SourceType. If either side drifts, this fails to compile.
-    const expectedSources = ['tmdb', 'imdb', 'anilist', 'mal', 'simkl', 'trakt', 'kitsu'] as const;
+    const expectedSources = ['tmdb', 'imdb', 'anilist', 'mal', 'simkl', 'kitsu', 'trakt', 'bingebase'] as const;
     const _typecheck: readonly SourceType[] = expectedSources;
     void _typecheck;
 

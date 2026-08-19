@@ -64,9 +64,14 @@ export function useCatalogManager(config, addToast) {
   const handleAddPresetCatalog = (type, preset, source) => {
     const effectiveSource = source || globalSource;
     const isTmdb = effectiveSource !== 'imdb';
+    const rawLabel = String(preset?.label || '').trim();
+    const hasLeadingEmoji = /^[\p{Extended_Pictographic}\p{Emoji_Component}]/u.test(rawLabel);
+    const name = hasLeadingEmoji
+      ? rawLabel.replace(/^[\p{Extended_Pictographic}\p{Emoji_Component}\s]+/u, '')
+      : rawLabel;
     const newCatalog = {
       _id: createId(),
-      name: preset.label.replace(/^[^\s]+\s/, ''),
+      name: name || 'Catalogue',
       type,
       filters: isTmdb ? buildPresetFilters(type, preset.value) : { listType: preset.value },
       enabled: true,
@@ -90,7 +95,7 @@ export function useCatalogManager(config, addToast) {
     if (activeCatalog?._id === catalogId) {
       setActiveCatalog(null);
     }
-    addToast('Catalog deleted');
+    addToast('Catalogue supprimé');
   };
 
   const handleDuplicateCatalog = (catalogId) => {
@@ -101,7 +106,7 @@ export function useCatalogManager(config, addToast) {
       ...structuredClone(catalog),
       _id: createId(),
       id: createId(),
-      name: `${catalog.name} (Copy)`,
+      name: `${catalog.name} (Copie)`,
     };
 
     config.setCatalogs((prev) => {
@@ -113,7 +118,7 @@ export function useCatalogManager(config, addToast) {
       return next;
     });
     setActiveCatalog(newCatalog);
-    addToast('Catalog duplicated');
+    addToast('Catalogue dupliqué');
   };
 
   const handleUpdateCatalog = (id, data) => {

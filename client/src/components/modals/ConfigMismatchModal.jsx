@@ -13,24 +13,23 @@ export function ConfigMismatchModal({ isOpen, onGoToOwn, onLoginNew }) {
         ref={modalRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Access Restricted"
+        aria-label="Accès restreint"
         style={{ maxWidth: '450px' }}
       >
         <div className="modal-header">
           <div className="modal-icon warning">
             <AlertTriangle size={24} />
           </div>
-          <h2 className="modal-title">Access Restricted</h2>
+          <h2 className="modal-title">Accès restreint</h2>
         </div>
 
         <div className="modal-body">
           <p className="text-secondary" style={{ marginBottom: '20px', lineHeight: '1.5' }}>
-            This configuration was created with a different TMDB API key. For security, you can only
-            access configurations that match your current API key.
+            Cette configuration a été créée avec une autre clé API TMDB. Pour des raisons de sécurité, vous pouvez accéder uniquement aux configurations associées à votre clé API actuelle.
           </p>
 
           <div className="alert alert-info" style={{ marginBottom: '24px' }}>
-            <strong>What would you like to do?</strong>
+            <strong>Que souhaitez-vous faire ?</strong>
           </div>
         </div>
 
@@ -44,7 +43,7 @@ export function ConfigMismatchModal({ isOpen, onGoToOwn, onLoginNew }) {
             onClick={onGoToOwn}
           >
             <Home size={18} />
-            Go to my configurations
+            Aller à mes configurations
           </button>
 
           <button
@@ -53,7 +52,7 @@ export function ConfigMismatchModal({ isOpen, onGoToOwn, onLoginNew }) {
             onClick={onLoginNew}
           >
             <LogIn size={18} />
-            Log in with a different key
+            Se connecter avec une autre clé
           </button>
         </div>
       </div>

@@ -472,21 +472,21 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
     <>
       <FilterSection
         id="basic"
-        title="Sort & Filter"
-        description="Sort order and basic filters"
+        title="Tri et filtres"
+        description="Ordre de tri et filtres de base"
         icon={Settings}
         isOpen={localExpandedSections.basic}
         onToggle={toggleSection}
       >
         <div className="filter-grid">
           <div className="filter-group">
-            <LabelWithTooltip label="Trier par" tooltip="How to order your IMDb results." />
+            <LabelWithTooltip label="Trier par" tooltip="Définissez l’ordre des résultats IMDb." />
             <SearchableSelect
               options={imdbSortOptions}
               value={filters.sortBy || 'POPULARITY'}
               onChange={(value) => onFiltersChange('sortBy', value)}
               placeholder="Plus populaires"
-              searchPlaceholder="Search..."
+              searchPlaceholder="Rechercher..."
               labelKey="label"
               valueKey="value"
               allowClear={false}
@@ -495,15 +495,15 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
           <div className="filter-group">
             <LabelWithTooltip
-              label="Sort Order"
-              tooltip="Direction of sorting — ascending or descending."
+              label="Ordre de tri"
+              tooltip="Sens du tri : croissant ou décroissant."
             />
             <SearchableSelect
               options={sortOrderOptions}
               value={filters.sortOrder || 'DESC'}
               onChange={(value) => onFiltersChange('sortOrder', value)}
               placeholder="Descending"
-              searchPlaceholder="Search..."
+              searchPlaceholder="Rechercher..."
               labelKey="label"
               valueKey="value"
               allowClear={false}
@@ -562,8 +562,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
         <div className="filter-spacer-lg">
           <RangeSlider
-            label="IMDb Rating"
-            tooltip="Filter by IMDb user rating (0–10). Select a range to surface specific scores."
+            label="Note IMDb"
+            tooltip="Filtrer selon la note des utilisateurs IMDb (0 à 10)."
             min={0}
             max={10}
             step={0.1}
@@ -577,7 +577,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <div className="filter-spacer">
           <RangeSlider
             label="Vote Count"
-            tooltip="Filter by number of user ratings. Use this to find popular breakout hits or obscure hidden gems."
+            tooltip="Filtrer selon le nombre d’évaluations afin de distinguer les titres populaires des œuvres plus confidentielles."
             min={0}
             max={1000000}
             step={1000}
@@ -591,8 +591,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
       <FilterSection
         id="region"
-        title="Language & Region"
-        description="Filter by original language and country"
+        title="Langue et région"
+        description="Filtrer selon la langue originale et le pays"
         icon={Globe}
         isOpen={localExpandedSections.region}
         onToggle={toggleSection}
@@ -601,14 +601,14 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
           <div className="filter-group">
             <LabelWithTooltip
               label="Languages"
-              tooltip="Filter by the original language of the content. Select multiple."
+              tooltip="Filtrer selon la langue originale du contenu. Plusieurs choix possibles."
             />
             <SearchableSelect
               options={availableLanguages}
               value=""
               onChange={handleAddLanguage}
-              placeholder="Add language..."
-              searchPlaceholder="Search languages..."
+              placeholder="Ajouter une langue..."
+              searchPlaceholder="Rechercher des langues..."
               labelKey="english_name"
               valueKey="iso_639_1"
               allowClear={false}
@@ -636,14 +636,14 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
           <div className="filter-group">
             <LabelWithTooltip
               label="Countries"
-              tooltip="Filter by country of origin. Select multiple."
+              tooltip="Filtrer selon le pays d’origine. Plusieurs choix possibles."
             />
             <SearchableSelect
               options={availableCountries}
               value=""
               onChange={handleAddCountry}
-              placeholder="Add country..."
-              searchPlaceholder="Search countries..."
+              placeholder="Ajouter un pays..."
+              searchPlaceholder="Rechercher des pays..."
               labelKey="english_name"
               valueKey="iso_3166_1"
               allowClear={false}
@@ -673,7 +673,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       <FilterSection
         id="genres"
         title="Genres"
-        description="Filter by IMDb genre"
+        description="Filtrer selon le genre IMDb"
         icon={Sparkles}
         isOpen={localExpandedSections.genres}
         onToggle={toggleSection}
@@ -696,8 +696,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
       <FilterSection
         id="release"
-        title="Release Date & Runtime"
-        description="Date range and runtime filters"
+        title="Date de sortie et durée"
+        description="Période de sortie et durée"
         icon={Calendar}
         isOpen={localExpandedSections.release}
         onToggle={toggleSection}
@@ -705,8 +705,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <div className="filter-grid">
           <div className="filter-group">
             <LabelWithTooltip
-              label="Release Date From"
-              tooltip="Include titles released on or after this date."
+              label="Sortie à partir du"
+              tooltip="Inclure les titres sortis à cette date ou après."
             />
             <input
               id="imdb-date-from"
@@ -718,8 +718,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
           </div>
           <div className="filter-group">
             <LabelWithTooltip
-              label="Release Date To"
-              tooltip="Include titles released on or before this date."
+              label="Sortie jusqu’au"
+              tooltip="Inclure les titres sortis à cette date ou avant."
             />
             <input
               id="imdb-date-to"
@@ -734,7 +734,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <div className="filter-spacer">
           <RangeSlider
             label="Durée (minutes)"
-            tooltip="Filter by total runtime in minutes."
+            tooltip="Filtrer selon la durée totale en minutes."
             min={0}
             max={400}
             step={1}
@@ -779,14 +779,14 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       <FilterSection
         id="keywords"
         title="Keywords"
-        description="Type any keyword to filter by."
+        description="Saisissez un mot-clé pour filtrer."
         icon={Tag}
         isOpen={localExpandedSections.keywords}
         onToggle={toggleSection}
         badgeCount={(filters.keywords || []).length + (filters.excludeKeywords || []).length}
       >
         <div className="filter-group mb-4">
-          <LabelWithTooltip label="Include Keywords" tooltip="Results must match these keywords." />
+          <LabelWithTooltip label="Mots-clés à inclure" tooltip="Results must match these keywords." />
           <div>
             <input
               type="text"
@@ -796,7 +796,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
               onChange={(e) => setKeywordInput(e.target.value)}
               onKeyDown={(e) => handleEnterToAdd(e, handleAddKeyword)}
             />
-            <span className="filter-label-hint">Press Enter to add</span>
+            <span className="filter-label-hint">Appuyez sur Entrée pour ajouter</span>
           </div>
           {(filters.keywords || []).length > 0 && (
             <div className="imdb-selected-chips mt-3" style={{ marginTop: '12px' }}>
@@ -817,7 +817,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
         <div className="filter-group mt-6">
           <LabelWithTooltip
-            label="Exclude Keywords"
+            label="Mots-clés à exclure"
             tooltip="Results must NOT match these keywords."
           />
           <div>
@@ -829,7 +829,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
               onChange={(e) => setExcludeKeywordInput(e.target.value)}
               onKeyDown={(e) => handleEnterToAdd(e, handleAddExcludeKeyword)}
             />
-            <span className="filter-label-hint">Press Enter to add</span>
+            <span className="filter-label-hint">Appuyez sur Entrée pour ajouter</span>
           </div>
           {(filters.excludeKeywords || []).length > 0 && (
             <div className="imdb-selected-chips mt-3" style={{ marginTop: '12px' }}>
@@ -858,7 +858,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <FilterSection
           id="awards"
           title="Awards"
-          description="Filter by award wins or nominations"
+          description="Filtrer selon les récompenses ou nominations"
           icon={Award}
           isOpen={localExpandedSections.awards}
           onToggle={toggleSection}
@@ -909,7 +909,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       <FilterSection
         id="people"
         title="People & Studios"
-        description="Filter by credited people and production companies"
+        description="Filtrer selon les personnes créditées et les sociétés de production"
         icon={Users}
         isOpen={localExpandedSections.people}
         onToggle={toggleSection}
@@ -922,7 +922,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <div className="filter-group mb-4">
           <LabelWithTooltip
             label="Credited People"
-            tooltip="Search for actors, directors, writers etc. by name using IMDb data."
+            tooltip="Rechercher des acteurs, réalisateurs, scénaristes, etc. par nom à partir des données IMDb."
           />
           {onSearchImdbPeople && (
             <SearchInput
@@ -930,7 +930,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
               onSelect={onSelectImdbPerson}
               selectedItems={selectedImdbPeople}
               onRemove={onRemoveImdbPerson}
-              placeholder="Search people on IMDb..."
+              placeholder="Rechercher des personnes sur IMDb..."
               type="person"
               multiple={true}
             />
@@ -940,7 +940,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <div className="filter-group mt-6">
           <LabelWithTooltip
             label="Production Companies"
-            tooltip="Search for production companies, studios, and distributors."
+            tooltip="Rechercher des sociétés de production, studios et distributeurs."
           />
           {onSearchImdbCompanies && (
             <SearchInput
@@ -948,7 +948,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
               onSelect={onSelectImdbCompany}
               selectedItems={selectedImdbCompanies}
               onRemove={onRemoveImdbCompany}
-              placeholder="Search companies on IMDb..."
+              placeholder="Rechercher des sociétés sur IMDb..."
               type="company"
               multiple={true}
             />
@@ -957,8 +957,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
         <div className="filter-group mt-6">
           <LabelWithTooltip
-            label="Exclude Companies"
-            tooltip="Exclude titles made by specific production companies or studios."
+            label="Sociétés à exclure"
+            tooltip="Exclure les titres produits par certaines sociétés ou certains studios."
           />
           {onSearchImdbCompanies && (
             <SearchInput
@@ -966,7 +966,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
               onSelect={onSelectImdbExcludeCompany}
               selectedItems={selectedImdbExcludeCompanies}
               onRemove={onRemoveImdbExcludeCompany}
-              placeholder="Exclude companies on IMDb..."
+              placeholder="Exclure des sociétés IMDb..."
               type="company"
               multiple={true}
             />
@@ -988,7 +988,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
           <div className="filter-group mb-4">
             <LabelWithTooltip
               label="City"
-              tooltip="Search for a city to find titles currently showing in theatres nearby."
+              tooltip="Rechercher une ville pour trouver les titres actuellement à l’affiche à proximité."
             />
             {onSearchCities && (
               <>
@@ -1001,7 +1001,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
                   onRemove={() => {
                     if (onClearCity) onClearCity();
                   }}
-                  placeholder="Search cities..."
+                  placeholder="Rechercher des villes..."
                   type="company"
                   multiple={false}
                 />
@@ -1018,7 +1018,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
           <div className="filter-group">
             <LabelWithTooltip
               label="Radius (km)"
-              tooltip="Search radius around the selected city in kilometers. Default is 50km."
+              tooltip="Rayon de recherche autour de la ville sélectionnée, en kilomètres. Valeur par défaut : 50 km."
             />
             <SingleSlider
               min={1}
@@ -1038,7 +1038,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <FilterSection
           id="certificates"
           title="Certificates"
-          description="Filter by content rating certificates (PG, R, etc.)"
+          description="Filtrer selon la classification du contenu (PG, R, etc.)"
           icon={Shield}
           isOpen={localExpandedSections.certificates}
           onToggle={toggleSection}
@@ -1067,7 +1067,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <FilterSection
           id="rankedLists"
           title="Ranked Lists"
-          description="Filter by IMDb curated ranking lists (Top Rated / Bottom Rated)."
+          description="Filtrer selon les classements IMDb (mieux notés / moins bien notés)."
           icon={ListOrdered}
           isOpen={localExpandedSections.rankedLists}
           onToggle={toggleSection}
@@ -1081,8 +1081,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
           {!MAX_RANK_HIDDEN && (
             <div className="filter-group">
               <LabelWithTooltip
-                label="Preset Ranges"
-                tooltip="Quickly autofill the number of ranked titles to include or exclude."
+                label="Plages prédéfinies"
+                tooltip="Renseigner rapidement le nombre de titres classés à inclure ou exclure."
               />
               <div className="runtime-presets filter-spacer-sm">
                 {rankedRangePresets.map((preset) => (
@@ -1116,7 +1116,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
               <LabelWithTooltip
                 label="Mode"
-                tooltip="Choose whether titles in the selected ranked list should be included or excluded."
+                tooltip="Choisir si les titres du classement sélectionné doivent être inclus ou exclus."
               />
               <SearchableSelect
                 options={rankModeOptions}
@@ -1125,16 +1125,16 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
                   const mode = value === 'EXCLUDE' ? 'EXCLUDE' : 'INCLUDE';
                   applyRankConstraint({ mode, type: activeRankType });
                 }}
-                placeholder="Select mode..."
-                searchPlaceholder="Search mode..."
+                placeholder="Sélectionner un mode..."
+                searchPlaceholder="Rechercher un mode..."
                 labelKey="label"
                 valueKey="value"
                 allowClear={false}
               />
 
               <LabelWithTooltip
-                label="Rank Type"
-                tooltip="Choose which ranked list type this filter should use."
+                label="Type de classement"
+                tooltip="Choisir le type de classement utilisé par ce filtre."
               />
               <SearchableSelect
                 options={visibleRankedLists}
@@ -1144,8 +1144,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
                   if (!type) return;
                   applyRankConstraint({ mode: activeRankMode, type });
                 }}
-                placeholder="Select list type..."
-                searchPlaceholder="Search list type..."
+                placeholder="Sélectionner un type de liste..."
+                searchPlaceholder="Rechercher un type de liste..."
                 labelKey="label"
                 valueKey="value"
                 allowClear={false}
@@ -1153,7 +1153,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
 
               <LabelWithTooltip
                 label="Number of Movies"
-                tooltip="Limit the ranked list by position count (e.g. 100 means top/bottom 100)."
+                tooltip="Limiter le classement à un nombre de positions (ex. 100 = top/flop 100)."
               />
               <input
                 type="text"
@@ -1170,7 +1170,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
                   }
                 }}
               />
-              <p className="text-xs text-gray-400 mt-2">Allowed range: 1 and above</p>
+              <p className="text-xs text-gray-400 mt-2">Valeur autorisée : 1 ou plus</p>
             </div>
           )}
         </FilterSection>
@@ -1179,8 +1179,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       {/* Text Search (Phase 3) */}
       <FilterSection
         id="textSearch"
-        title="Text Search"
-        description="Search in plot summaries and filming locations"
+        title="Recherche textuelle"
+        description="Rechercher dans les résumés et lieux de tournage"
         icon={FileText}
         isOpen={localExpandedSections.textSearch}
         onToggle={toggleSection}
@@ -1189,13 +1189,13 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <div className="filter-group mb-4">
           <LabelWithTooltip
             label="Plot Keywords"
-            tooltip="Search for titles containing these words in their plot summary."
+            tooltip="Rechercher les titres contenant ces mots dans leur résumé."
           />
           <div>
             <input
               type="text"
               className="input"
-              placeholder="Type and press Enter..."
+              placeholder="Saisissez puis appuyez sur Entrée..."
               value={plotInput}
               onChange={(e) => setPlotInput(e.target.value)}
               onKeyDown={(e) =>
@@ -1205,7 +1205,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
                 })
               }
             />
-            <span className="filter-label-hint">Press Enter to add</span>
+            <span className="filter-label-hint">Appuyez sur Entrée pour ajouter</span>
           </div>
           {plotValues.length > 0 && (
             <div className="imdb-selected-chips mt-3" style={{ marginTop: '12px' }}>
@@ -1227,13 +1227,13 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <div className="filter-group">
           <LabelWithTooltip
             label="Filming Locations"
-            tooltip="Search for titles filmed at a specific location."
+            tooltip="Rechercher les titres tournés dans un lieu précis."
           />
           <div>
             <input
               type="text"
               className="input"
-              placeholder="Type and press Enter..."
+              placeholder="Saisissez puis appuyez sur Entrée..."
               value={filmingInput}
               onChange={(e) => setFilmingInput(e.target.value)}
               onKeyDown={(e) =>
@@ -1243,7 +1243,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
                 })
               }
             />
-            <span className="filter-label-hint">Press Enter to add</span>
+            <span className="filter-label-hint">Appuyez sur Entrée pour ajouter</span>
           </div>
           {filmingLocationValues.length > 0 && (
             <div className="imdb-selected-chips mt-3" style={{ marginTop: '12px' }}>
@@ -1270,7 +1270,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         <FilterSection
           id="advanced"
           title="Advanced Filters"
-          description="Explicit content and data availability filters"
+          description="Contenu explicite et disponibilité des données"
           icon={Database}
           isOpen={localExpandedSections.advanced}
           onToggle={toggleSection}
@@ -1278,8 +1278,8 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
         >
           <div className="filter-group mb-4">
             <LabelWithTooltip
-              label="Include Explicit Content"
-              tooltip="Toggle to include adult/explicit content in IMDb results."
+              label="Inclure le contenu explicite"
+              tooltip="Inclure le contenu adulte ou explicite dans les résultats IMDb."
             />
             <label className="sidebar-checkbox">
               <input
@@ -1289,14 +1289,14 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
                   onFiltersChange('explicitContent', e.target.checked ? 'INCLUDE' : undefined)
                 }
               />
-              <span>Include explicit titles</span>
+              <span>Inclure les titres explicites</span>
             </label>
           </div>
 
           <div className="filter-group">
             <LabelWithTooltip
               label="Must Have Data"
-              tooltip="Only include titles that have specific data available."
+              tooltip="Inclure uniquement les titres disposant de certaines données."
             />
             <div className="imdb-chip-wrap">
               {imdbWithDataOptions.map((opt) => {
@@ -1326,7 +1326,7 @@ export const ImdbFilterPanel = memo(function ImdbFilterPanel({
       <FilterSection
         id="extras"
         title="Stremio Extras"
-        description="Expose filter dropdowns inside Stremio"
+        description="Afficher les filtres déroulants dans Stremio"
         icon={Layers}
         isOpen={localExpandedSections.extras}
         onToggle={toggleSection}

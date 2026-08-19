@@ -46,7 +46,7 @@ export const GenreSelector = memo(function GenreSelector({
   if (!genres || genres.length === 0) {
     return (
       <div className="error-box">
-        <p>Genres not available.</p>
+        <p>Genres indisponibles.</p>
         <div className="mt-2">
           <button className="btn btn-secondary btn-sm" onClick={onRefresh}>
             Retry loading genres
@@ -72,7 +72,7 @@ export const GenreSelector = memo(function GenreSelector({
 
       <SmoothExpand show={showMatchMode}>
         <div className={`genre-match-mode-box`}>
-          <div className="genre-match-mode-label">How should multiple genres be matched?</div>
+          <div className="genre-match-mode-label">Comment combiner plusieurs genres ?</div>
           <div
             className={`genre-match-mode-toggle ${selectedGenres.length < 2 ? 'disabled' : ''}`}
             role="radiogroup"
@@ -102,7 +102,7 @@ export const GenreSelector = memo(function GenreSelector({
         </div>
       </SmoothExpand>
 
-      <div className="genre-grid tristate" role="group" aria-label="Genre filter">
+      <div className="genre-grid tristate" role="group" aria-label="Filtre de genres">
         {[...genres]
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((genre) => {
@@ -119,7 +119,7 @@ export const GenreSelector = memo(function GenreSelector({
                 aria-label={`${genre.name}: ${state === 'neutral' ? 'not selected' : state === 'include' ? 'included' : 'excluded'}`}
                 title={
                   state === 'neutral'
-                    ? 'Click to include'
+                    ? 'Cliquer pour inclure'
                     : state === 'include'
                       ? 'Click to exclude'
                       : 'Click to clear'

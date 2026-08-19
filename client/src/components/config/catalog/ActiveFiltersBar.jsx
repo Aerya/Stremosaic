@@ -22,7 +22,7 @@ export const ActiveFiltersBar = memo(function ActiveFiltersBar({
             aria-expanded={!isCollapsed}
             aria-label="Toggle active filters"
           >
-            <span className="active-filters-title">Active Filters</span>
+            <span className="active-filters-title">Filtres actifs</span>
             <span
               className="filter-count-badge"
               style={{ transform: 'scale(0.8)', marginLeft: '-4px' }}
@@ -39,10 +39,10 @@ export const ActiveFiltersBar = memo(function ActiveFiltersBar({
             type="button"
             className="clear-all-btn"
             onClick={onClearAll}
-            title="Clear all filters"
+            title="Effacer tous les filtres"
           >
             <Trash2 size={14} />
-            <span>Clear</span>
+            <span>Effacer</span>
           </button>
         </div>
         <SmoothExpand show={!isCollapsed}>
@@ -53,14 +53,14 @@ export const ActiveFiltersBar = memo(function ActiveFiltersBar({
                   type="button"
                   className="active-filter-chip-label"
                   onClick={() => onToggleSection(filter.section)}
-                  aria-label={`Show ${filter.label} section`}
+                  aria-label={`Afficher la section ${filter.label}`}
                 >
                   {filter.label}
                 </button>
                 <button
                   type="button"
                   className="chip-remove"
-                  aria-label={`Remove ${filter.label} filter`}
+                  aria-label={`Supprimer le filtre ${filter.label}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     onClearFilter(filter.key);

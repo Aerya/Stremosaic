@@ -39,7 +39,7 @@ export const humanizeSortValue = (value) => {
   const fieldLabel = humanizeFilterValue(raw);
   if (!direction) return fieldLabel;
 
-  return `${fieldLabel} (${direction === 'asc' ? 'Ascending' : 'Descending'})`;
+  return `${fieldLabel} (${direction === 'asc' ? 'Croissant' : 'Décroissant'})`;
 };
 
 export const resolveOptionLabel = (

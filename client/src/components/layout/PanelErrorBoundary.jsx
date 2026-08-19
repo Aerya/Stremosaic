@@ -31,7 +31,7 @@ export class PanelErrorBoundary extends Component {
           }}
         >
           <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
-            {this.props.fallbackMessage || 'Something went wrong in this panel.'}
+            {this.props.fallbackMessage || 'Une erreur est survenue dans ce panneau.'}
           </p>
           <button className="btn btn-secondary btn-sm" onClick={this.handleReset}>
             <RefreshCw size={14} />

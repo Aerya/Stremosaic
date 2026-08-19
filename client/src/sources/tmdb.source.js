@@ -158,7 +158,7 @@ export const TMDB_SOURCE = {
         const extra = countriesArr.length > 2 ? ` +${countriesArr.length - 2}` : '';
         active.push({
           key: 'countries',
-          label: `Country: ${countryNames.join(', ')}${extra}`,
+          label: `Pays : ${countryNames.join(', ')}${extra}`,
           section: 'filters',
         });
       }
@@ -167,7 +167,7 @@ export const TMDB_SOURCE = {
     if (filters.yearFrom || filters.yearTo) {
       active.push({
         key: 'year',
-        label: `Year: ${filters.yearFrom || 'Any'}–${filters.yearTo || 'Now'}`,
+        label: `Année : ${filters.yearFrom || 'Toutes'}–${filters.yearTo || 'Présent'}`,
         section: 'filters',
       });
     }
@@ -175,7 +175,7 @@ export const TMDB_SOURCE = {
     if (filters.ratingMin > 0 || (filters.ratingMax != null && filters.ratingMax < 10)) {
       active.push({
         key: 'rating',
-        label: `Rating: ${filters.ratingMin || 0}–${filters.ratingMax ?? 10}`,
+        label: `Note : ${filters.ratingMin || 0}–${filters.ratingMax ?? 10}`,
         section: 'filters',
       });
     }
@@ -183,7 +183,7 @@ export const TMDB_SOURCE = {
     if (filters.runtimeMin || filters.runtimeMax) {
       active.push({
         key: 'runtime',
-        label: `Runtime: ${filters.runtimeMin || 0}–${filters.runtimeMax || '∞'}min`,
+        label: `Durée : ${filters.runtimeMin || 0}–${filters.runtimeMax || '∞'}min`,
         section: 'filters',
       });
     }
@@ -191,13 +191,13 @@ export const TMDB_SOURCE = {
     if (filters.voteCountMin > 0) {
       active.push({
         key: 'voteCountMin',
-        label: `Min votes: ${filters.voteCountMin.toLocaleString()}`,
+        label: `Votes min : ${filters.voteCountMin.toLocaleString()}`,
         section: 'filters',
       });
     }
 
     if (filters.datePreset) {
-      active.push({ key: 'datePreset', label: `Date: ${filters.datePreset}`, section: 'release' });
+      active.push({ key: 'datePreset', label: `Date : ${filters.datePreset}`, section: 'release' });
     } else if (
       !filters.lastXYears &&
       (filters.releaseDateFrom || filters.releaseDateTo || filters.airDateFrom || filters.airDateTo)
@@ -206,7 +206,7 @@ export const TMDB_SOURCE = {
       const rawTo = filters.releaseDateTo || filters.airDateTo || '…';
       active.push({
         key: 'releaseDate',
-        label: `${isMovieType ? 'Release' : 'Air'}: ${rawFrom} – ${rawTo}`,
+        label: `${isMovieType ? 'Sortie' : 'Diffusion'} : ${rawFrom} – ${rawTo}`,
         section: 'release',
       });
     }
@@ -214,7 +214,7 @@ export const TMDB_SOURCE = {
     if (!isMovieType && (filters.firstAirDateFrom || filters.firstAirDateTo)) {
       active.push({
         key: 'firstAirDate',
-        label: `Premiered: ${filters.firstAirDateFrom || '…'} – ${filters.firstAirDateTo || '…'}`,
+        label: `Première : ${filters.firstAirDateFrom || '…'} – ${filters.firstAirDateTo || '…'}`,
         section: 'release',
       });
     }
@@ -222,7 +222,7 @@ export const TMDB_SOURCE = {
     if (filters.firstAirDateYear) {
       active.push({
         key: 'firstAirDateYear',
-        label: `First air year: ${filters.firstAirDateYear}`,
+        label: `Première année de diffusion : ${filters.firstAirDateYear}`,
         section: 'release',
       });
     }
@@ -230,7 +230,7 @@ export const TMDB_SOURCE = {
     if (filters.primaryReleaseYear) {
       active.push({
         key: 'primaryReleaseYear',
-        label: `Release year: ${filters.primaryReleaseYear}`,
+        label: `Année de sortie : ${filters.primaryReleaseYear}`,
         section: 'release',
       });
     }
@@ -238,13 +238,13 @@ export const TMDB_SOURCE = {
     if (isMovieType && filters.region) {
       const label =
         countries.find((c) => c.iso_3166_1 === filters.region)?.english_name || filters.region;
-      active.push({ key: 'region', label: `Release region: ${label}`, section: 'release' });
+      active.push({ key: 'region', label: `Région de sortie : ${label}`, section: 'release' });
     }
 
     if (isMovieType && filters.releaseTypes?.length > 0) {
       active.push({
         key: 'releaseTypes',
-        label: `${filters.releaseTypes.length} release type(s)`,
+        label: `${filters.releaseTypes.length} type(s) de sortie`,
         section: 'release',
       });
     }
@@ -252,7 +252,7 @@ export const TMDB_SOURCE = {
     if (filters.certifications?.length > 0) {
       active.push({
         key: 'certifications',
-        label: `Rating: ${filters.certifications.join(', ')}`,
+        label: `Classification : ${filters.certifications.join(', ')}`,
         section: 'release',
       });
     }
@@ -260,7 +260,7 @@ export const TMDB_SOURCE = {
     if (filters.certificationMin || filters.certificationMax) {
       active.push({
         key: 'certificationRange',
-        label: `Age range: ${filters.certificationMin || 'Any'}–${filters.certificationMax || 'Any'}`,
+        label: `Tranche d’âge : ${filters.certificationMin || 'Toutes'}–${filters.certificationMax || 'Toutes'}`,
         section: 'release',
       });
     }
@@ -271,19 +271,19 @@ export const TMDB_SOURCE = {
         filters.certificationCountry;
       active.push({
         key: 'certificationCountry',
-        label: `Rating country: ${label}`,
+        label: `Pays de classification : ${label}`,
         section: 'release',
       });
     }
 
     if (filters.timezone) {
-      active.push({ key: 'timezone', label: `Timezone: ${filters.timezone}`, section: 'release' });
+      active.push({ key: 'timezone', label: `Fuseau horaire : ${filters.timezone}`, section: 'release' });
     }
 
     if (!isMovieType && filters.tvStatus) {
       active.push({
         key: 'tvStatus',
-        label: `Status: ${resolveOptionLabel(tvStatuses, filters.tvStatus)}`,
+        label: `Statut : ${resolveOptionLabel(tvStatuses, filters.tvStatus)}`,
         section: 'release',
       });
     }
@@ -291,7 +291,7 @@ export const TMDB_SOURCE = {
     if (!isMovieType && filters.tvType) {
       active.push({
         key: 'tvType',
-        label: `Type: ${resolveOptionLabel(tvTypes, filters.tvType)}`,
+        label: `Type : ${resolveOptionLabel(tvTypes, filters.tvType)}`,
         section: 'release',
       });
     }
@@ -300,13 +300,13 @@ export const TMDB_SOURCE = {
       const label =
         watchRegions.find((r) => r.iso_3166_1 === filters.watchRegion)?.english_name ||
         filters.watchRegion;
-      active.push({ key: 'watchRegion', label: `Stream region: ${label}`, section: 'streaming' });
+      active.push({ key: 'watchRegion', label: `Région de streaming : ${label}`, section: 'streaming' });
     }
 
     if (filters.watchProviders?.length > 0) {
       active.push({
         key: 'watchProviders',
-        label: `${filters.watchProviders.length} streaming service(s)`,
+        label: `${filters.watchProviders.length} service(s) de streaming`,
         section: 'streaming',
       });
     }
@@ -317,14 +317,14 @@ export const TMDB_SOURCE = {
         .join(', ');
       active.push({
         key: 'watchMonetizationTypes',
-        label: `Monetization: ${labels}`,
+        label: `Monétisation : ${labels}`,
         section: 'streaming',
       });
     }
 
     if (filters.withNetworks) {
       const count = filters.withNetworks.split('|').filter(Boolean).length;
-      active.push({ key: 'withNetworks', label: `${count} network(s)`, section: 'streaming' });
+      active.push({ key: 'withNetworks', label: `${count} chaîne(s)`, section: 'streaming' });
     }
 
     if (selectedPeople.length > 0) {
@@ -332,7 +332,7 @@ export const TMDB_SOURCE = {
       const extra = selectedPeople.length > 2 ? ` +${selectedPeople.length - 2}` : '';
       active.push({
         key: 'people',
-        label: `Cast/Crew: ${names.join(', ')}${extra}`,
+        label: `Casting/Équipe : ${names.join(', ')}${extra}`,
         section: 'people',
       });
     }
@@ -342,7 +342,7 @@ export const TMDB_SOURCE = {
       const extra = selectedCompanies.length > 2 ? ` +${selectedCompanies.length - 2}` : '';
       active.push({
         key: 'companies',
-        label: `Studio: ${names.join(', ')}${extra}`,
+        label: `Studio : ${names.join(', ')}${extra}`,
         section: 'people',
       });
     }
@@ -350,7 +350,7 @@ export const TMDB_SOURCE = {
     if (excludeCompanies.length > 0) {
       active.push({
         key: 'excludeCompanies',
-        label: `Exclude ${excludeCompanies.length} studio(s)`,
+        label: `Exclure ${excludeCompanies.length} studio(s)`,
         section: 'people',
       });
     }
@@ -360,7 +360,7 @@ export const TMDB_SOURCE = {
       const extra = selectedKeywords.length > 2 ? ` +${selectedKeywords.length - 2}` : '';
       active.push({
         key: 'keywords',
-        label: `Keywords: ${names.join(', ')}${extra}`,
+        label: `Mots-clés : ${names.join(', ')}${extra}`,
         section: 'people',
       });
     }
@@ -368,31 +368,31 @@ export const TMDB_SOURCE = {
     if (excludeKeywords.length > 0) {
       active.push({
         key: 'excludeKeywords',
-        label: `Exclude ${excludeKeywords.length} keyword(s)`,
+        label: `Exclure ${excludeKeywords.length} mot(s)-clé(s)`,
         section: 'people',
       });
     }
 
     if (filters.includeAdult) {
-      active.push({ key: 'includeAdult', label: 'Adult content', section: 'options' });
+      active.push({ key: 'includeAdult', label: 'Contenu adulte', section: 'options' });
     }
 
     if (filters.includeVideo) {
-      active.push({ key: 'includeVideo', label: 'Include video', section: 'options' });
+      active.push({ key: 'includeVideo', label: 'Inclure les vidéos', section: 'options' });
     }
 
     if (filters.randomize) {
-      active.push({ key: 'randomize', label: 'Randomized', section: 'options' });
+      active.push({ key: 'randomize', label: 'Aléatoire', section: 'options' });
     }
 
     if (filters.discoverOnly) {
-      active.push({ key: 'discoverOnly', label: 'Discover only', section: 'options' });
+      active.push({ key: 'discoverOnly', label: 'Découverte uniquement', section: 'options' });
     }
 
     if (filters.includeNullFirstAirDates) {
       active.push({
         key: 'includeNullFirstAirDates',
-        label: 'Unknown air dates',
+        label: 'Dates de diffusion inconnues',
         section: 'options',
       });
     }
@@ -400,19 +400,19 @@ export const TMDB_SOURCE = {
     if (filters.screenedTheatrically) {
       active.push({
         key: 'screenedTheatrically',
-        label: 'Screened theatrically',
+        label: 'Projeté au cinéma',
         section: 'options',
       });
     }
 
     if (filters.releasedOnly) {
-      active.push({ key: 'releasedOnly', label: 'Released only', section: 'release' });
+      active.push({ key: 'releasedOnly', label: 'Sortis uniquement', section: 'release' });
     }
 
     if (filters.lastXYears) {
       active.push({
         key: 'lastXYears',
-        label: `Last ${filters.lastXYears} years`,
+        label: `Les ${filters.lastXYears} dernières années`,
         section: 'release',
       });
     }

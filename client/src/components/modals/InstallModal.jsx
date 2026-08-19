@@ -45,12 +45,12 @@ export function InstallModal({ isOpen, onClose, installUrl, stremioUrl, onDonate
         ref={modalRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Install Your Addon"
+        aria-label="Installer votre addon"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div className="modal-header">
-          <h3 className="modal-title">Install Your Addon</h3>
+          <h3 className="modal-title">Installer votre addon</h3>
           <button className="btn btn-ghost btn-icon" onClick={onClose}>
             <X size={20} />
           </button>
@@ -58,8 +58,8 @@ export function InstallModal({ isOpen, onClose, installUrl, stremioUrl, onDonate
 
         <div className="modal-body">
           <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>
-            Your configuration has been saved! Use one of these options to add your custom catalogs
-            to Stremio.
+            Votre configuration a été enregistrée ! Utilisez l’une de ces options pour ajouter vos
+            catalogues personnalisés à Stremio.
           </p>
 
           <div style={{ marginBottom: '24px' }}>
@@ -69,15 +69,15 @@ export function InstallModal({ isOpen, onClose, installUrl, stremioUrl, onDonate
               style={{ padding: '16px 24px', fontSize: '16px' }}
             >
               <Download size={20} />
-              Install to Stremio
+              Installer dans Stremio
             </button>
             <p className="text-sm text-muted text-center" style={{ marginTop: '8px' }}>
-              This will open Stremio and install the addon
+              Ceci ouvrira Stremio pour installer l’addon
             </p>
           </div>
 
           <div className="install-link-box">
-            <div className="install-link-label">Addon Manifest URL</div>
+            <div className="install-link-label">URL du manifeste de l’addon</div>
             <div className="install-link">{manifestUrl}</div>
             <button
               className="btn btn-secondary btn-sm copy-button"
@@ -86,12 +86,12 @@ export function InstallModal({ isOpen, onClose, installUrl, stremioUrl, onDonate
               {copied ? (
                 <>
                   <Check size={14} className="success-icon" />
-                  Copied!
+                  Copié !
                 </>
               ) : (
                 <>
                   <Copy size={14} />
-                  Copy URL
+                  Copier l’URL
                 </>
               )}
             </button>
@@ -107,9 +107,8 @@ export function InstallModal({ isOpen, onClose, installUrl, stremioUrl, onDonate
             }}
           >
             <p className="text-sm">
-              <strong>Tip:</strong> You can always return to your configuration page to edit your
-              catalogs. Stremio may cache addon data—if you don't see changes, refresh the Addons
-              page or restart Stremio.
+              <strong>Astuce :</strong> Vous pouvez toujours revenir sur cette page pour modifier vos
+              catalogues. Stremio peut mettre en cache les données — si vos changements n’apparaissent pas, rafraîchissez les addons ou redémarrez Stremio.
             </p>
           </div>
           <div className="setup-support-row" style={{ marginTop: '24px' }}>
@@ -119,7 +118,7 @@ export function InstallModal({ isOpen, onClose, installUrl, stremioUrl, onDonate
 
         <div className="modal-footer">
           <button className="btn btn-ghost" onClick={onClose}>
-            Close
+            Fermer
           </button>
           <a
             href={`https://web.stremio.com/#/addons?addon=${encodeURIComponent(manifestUrl)}`}
@@ -127,7 +126,7 @@ export function InstallModal({ isOpen, onClose, installUrl, stremioUrl, onDonate
             rel="noopener noreferrer"
             className="btn btn-secondary"
           >
-            Open Stremio Web
+            Ouvrir Stremio Web
             <ExternalLink size={14} />
           </a>
         </div>

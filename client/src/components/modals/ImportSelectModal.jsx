@@ -85,16 +85,16 @@ export function ImportSelectModal({ isOpen, data, onClose, onConfirm }) {
         ref={modalRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Select Catalogs to Import"
+        aria-label="Sélectionner les catalogues à importer"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
         style={{ maxWidth: '520px' }}
       >
         <div className="modal-header" style={{ paddingBottom: '8px' }}>
           <div>
-            <h3 className="modal-title">Import Configuration</h3>
+            <h3 className="modal-title">Importer la configuration</h3>
             <p className="text-secondary" style={{ fontSize: '13px', marginTop: '4px' }}>
-              Select which catalogs to import ({selected.size} of {catalogs.length} selected)
+              Sélectionnez les catalogues à importer ({selected.size} sur {catalogs.length} sélectionné(s))
             </p>
           </div>
           <button className="btn btn-ghost btn-icon" onClick={onClose}>
@@ -122,7 +122,7 @@ export function ImportSelectModal({ isOpen, data, onClose, onConfirm }) {
                   style={{ gap: '6px', fontSize: '13px' }}
                 >
                   {allSelected ? <CheckSquare size={14} /> : <Square size={14} />}
-                  {allSelected ? 'Deselect All' : 'Select All'}
+                  {allSelected ? 'Tout désélectionner' : 'Tout sélectionner'}
                 </button>
               </div>
 
@@ -177,15 +177,15 @@ export function ImportSelectModal({ isOpen, data, onClose, onConfirm }) {
                           fontSize: '14px',
                         }}
                       >
-                        {catalog.name || 'Untitled'}
+                        {catalog.name || 'Sans titre'}
                       </span>
                     </span>
                     <span className="text-secondary" style={{ fontSize: '12px', flexShrink: 0 }}>
                       {catalog.type === 'anime'
                         ? 'Anime'
                         : catalog.type === 'series'
-                          ? 'TV'
-                          : 'Movie'}
+                          ? 'Série'
+                          : 'Film'}
                       {catalog.source === 'imdb' ? ' · IMDb' : ''}
                     </span>
                   </label>
@@ -196,7 +196,7 @@ export function ImportSelectModal({ isOpen, data, onClose, onConfirm }) {
 
           {catalogs.length === 0 && (
             <div style={{ padding: '24px 16px', textAlign: 'center' }} className="text-secondary">
-              No catalogs found in this file
+              Aucun catalogue trouvé dans ce fichier
             </div>
           )}
 
@@ -217,7 +217,7 @@ export function ImportSelectModal({ isOpen, data, onClose, onConfirm }) {
                   onChange={(e) => setImportPrefs(e.target.checked)}
                 />
                 <Check size={14} />
-                <span>Import preferences (shuffle, search, etc.)</span>
+                <span>Importer les préférences (mélange, recherche, etc.)</span>
               </label>
             )}
             {data.configName && (
@@ -228,7 +228,7 @@ export function ImportSelectModal({ isOpen, data, onClose, onConfirm }) {
                   onChange={(e) => setImportName(e.target.checked)}
                 />
                 <Check size={14} />
-                <span>Import config name: &ldquo;{data.configName}&rdquo;</span>
+                <span>Importer le nom de la configuration : &ldquo;{data.configName}&rdquo;</span>
               </label>
             )}
           </div>
@@ -236,7 +236,7 @@ export function ImportSelectModal({ isOpen, data, onClose, onConfirm }) {
 
         <div className="modal-footer">
           <button type="button" className="btn btn-ghost" onClick={onClose}>
-            Cancel
+            Annuler
           </button>
           <button
             type="button"
@@ -244,8 +244,8 @@ export function ImportSelectModal({ isOpen, data, onClose, onConfirm }) {
             onClick={handleConfirm}
             disabled={noneSelected && !importPrefs && !importName}
           >
-            Import{' '}
-            {selected.size > 0 ? `${selected.size} Catalog${selected.size !== 1 ? 's' : ''}` : ''}
+            Importer{' '}
+            {selected.size > 0 ? `${selected.size} catalogue${selected.size > 1 ? 's' : ''}` : ''}
           </button>
         </div>
       </div>

@@ -109,8 +109,8 @@ export function MalFilterPanel({
       {!hasAdvancedFilters && (
         <FilterSection
           id="ranking"
-          title="Ranking"
-          description="Choose a MAL ranking type"
+          title="Classement"
+          description="Choisir un type de classement MAL"
           icon={Settings}
           isOpen={expandedSections?.ranking}
           onToggle={onToggleSection}
@@ -119,15 +119,15 @@ export function MalFilterPanel({
           <div className="filter-grid">
             <div className="filter-group">
               <LabelWithTooltip
-                label="Ranking Type"
-                tooltip="Select from MAL's curated ranking lists. Disabled when using advanced filters (genres, type, status, etc.)."
+                label="Type de classement"
+                tooltip="Sélectionner un classement MAL. Désactivé lorsque des filtres avancés sont utilisés."
               />
               <SearchableSelect
                 options={availableRankingTypes}
                 value={rankingValue}
                 onChange={(value) => onFiltersChange('malRankingType', value)}
-                placeholder="All"
-                searchPlaceholder="Search..."
+                placeholder="Tous"
+                searchPlaceholder="Rechercher..."
                 labelKey="label"
                 valueKey="value"
                 allowClear={false}
@@ -140,7 +140,7 @@ export function MalFilterPanel({
       <FilterSection
         id="genres"
         title="Genres"
-        description="Select genres to include or exclude"
+        description="Sélectionner les genres à inclure ou exclure"
         icon={Sparkles}
         isOpen={expandedSections?.genres}
         onToggle={onToggleSection}
@@ -208,8 +208,8 @@ export function MalFilterPanel({
 
       <FilterSection
         id="format"
-        title="Type & Status"
-        description="Media type, airing status, and content rating"
+        title="Type et statut"
+        description="Type de média, statut de diffusion et classification"
         icon={Layers}
         isOpen={expandedSections?.format}
         onToggle={onToggleSection}
@@ -218,8 +218,8 @@ export function MalFilterPanel({
         {availableMediaTypes.length > 0 && (
           <div className="filter-group">
             <LabelWithTooltip
-              label="Media Type"
-              tooltip="Filter by media type: TV, Movie, OVA, ONA, Special, Music."
+              label="Type de média"
+              tooltip="Filtrer selon le type de média : TV, film, OVA, ONA, spécial, musique."
             />
             <AnimeFormatSelector
               selected={filters.malMediaType || []}
@@ -231,8 +231,8 @@ export function MalFilterPanel({
         {malStatuses.length > 0 && (
           <div className="filter-group">
             <LabelWithTooltip
-              label="Status"
-              tooltip="Filter by airing status: Airing, Finished, Upcoming."
+              label="Statut"
+              tooltip="Filtrer selon le statut : en diffusion, terminé, à venir."
             />
             <AnimeFormatSelector
               selected={filters.malStatus || []}
@@ -245,15 +245,15 @@ export function MalFilterPanel({
         {malRatings.length > 0 && (
           <div className="filter-group">
             <LabelWithTooltip
-              label="Content Rating"
-              tooltip="Filter by content rating: G, PG, PG-13, R, R+."
+              label="Classification du contenu"
+              tooltip="Filtrer selon la classification : G, PG, PG-13, R, R+."
             />
             <SearchableSelect
               options={malRatings}
               value={filters.malRating || ''}
               onChange={(val) => onFiltersChange('malRating', val || undefined)}
-              placeholder="Any Rating"
-              searchPlaceholder="Search..."
+              placeholder="Toutes les classifications"
+              searchPlaceholder="Rechercher..."
               labelKey="label"
               valueKey="value"
             />
@@ -265,7 +265,7 @@ export function MalFilterPanel({
         <FilterSection
           id="season"
           title="Season"
-          description="Filter by anime season and year"
+          description="Filtrer selon la saison et l’année de l’anime"
           icon={Calendar}
           isOpen={expandedSections?.season}
           onToggle={onToggleSection}
@@ -275,7 +275,7 @@ export function MalFilterPanel({
             <div className="filter-group">
               <LabelWithTooltip
                 label="Seasonal Anime"
-                tooltip="Filter by anime season. When a season is selected, ranking and advanced filters are ignored."
+                tooltip="Filtrer selon la saison. Lorsqu’une saison est sélectionnée, le classement et les filtres avancés sont ignorés."
               />
               <AnimeSeasonSelector
                 season={filters.malSeason}
@@ -291,13 +291,13 @@ export function MalFilterPanel({
 
             {filters.malSeason && filters.malSeasonYear && (
               <div className="filter-group">
-                <LabelWithTooltip label="Sort" tooltip="How to sort seasonal results." />
+                <LabelWithTooltip label="Tri" tooltip="Définir le tri des résultats saisonniers." />
                 <SearchableSelect
                   options={malSortOptions}
                   value={filters.malSort || 'anime_num_list_users'}
                   onChange={(value) => onFiltersChange('malSort', value)}
                   placeholder="Most Listed"
-                  searchPlaceholder="Search..."
+                  searchPlaceholder="Rechercher..."
                   labelKey="label"
                   valueKey="value"
                   allowClear={false}
@@ -311,7 +311,7 @@ export function MalFilterPanel({
       <FilterSection
         id="score"
         title="Score & Sorting"
-        description="Filter by score range and sort results"
+        description="Filtrer selon la note et trier les résultats"
         icon={Star}
         isOpen={expandedSections?.score}
         onToggle={onToggleSection}
@@ -331,15 +331,15 @@ export function MalFilterPanel({
         {malOrderByOptions.length > 0 && (
           <div className="filter-group">
             <LabelWithTooltip
-              label="Order By"
-              tooltip="How to order browse results. Only applies when using advanced filters."
+              label="Trier par"
+              tooltip="Définir l’ordre des résultats. S’applique uniquement aux filtres avancés."
             />
             <SearchableSelect
               options={malOrderByOptions}
               value={filters.malOrderBy || ''}
               onChange={(val) => onFiltersChange('malOrderBy', val || undefined)}
               placeholder="Score (default)"
-              searchPlaceholder="Search..."
+              searchPlaceholder="Rechercher..."
               labelKey="label"
               valueKey="value"
             />
@@ -350,7 +350,7 @@ export function MalFilterPanel({
       <FilterSection
         id="extras"
         title="Stremio Extras"
-        description="Expose filter dropdowns inside Stremio"
+        description="Afficher les filtres déroulants dans Stremio"
         icon={Layers}
         isOpen={expandedSections?.extras}
         onToggle={onToggleSection}

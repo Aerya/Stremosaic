@@ -71,8 +71,8 @@ export function SimklFilterPanel({
     <>
       <FilterSection
         id="browseType"
-        title="Browse Type"
-        description="Trending, best, by genre, premieres, or airing"
+        title="Type de navigation"
+        description="Tendances, meilleurs, par genre, premières ou diffusion"
         icon={Settings}
         isOpen={expandedSections?.browseType}
         onToggle={onToggleSection}
@@ -80,8 +80,8 @@ export function SimklFilterPanel({
       >
         <div className="filter-group">
           <LabelWithTooltip
-            label="List Type"
-            tooltip="Choose what kind of Simkl list to browse: Trending, Best, By Genre, Premieres, or Airing."
+            label="Type de liste"
+            tooltip="Choisir le type de liste Simkl : tendances, meilleurs, par genre, premières ou diffusion."
           />
           <AnimeFormatSelector
             selected={[listType]}
@@ -98,7 +98,7 @@ export function SimklFilterPanel({
 
         {listType === 'trending' && simklTrendingPeriods.length > 0 && (
           <div className="filter-group">
-            <LabelWithTooltip label="Period" tooltip="Time range for trending anime." />
+            <LabelWithTooltip label="Period" tooltip="Période utilisée pour les tendances anime." />
             <AnimeFormatSelector
               selected={[filters.simklTrendingPeriod || 'week']}
               options={simklTrendingPeriods}
@@ -113,15 +113,15 @@ export function SimklFilterPanel({
         {listType === 'best' && simklBestFilters.length > 0 && (
           <div className="filter-group">
             <LabelWithTooltip
-              label="Best By"
-              tooltip="Filter for best anime by votes, watch count, year, month, or all time."
+              label="Meilleurs selon"
+              tooltip="Filtrer les meilleurs anime selon les votes, le nombre de vues, l’année, le mois ou toutes périodes."
             />
             <SearchableSelect
               options={simklBestFilters}
               value={filters.simklBestFilter || 'all'}
               onChange={(value) => onFiltersChange('simklBestFilter', value)}
               placeholder="All Time"
-              searchPlaceholder="Search..."
+              searchPlaceholder="Rechercher..."
               labelKey="label"
               valueKey="value"
               allowClear={false}
@@ -132,13 +132,13 @@ export function SimklFilterPanel({
         {listType === 'genre' && (
           <>
             <div className="filter-group">
-              <LabelWithTooltip label="Genre" tooltip="Select a Simkl genre to browse." />
+              <LabelWithTooltip label="Genre" tooltip="Sélectionner un genre Simkl." />
               <SearchableSelect
                 options={simklGenreObjects}
                 value={filters.simklGenre || ''}
                 onChange={(value) => onFiltersChange('simklGenre', value || undefined)}
-                placeholder="Select Genre"
-                searchPlaceholder="Search genres..."
+                placeholder="Sélectionner un genre"
+                searchPlaceholder="Rechercher des genres..."
                 labelKey="name"
                 valueKey="id"
               />
@@ -146,13 +146,13 @@ export function SimklFilterPanel({
 
             {simklSortOptions.length > 0 && (
               <div className="filter-group">
-                <LabelWithTooltip label="Sort" tooltip="How to sort genre results." />
+                <LabelWithTooltip label="Tri" tooltip="Définir le tri des résultats par genre." />
                 <SearchableSelect
                   options={simklSortOptions}
                   value={filters.simklSort || 'rank'}
                   onChange={(value) => onFiltersChange('simklSort', value)}
                   placeholder="Rank"
-                  searchPlaceholder="Search..."
+                  searchPlaceholder="Rechercher..."
                   labelKey="label"
                   valueKey="value"
                   allowClear={false}
@@ -166,7 +166,7 @@ export function SimklFilterPanel({
       {simklAnimeTypesFiltered.length > 1 && (
         <FilterSection
           id="animeType"
-          title="Anime Type"
+          title="Type d’anime"
           description={
             localCatalog?.type === 'series'
               ? 'Filter by anime format: TV, OVA, ONA'
@@ -178,7 +178,7 @@ export function SimklFilterPanel({
           badgeCount={getTypeBadge()}
         >
           <div className="filter-group">
-            <LabelWithTooltip label="Type" tooltip="Filter results by anime type." />
+            <LabelWithTooltip label="Type" tooltip="Filtrer les résultats selon le type d’anime." />
             <AnimeFormatSelector
               selected={[filters.simklType || 'all']}
               options={simklAnimeTypesFiltered}
@@ -194,7 +194,7 @@ export function SimklFilterPanel({
       <FilterSection
         id="options"
         title="Options"
-        description="Adult content and randomization"
+        description="Contenu adulte et aléatoire"
         icon={Eye}
         isOpen={expandedSections?.options}
         onToggle={onToggleSection}
@@ -204,8 +204,8 @@ export function SimklFilterPanel({
           <Checkbox
             checked={!!filters.includeAdult}
             onChange={(checked) => onFiltersChange('includeAdult', checked || undefined)}
-            label="Include adult content"
-            tooltip="Include adult/18+ anime where available."
+            label="Inclure le contenu adulte"
+            tooltip="Inclure les anime adultes/18+ lorsqu’ils sont disponibles."
           />
 
           <label className="checkbox-label-row" style={{ cursor: 'pointer' }}>
@@ -226,7 +226,7 @@ export function SimklFilterPanel({
             </div>
             <LabelWithTooltip
               label="Randomize Results"
-              tooltip="Fetch a random page from matching results and shuffle them."
+              tooltip="Charger une page aléatoire parmi les résultats et les mélanger."
             />
           </label>
         </div>
@@ -235,7 +235,7 @@ export function SimklFilterPanel({
       <FilterSection
         id="extras"
         title="Stremio Extras"
-        description="Expose filter dropdowns inside Stremio"
+        description="Afficher les filtres déroulants dans Stremio"
         icon={Layers}
         isOpen={expandedSections?.extras}
         onToggle={onToggleSection}

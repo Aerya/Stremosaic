@@ -53,8 +53,8 @@ export function MarketplaceSearchBar({
           type="button"
           className="btn btn-ghost btn-icon"
           onClick={handleClear}
-          aria-label="Clear search"
-          title="Clear search"
+          aria-label="Effacer la recherche"
+          title="Effacer la recherche"
           style={{
             position: 'absolute',
             right: 4,

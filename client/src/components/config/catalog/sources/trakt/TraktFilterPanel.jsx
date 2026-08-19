@@ -761,14 +761,14 @@ export function TraktFilterPanel({
         <div className="filter-group">
           <LabelWithTooltip
             label="Client ID"
-            tooltip="Create a Trakt API application at trakt.tv/oauth/applications to get your Client ID."
+            tooltip="Créez une application API Trakt sur trakt.tv/oauth/applications pour obtenir votre Client ID."
           />
           <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
             <input
               type="text"
               className="input"
               style={{ flex: 1, height: '40px' }}
-              placeholder="Enter your Trakt Client ID..."
+              placeholder="Saisissez votre Client ID Trakt..."
               value={traktKey}
               onChange={(e) => setTraktKey(e.target.value)}
               onKeyDown={(e) => {
@@ -862,8 +862,8 @@ export function TraktFilterPanel({
       {/* ── Section 1: Sort & Filter (mirrors TMDB id="filters") ── */}
       <FilterSection
         id="filters"
-        title="Sort & Filter"
-        description="Browse type, option, locale, year, rating, runtime"
+        title="Tri et filtres"
+        description="Type de navigation, option, langue, année, note, durée"
         icon={Settings}
         isOpen={expandedSections?.filters}
         onToggle={onToggleSection}
@@ -879,13 +879,13 @@ export function TraktFilterPanel({
         >
           {showAdvancedFilters && (
             <div className="filter-group">
-              <LabelWithTooltip label="Langue originale" tooltip="Filter by original language." />
+              <LabelWithTooltip label="Langue originale" tooltip="Filtrer selon la langue originale." />
               <SearchableSelect
                 options={availableLanguages}
                 value=""
                 onChange={handleAddLanguage}
-                placeholder="Add language..."
-                searchPlaceholder="Search languages..."
+                placeholder="Ajouter une langue..."
+                searchPlaceholder="Rechercher des langues..."
                 labelKey="english_name"
                 valueKey="iso_639_1"
                 allowClear={false}
@@ -910,13 +910,13 @@ export function TraktFilterPanel({
 
           {showAdvancedFilters && (
             <div className="filter-group">
-              <LabelWithTooltip label="Pays" tooltip="Filter by country of origin." />
+              <LabelWithTooltip label="Pays" tooltip="Filtrer selon le pays d’origine." />
               <SearchableSelect
                 options={availableCountries}
                 value=""
                 onChange={handleAddCountry}
-                placeholder="Add country..."
-                searchPlaceholder="Search countries..."
+                placeholder="Ajouter un pays..."
+                searchPlaceholder="Rechercher des pays..."
                 labelKey="english_name"
                 valueKey="iso_3166_1"
                 allowClear={false}
@@ -941,15 +941,15 @@ export function TraktFilterPanel({
 
           <div className="filter-group">
             <LabelWithTooltip
-              label="Browse Type"
-              tooltip="Pick a broader Trakt catalog family such as Discover, Community, Calendar, or Other."
+              label="Type de navigation"
+              tooltip="Choisir une famille de catalogues Trakt : Découvrir, Communauté, Calendrier ou Autre."
             />
             <SearchableSelect
               options={browseTypeOptions}
               value={selectedBrowseTypeValue}
               onChange={handleBrowseTypeChange}
               placeholder="Optional (Trakt default)..."
-              searchPlaceholder="Search browse types..."
+              searchPlaceholder="Rechercher des types de navigation..."
               labelKey="label"
               valueKey="value"
               allowClear={true}
@@ -972,7 +972,7 @@ export function TraktFilterPanel({
               value={selectedOptionValue}
               onChange={handleOptionChange}
               placeholder="Optional (Trakt default)..."
-              searchPlaceholder="Search options..."
+              searchPlaceholder="Rechercher des options..."
               labelKey="label"
               valueKey="value"
               allowClear={true}
@@ -1002,8 +1002,8 @@ export function TraktFilterPanel({
         {showCalendarControls && (
           <div className="filter-group">
             <LabelWithTooltip
-              label="Date Order"
-              tooltip="Sort items in the selected time range by date in ascending or descending order."
+              label="Ordre des dates"
+              tooltip="Trier les éléments de la période sélectionnée par date croissante ou décroissante."
             />
             <SearchableSelect
               options={CALENDAR_SORT_OPTIONS}
@@ -1015,8 +1015,8 @@ export function TraktFilterPanel({
                   nextSort === defaultCalendarSort ? undefined : nextSort
                 );
               }}
-              placeholder="Select date order..."
-              searchPlaceholder="Search sort options..."
+              placeholder="Sélectionner l’ordre des dates..."
+              searchPlaceholder="Rechercher des options de tri..."
               labelKey="label"
               valueKey="value"
               allowClear={false}
@@ -1068,7 +1068,7 @@ export function TraktFilterPanel({
 
         {showCoreRatingVoteFilters && (
           <RangeSlider
-            label="Trakt Rating"
+            label="Note Trakt"
             min={0}
             max={100}
             step={1}
@@ -1156,8 +1156,8 @@ export function TraktFilterPanel({
       {!isMovie && showAdvancedFilters && (
         <FilterSection
           id="network"
-          title="Network"
-          description="Filter by TV network or streaming service"
+          title="Chaîne / plateforme"
+          description="Filtrer selon la chaîne TV ou le service de streaming"
           icon={Tv}
           isOpen={expandedSections?.network}
           onToggle={onToggleSection}
@@ -1196,15 +1196,15 @@ export function TraktFilterPanel({
               {networkCountryOptions.length > 1 && (
                 <div className="filter-group" style={{ marginBottom: '8px' }}>
                   <LabelWithTooltip
-                    label="Filter by Country"
-                    tooltip="Narrow the network list to a specific country. Global services like Netflix and Amazon Prime are registered under 'United States'."
+                    label="Filtrer par pays"
+                    tooltip="Limiter la liste des chaînes à un pays. Les services mondiaux comme Netflix et Prime Video sont généralement rattachés aux États-Unis."
                   />
                   <SearchableSelect
                     options={networkCountryOptions}
                     value={networkCountryFilter}
                     onChange={(v) => setNetworkCountryFilter(v || '')}
-                    placeholder="All countries..."
-                    searchPlaceholder="Search countries..."
+                    placeholder="Tous les pays..."
+                    searchPlaceholder="Rechercher des pays..."
                     labelKey="label"
                     valueKey="value"
                     allowClear={true}
@@ -1213,8 +1213,8 @@ export function TraktFilterPanel({
               )}
               <div className="filter-group">
                 <LabelWithTooltip
-                  label="Networks"
-                  tooltip="Filter by the TV network or streaming service that originally produced the show (e.g. HBO, Netflix, BBC)."
+                  label="Chaînes / plateformes"
+                  tooltip="Filtrer selon la chaîne TV ou le service de streaming ayant produit la série à l’origine (ex. HBO, Netflix, BBC)."
                 />
                 <span className="filter-label-hint">
                   Where the show originally aired or streamed.
@@ -1223,8 +1223,8 @@ export function TraktFilterPanel({
                   options={filteredNetworkOptions}
                   value={filters.traktNetworkIds || []}
                   onChange={handleNetworkChange}
-                  placeholder="Any network..."
-                  searchPlaceholder="Search networks..."
+                  placeholder="Toutes les chaînes..."
+                  searchPlaceholder="Rechercher des chaînes..."
                   labelKey="name"
                   valueKey="code"
                 />
@@ -1247,7 +1247,7 @@ export function TraktFilterPanel({
         >
           {externalRatingSupport.imdbRatings && (
             <RangeSlider
-              label="IMDb Rating"
+              label="Note IMDb"
               min={0}
               max={10}
               step={0.1}
@@ -1261,7 +1261,7 @@ export function TraktFilterPanel({
 
           {externalRatingSupport.tmdbRatings && (
             <RangeSlider
-              label="TMDB Rating"
+              label="Note TMDB"
               min={0}
               max={10}
               step={0.1}
@@ -1317,7 +1317,7 @@ export function TraktFilterPanel({
 
           <div className="filter-grid">
             <div className="filter-group">
-              <LabelWithTooltip label="Trakt Min Votes" tooltip="Minimum number of Trakt votes." />
+              <LabelWithTooltip label="Trakt Min Votes" tooltip="Nombre minimum de votes Trakt." />
               <input
                 type="number"
                 className="input"
@@ -1334,7 +1334,7 @@ export function TraktFilterPanel({
 
             {externalRatingSupport.imdbVotes && (
               <div className="filter-group">
-                <LabelWithTooltip label="IMDb Min Votes" tooltip="Minimum number of IMDb votes." />
+                <LabelWithTooltip label="IMDb Min Votes" tooltip="Nombre minimum de votes IMDb." />
                 <input
                   type="number"
                   className="input"
@@ -1352,7 +1352,7 @@ export function TraktFilterPanel({
 
             {externalRatingSupport.tmdbVotes && (
               <div className="filter-group">
-                <LabelWithTooltip label="TMDB Min Votes" tooltip="Minimum number of TMDB votes." />
+                <LabelWithTooltip label="TMDB Min Votes" tooltip="Nombre minimum de votes TMDB." />
                 <input
                   type="number"
                   className="input"
@@ -1388,7 +1388,7 @@ export function TraktFilterPanel({
         <FilterSection
           id="genres"
           title="Genres"
-          description="Select genres to include or exclude"
+          description="Sélectionner les genres à inclure ou exclure"
           icon={Sparkles}
           isOpen={expandedSections?.genres}
           onToggle={onToggleSection}
@@ -1412,8 +1412,8 @@ export function TraktFilterPanel({
       {showAdvancedFilters && (
         <FilterSection
           id="release"
-          title="Certifications & Status"
-          description="Age ratings, show status"
+          title="Classifications et statut"
+          description="Classification par âge et statut de la série"
           icon={Shield}
           isOpen={expandedSections?.release}
           onToggle={onToggleSection}
@@ -1421,7 +1421,7 @@ export function TraktFilterPanel({
         >
           {certifications.length > 0 && (
             <div className="filter-group">
-              <LabelWithTooltip label="Certifications" tooltip="Filter by content rating." />
+              <LabelWithTooltip label="Certifications" tooltip="Filtrer selon la classification du contenu." />
               <AnimeFormatSelector
                 selected={filters.traktCertifications || []}
                 options={certifications}
@@ -1434,7 +1434,7 @@ export function TraktFilterPanel({
 
           {!isMovie && traktShowStatuses.length > 0 && (
             <div className="filter-group">
-              <LabelWithTooltip label="Show Status" tooltip="Filter by show status." />
+              <LabelWithTooltip label="Statut de la série" tooltip="Filtrer selon le statut de la série." />
               <AnimeFormatSelector
                 selected={filters.traktStatus || []}
                 options={traktShowStatuses}
@@ -1451,7 +1451,7 @@ export function TraktFilterPanel({
       <FilterSection
         id="options"
         title="Options"
-        description="Randomization and API key"
+        description="Aléatoire et clé API"
         icon={Settings}
         isOpen={expandedSections?.options}
         onToggle={onToggleSection}
@@ -1461,7 +1461,7 @@ export function TraktFilterPanel({
           checked={!!filters.randomize}
           onChange={(checked) => onFiltersChange('randomize', checked || undefined)}
           label="Randomize Results"
-          tooltip="Fetch a random page from matching results and shuffle them."
+          tooltip="Charger une page aléatoire parmi les résultats et les mélanger."
         />
 
         <div style={{ marginTop: '12px' }}>
@@ -1484,7 +1484,7 @@ export function TraktFilterPanel({
       <FilterSection
         id="extras"
         title="Stremio Extras"
-        description="Expose filter dropdowns inside Stremio"
+        description="Afficher les filtres déroulants dans Stremio"
         icon={Layers}
         isOpen={expandedSections?.extras}
         onToggle={onToggleSection}

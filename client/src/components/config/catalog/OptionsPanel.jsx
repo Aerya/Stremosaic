@@ -9,16 +9,16 @@ export const OptionsPanel = memo(function OptionsPanel({ localCatalog, onFilters
       <Checkbox
         checked={!!filters.includeAdult}
         onChange={(checked) => onFiltersChange('includeAdult', checked || undefined)}
-        label="Include adult content"
-        tooltip="Include adult/18+ rated content in results. Disabled by default."
+        label="Inclure le contenu adulte"
+        tooltip="Inclure le contenu adulte/18+ dans les résultats. Désactivé par défaut."
       />
 
       {isMovie && (
         <Checkbox
           checked={!!filters.includeVideo}
           onChange={(checked) => onFiltersChange('includeVideo', checked || undefined)}
-          label="Include video content"
-          tooltip="Include titles marked as video content in TMDB."
+          label="Inclure le contenu vidéo"
+          tooltip="Inclure les titres marqués comme contenus vidéo dans TMDB."
         />
       )}
 
@@ -26,22 +26,22 @@ export const OptionsPanel = memo(function OptionsPanel({ localCatalog, onFilters
         checked={!!filters.randomize}
         onChange={(checked) => onFiltersChange('randomize', checked || undefined)}
         label="Randomize Results"
-        tooltip="Fetch a random page from the matching results and shuffle them. Great for discovering something new every time."
+        tooltip="Charger une page aléatoire parmi les résultats correspondants et les mélanger."
       />
 
       <Checkbox
         checked={!!filters.discoverOnly}
         onChange={(checked) => onFiltersChange('discoverOnly', checked || undefined)}
-        label="Discover Only"
-        tooltip="Hide this catalog from the Board (Home). It will only appear in the Discover tab."
+        label="Découverte uniquement"
+        tooltip="Masquer ce catalogue de l’accueil. Il apparaîtra uniquement dans l’onglet Découvrir."
       />
 
       {!isMovie && (
         <Checkbox
           checked={!!filters.includeNullFirstAirDates}
           onChange={(checked) => onFiltersChange('includeNullFirstAirDates', checked || undefined)}
-          label="Include unknown air dates"
-          tooltip="Include shows with no recorded first air date."
+          label="Inclure les dates de diffusion inconnues"
+          tooltip="Inclure les séries sans date de première diffusion connue."
         />
       )}
 
@@ -50,7 +50,7 @@ export const OptionsPanel = memo(function OptionsPanel({ localCatalog, onFilters
           checked={!!filters.screenedTheatrically}
           onChange={(checked) => onFiltersChange('screenedTheatrically', checked || undefined)}
           label="Screened theatrically"
-          tooltip="Include shows that were screened in theaters."
+          tooltip="Inclure les séries ayant été projetées au cinéma."
         />
       )}
     </div>

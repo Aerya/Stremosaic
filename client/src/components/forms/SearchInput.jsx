@@ -8,7 +8,7 @@ export function SearchInput({
   onSelect,
   selectedItems = [],
   onRemove,
-  placeholder = 'Search...',
+  placeholder = 'Rechercher...',
   type = 'person',
   multiple = true,
 }) {

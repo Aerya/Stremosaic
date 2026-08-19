@@ -19,6 +19,7 @@ import { SocialButtons } from '../social/SocialButtons.jsx';
 import { useState, useEffect, lazy, Suspense, memo } from 'react';
 
 import { useIsMobile } from '../../hooks/useIsMobile';
+import { createId } from '../../utils/id';
 import { useCatalog, useTMDBData, useAppActions } from '../../context/AppContext';
 import { CatalogListSkeleton } from '../layout/Skeleton';
 import { SettingsModal } from '../modals/SettingsModal';
@@ -69,26 +70,41 @@ const FRENCH_STREAMING_PRESETS = [
   { id: "mubi-fr", label: "MUBI", aliases: ["MUBI"] },
 ];
 
+function normalizeProvider(provider) {
+  if (!provider || typeof provider !== 'object') return null;
+  const id = provider.provider_id ?? provider.id;
+  const name = provider.provider_name ?? provider.name;
+  if (id == null || !name) return null;
+  return { ...provider, id: Number(id), name: String(name).trim() };
+}
+
 function findProvider(providers, aliases) {
-  const normalized = (providers || []).map((provider) => ({
-    ...provider,
-    _name: String(provider?.provider_name || "").trim().toLowerCase(),
-  }));
+  const normalized = (Array.isArray(providers) ? providers : [])
+    .map(normalizeProvider)
+    .filter(Boolean)
+    .map((provider) => ({
+      ...provider,
+      _name: provider.name.toLocaleLowerCase('fr-FR'),
+    }));
+
   for (const alias of aliases) {
-    const wanted = alias.toLowerCase();
+    const wanted = alias.toLocaleLowerCase('fr-FR');
     const exact = normalized.find((provider) => provider._name === wanted);
     if (exact) return exact;
   }
+
   for (const alias of aliases) {
-    const wanted = alias.toLowerCase();
+    const wanted = alias.toLocaleLowerCase('fr-FR');
     const partial = normalized.find(
-      (provider) => provider._name.includes(wanted) || wanted.includes(provider._name)
+      (provider) =>
+        provider._name.includes(wanted) ||
+        (wanted.length >= 4 && wanted.includes(provider._name))
     );
     if (partial) return partial;
   }
+
   return null;
 }
-
 
 export const CatalogSidebar = memo(function CatalogSidebar() {
   const {
@@ -101,7 +117,6 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
     setConfigName: onConfigNameChange,
     preferences,
     handleAddPresetCatalog: onAddPresetCatalog,
-    handleAddCatalog: onAddCatalogDirect,
     handleDeleteCatalog: onDeleteCatalog,
     handleDuplicateCatalog: onDuplicateCatalog,
     handleImportConfig: onImportConfig,
@@ -118,31 +133,67 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
 
   const onAddCatalog = () => setShowNewCatalogModal(true);
   const handleAddFrenchStreamingPreset = async (service) => {
-    if (typeof onAddCatalogDirect !== "function") { addToast?.("Erreur interne : ajout de catalogue indisponible"); return; }
-    if (typeof getWatchProviders !== "function") { addToast?.("Erreur interne : providers TMDB indisponibles"); return; }
+    if (typeof getWatchProviders !== 'function') {
+      addToast?.('Providers TMDB indisponibles', 'error');
+      return;
+    }
+
     try {
       const [movieProviders, seriesProviders] = await Promise.all([
-        getWatchProviders("movie", "FR"),
-        getWatchProviders("series", "FR"),
+        getWatchProviders('movie', 'FR'),
+        getWatchProviders('series', 'FR'),
       ]);
+
       const targets = [
-        ["movie", findFrenchProvider(movieProviders, service.aliases)],
-        ["series", findFrenchProvider(seriesProviders, service.aliases)],
-      ].filter(([, provider]) => provider?.provider_id);
-      if (targets.length === 0) { addToast?.(`${service.label} : aucun provider TMDB trouvé pour la France`); return; }
-      let added = 0;
-      for (const [type, provider] of targets) {
-        const exists = safeCatalogs.some((catalog) => catalog?.type === type && catalog?.filters?.servicePreset === service.id);
-        if (exists) continue;
-        onAddCatalogDirect({
-          name: `${service.label} FR - ${type === "movie" ? "Films" : "Séries"}`,
-          type, source: "tmdb", enabled: true,
-          filters: { listType: "discover", sortBy: "popularity.desc", watchRegion: "FR", watchProviders: [provider.provider_id], watchMonetizationTypes: ["flatrate"], servicePreset: service.id },
-        });
-        added += 1;
+        ['movie', findProvider(movieProviders, service.aliases)],
+        ['series', findProvider(seriesProviders, service.aliases)],
+      ].filter(([, provider]) => provider?.id != null);
+
+      if (targets.length === 0) {
+        addToast?.(`${service.label} : aucun fournisseur TMDB trouvé pour la France`, 'error');
+        return;
       }
-      addToast?.(added > 0 ? `${service.label} FR : ${added} catalogue${added > 1 ? "s" : ""} ajouté${added > 1 ? "s" : ""}` : `${service.label} FR est déjà ajouté`);
-    } catch (error) { console.error("Streaming FR quick-add:", error); addToast?.(`Impossible d'ajouter ${service.label} FR`); }
+
+      const newCatalogs = targets
+        .filter(([type]) => !safeCatalogs.some(
+          (catalog) =>
+            catalog?.type === type &&
+            catalog?.filters?.servicePreset === service.id
+        ))
+        .map(([type, provider]) => ({
+          _id: createId(),
+          name: `${service.label} FR - ${type === 'movie' ? 'Films' : 'Séries'}`,
+          type,
+          source: 'tmdb',
+          enabled: true,
+          filters: {
+            listType: 'discover',
+            sortBy: 'popularity.desc',
+            watchRegion: 'FR',
+            watchProviders: [provider.id],
+            watchMonetizationTypes: ['flatrate'],
+            servicePreset: service.id,
+          },
+        }));
+
+      if (newCatalogs.length === 0) {
+        addToast?.(`${service.label} FR est déjà ajouté`);
+        return;
+      }
+
+      setCatalogs((previous) => [...previous, ...newCatalogs]);
+      onSelectCatalog?.(newCatalogs[0]);
+
+      addToast?.(
+        `${service.label} FR : ${newCatalogs.length} catalogue${newCatalogs.length > 1 ? 's' : ''} ajouté${newCatalogs.length > 1 ? 's' : ''}`
+      );
+    } catch (error) {
+      console.error('Ajout rapide Streaming FR:', error);
+      addToast?.(
+        `Impossible d'ajouter ${service.label} FR : ${error?.message || 'erreur inconnue'}`,
+        'error'
+      );
+    }
   };
 
   const onReorderCatalogs = (nextCatalogs) => {
@@ -463,7 +514,7 @@ export const CatalogSidebar = memo(function CatalogSidebar() {
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             setShowExportModal(false);
-            if (addToast) addToast('Configuration exported successfully');
+            if (addToast) addToast('Configuration exportée avec succès');
           }}
         />
       )}

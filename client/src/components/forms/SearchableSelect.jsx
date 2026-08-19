@@ -5,8 +5,8 @@ export const SearchableSelect = memo(function SearchableSelect({
   options = [],
   value,
   onChange,
-  placeholder = 'Select...',
-  searchPlaceholder = 'Search...',
+  placeholder = 'Sélectionner...',
+  searchPlaceholder = 'Rechercher...',
   emptyMessage = 'No options found',
   labelKey = 'name',
   valueKey = 'code',
@@ -215,7 +215,7 @@ export const SearchableSelect = memo(function SearchableSelect({
               className="searchable-select-clear"
               onClick={handleClear}
               type="button"
-              aria-label="Clear selection"
+              aria-label="Effacer la sélection"
             >
               <X size={14} />
             </button>

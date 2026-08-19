@@ -74,16 +74,16 @@ export const CatalogPreview = memo(function CatalogPreview({
           <div className="preview-header">
             <h4 className="preview-title">
               <Eye size={18} />
-              Preview
+              Aperçu
               {showUpdated && (
                 <span className="preview-updated-badge">
                   <CheckCircle size={14} />
-                  Updated
+                  Mis à jour
                 </span>
               )}
             </h4>
             {data && data.totalResults != null && (
-              <span className="preview-count">{data.totalResults.toLocaleString()} results</span>
+              <span className="preview-count">{data.totalResults.toLocaleString()} résultats</span>
             )}
           </div>
 
@@ -95,7 +95,7 @@ export const CatalogPreview = memo(function CatalogPreview({
                 style={{ margin: '0 auto 16px auto', color: 'var(--accent-primary)' }}
               />
               <p className="preview-loading-text" style={{ margin: 0, fontSize: '0.875rem' }}>
-                Loading preview...
+                Chargement de l’aperçu...
               </p>
             </div>
           )}
@@ -115,12 +115,12 @@ export const CatalogPreview = memo(function CatalogPreview({
                 {canOpenApiKeysFromError && typeof onOpenPreferences === 'function' && (
                   <button className="btn btn-primary" onClick={onOpenPreferences}>
                     <Settings size={16} />
-                    Open preferences
+                    Ouvrir les préférences
                   </button>
                 )}
                 <button className="btn btn-secondary" onClick={onRetry}>
                   <RefreshCw size={16} />
-                  Retry
+                  Réessayer
                 </button>
               </div>
             </div>
@@ -130,7 +130,7 @@ export const CatalogPreview = memo(function CatalogPreview({
             <div className="preview-empty" style={{ textAlign: 'center', padding: '24px 12px' }}>
               <SearchX size={32} style={{ marginBottom: '12px', opacity: 0.5 }} />
               <p style={{ margin: 0, fontSize: '0.875rem' }}>
-                No results found for the current filters.
+                Aucun résultat trouvé pour les filtres actuels.
               </p>
             </div>
           )}
@@ -149,13 +149,13 @@ export const CatalogPreview = memo(function CatalogPreview({
                 if (item.traktSlug) {
                   const traktType = item.type === 'series' ? 'shows' : 'movies';
                   itemUrl = `https://trakt.tv/${traktType}/${item.traktSlug}`;
-                  linkTitle = `View "${item.name}" on Trakt`;
+                  linkTitle = `Voir « ${item.name} » sur Trakt`;
                 } else if (imdbId) {
                   itemUrl = `https://www.imdb.com/title/${imdbId}/`;
-                  linkTitle = `View "${item.name}" on IMDb`;
+                  linkTitle = `Voir « ${item.name} » sur IMDb`;
                 } else if (tmdbId) {
                   itemUrl = `https://www.themoviedb.org/${item.type === 'series' ? 'tv' : 'movie'}/${tmdbId}`;
-                  linkTitle = `View "${item.name}" on TMDB`;
+                  linkTitle = `Voir « ${item.name} » sur TMDB`;
                 } else {
                   itemUrl = null;
                   linkTitle = item.name;
@@ -224,7 +224,7 @@ export const CatalogPreview = memo(function CatalogPreview({
         }}
         role="button"
         tabIndex={0}
-        aria-label="Close preview"
+        aria-label="Fermer l’aperçu"
         style={{
           zIndex: 1000,
           position: 'fixed',

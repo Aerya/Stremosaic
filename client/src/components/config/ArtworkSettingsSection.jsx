@@ -4,17 +4,17 @@ import { SearchableSelect } from '../forms/SearchableSelect';
 import { artworkProviderRequiresApiKey } from '../../utils/artworkValidation';
 
 const CONTENT_TYPES = [
-  { id: 'movie', label: 'Movies' },
-  { id: 'series', label: 'Series' },
+  { id: 'movie', label: 'Films' },
+  { id: 'series', label: 'Séries' },
   { id: 'anime', label: 'Anime' },
 ];
 
 const ART_KINDS = [
-  { id: 'poster', label: 'Poster' },
-  { id: 'backdrop', label: 'Backdrop' },
+  { id: 'poster', label: 'Affiche' },
+  { id: 'backdrop', label: 'Arrière-plan' },
   { id: 'logo', label: 'Logo' },
-  { id: 'landscape', label: 'Landscape' },
-  { id: 'episode', label: 'Episode' },
+  { id: 'landscape', label: 'Paysage' },
+  { id: 'episode', label: 'Épisode' },
 ];
 
 const SERVICE_OPTIONS = [
@@ -22,37 +22,37 @@ const SERVICE_OPTIONS = [
   { id: 'tvdb', name: 'TVDB', kinds: ['poster', 'backdrop', 'logo', 'landscape', 'episode'] },
   { id: 'fanart', name: 'Fanart.tv', kinds: ['poster', 'backdrop', 'logo', 'landscape'] },
   { id: 'rpdb', name: 'RPDB', kinds: ['poster', 'backdrop', 'logo', 'landscape'] },
-  { id: 'topPosters', name: 'Top Posters', kinds: ['poster', 'logo', 'episode'] },
+  { id: 'topPosters', name: 'Affiches principales', kinds: ['poster', 'logo', 'episode'] },
   {
     id: 'customUrl',
-    name: 'Custom URL Pattern',
+    name: 'Modèle d’URL personnalisée',
     kinds: ['poster', 'backdrop', 'logo', 'landscape', 'episode'],
   },
 ];
 
 const DEFAULT_PROVIDER_LABELS = {
-  poster: 'Default (TMDB)',
-  backdrop: 'Default (TMDB)',
-  landscape: 'Default (TMDB backdrop)',
-  logo: 'Default (TMDB)',
-  episode: 'Default (TMDB stills)',
+  poster: 'Par défaut (TMDB)',
+  backdrop: 'Par défaut (TMDB)',
+  landscape: 'Par défaut (Arrière-plan TMDB)',
+  logo: 'Par défaut (TMDB)',
+  episode: 'Par défaut (Captures TMDB)',
 };
 
 const DEFAULT_PROVIDER_NOTES = {
   poster:
-    'Uses TMDB poster artwork by default. You can switch to IMDb/TVDB preference per content type.',
-  backdrop: 'Uses TMDB backdrop artwork by default. Can be overridden to IMDb/TVDB preference.',
-  landscape: 'Uses TMDB backdrop in landscape format by default.',
-  logo: 'Uses TMDB logo artwork by default.',
-  episode: 'Uses TMDB episode stills by default, with native-source fallback.',
+    'Utilise les affiches TMDB par défaut. Vous pouvez choisir IMDb/TVDB par type de contenu.',
+  backdrop: 'Utilise les arrière-plans TMDB par défaut.',
+  landscape: 'Utilise le format paysage (arrière-plan) TMDB par défaut.',
+  logo: 'Utilise les logos TMDB par défaut.',
+  episode: 'Utilise les captures d’épisodes TMDB par défaut.',
 };
 
 const ARTWORK_TYPE_LABELS = {
-  poster: 'poster',
-  backdrop: 'backdrop',
-  landscape: 'landscape',
-  logo: 'logo',
-  episode: 'episode thumbnail',
+  poster: 'l’affiche',
+  backdrop: 'l’arrière-plan',
+  landscape: 'le visuel paysage',
+  logo: 'le logo',
+  episode: 'la miniature d’épisode',
 };
 
 const PREMIUM_REQUIRED_BY_PROVIDER = {
@@ -230,7 +230,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
     }
     if (service === 'topPosters') {
       return {
-        name: 'Top Posters',
+        name: 'Affiches principales',
         url: 'https://api.top-streaming.stream',
         requiresKey: true,
         note: 'Supports posters and logos. Premium tier also supports episode thumbnails.',
@@ -255,7 +255,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
   return (
     <div className="artwork-kind-selector">
       <div className="artwork-section-note">
-        Choose where {humanTypeLabel} artwork should come from:
+        Choisissez la source pour {humanTypeLabel} :
       </div>
 
       <SearchableSelect
@@ -264,7 +264,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
         onChange={handleProviderChange}
         valueKey="id"
         labelKey="name"
-        placeholder="Select a source"
+        placeholder="Sélectionner une source"
         menuPlacement="top"
       />
 
@@ -287,7 +287,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
                 borderLeft: '3px solid var(--text-warning)',
               }}
             >
-              ⚠️ Requires an API key. Configure this in the <strong>API Keys</strong> section below.
+              ⚠️ Nécessite une clé API. Configurez-la dans la section <strong>Clés d’API</strong> ci-dessous.
             </div>
           )}
 
@@ -302,7 +302,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
                 borderLeft: '3px solid var(--text-success)',
               }}
             >
-              ✓ API key detected for {serviceInfo?.name || currentProvider}.
+              ✓ Clé API détectée pour {serviceInfo?.name || currentProvider}.
             </div>
           )}
 
@@ -317,8 +317,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
                 borderLeft: '3px solid var(--text-warning)',
               }}
             >
-              ⚠️ {serviceInfo?.name || 'This provider'} requires a <strong>paid key</strong> for
-              this artwork type. Free/default keys will not unlock this kind.
+              ⚠️ {serviceInfo?.name || 'Ce service'} nécessite une <strong>clé payante</strong> pour ce type d’illustration.
             </div>
           )}
         </div>
@@ -332,7 +331,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
                 htmlFor={`${contentType}-${artKind}-custom-url`}
                 className="artwork-input-label"
               >
-                Custom URL Pattern
+                Modèle d’URL personnalisée
               </label>
               <input
                 id={`${contentType}-${artKind}-custom-url`}
@@ -347,7 +346,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
                 onChange={(e) => updateValue({ customUrlPattern: e.target.value })}
               />
               <div className="artwork-placeholders-note">
-                Placeholders: {'{asset}'}, {'{type}'}, {'{imdb_id}'}, {'{tmdb_id}'}, {'{rating_id}'}
+                Variables : {'{asset}'}, {'{type}'}, {'{imdb_id}'}, {'{tmdb_id}'}, {'{rating_id}'}
                 , {'{rating_id_type}'}, {'{season}'}, {'{episode}'}, {'{season_number}'},{' '}
                 {'{episode_number}'}, {'{api_key}'}, {'{api_key_urlencoded}'}, {'{language}'},{' '}
                 {'{language_short}'}
@@ -442,22 +441,22 @@ export function ArtworkSettingsPanel({ preferences, onChange }) {
         type="button"
         className="btn btn-sm btn-secondary artwork-copy-btn"
         onClick={handleCopyToAll}
-        title={`Copy ${CONTENT_TYPES.find((c) => c.id === activeContentType)?.label} artwork settings to all content types`}
+        title={`Copier les paramètres ${CONTENT_TYPES.find((c) => c.id === activeContentType)?.label} sur tous les types`}
       >
         <Copy size={14} />
-        Copy to all content types
+        Copier sur tous les types de contenu
       </button>
 
       {/* Global Options */}
       <div className="artwork-global-options">
-        <div className="artwork-global-title">Language Preferences</div>
+        <div className="artwork-global-title">Préférences de langue</div>
         <label className="artwork-checkbox-row">
           <input
             type="checkbox"
             checked={artworkSettings.englishArtOnly || false}
             onChange={(e) => handleGlobalOptionChange('englishArtOnly', e.target.checked)}
           />
-          Prefer English artwork only
+          Préférer les visuels en anglais uniquement
         </label>
         <label
           className="artwork-checkbox-row"
@@ -469,12 +468,12 @@ export function ArtworkSettingsPanel({ preferences, onChange }) {
             disabled={!isEnglishArtOnlyEnabled}
             onChange={(e) => handleGlobalOptionChange('originalLangFallback', e.target.checked)}
           />
-          Fall back to original language artwork
+          Utiliser la langue originale si indisponible
         </label>
         <div className="artwork-section-note">
           {isEnglishArtOnlyEnabled
-            ? 'When enabled, if English artwork is unavailable, the original language version will be used.'
-            : 'Enable “Prefer English artwork only” to configure original-language fallback behavior.'}
+            ? 'Si aucun visuel en anglais n’est disponible, la version en langue originale sera utilisée.'
+            : 'Activez « Préférer les visuels en anglais uniquement » pour configurer cette option.'}
         </div>
       </div>
     </div>

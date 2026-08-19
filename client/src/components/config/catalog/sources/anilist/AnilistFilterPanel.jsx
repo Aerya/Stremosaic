@@ -194,8 +194,8 @@ export function AnilistFilterPanel({
     <>
       <FilterSection
         id="sort"
-        title="Sort & Format"
-        description="Sort order, format, and airing status"
+        title="Tri et format"
+        description="Ordre de tri, format et statut de diffusion"
         icon={Settings}
         isOpen={expandedSections?.sort}
         onToggle={onToggleSection}
@@ -204,14 +204,14 @@ export function AnilistFilterPanel({
         <div className="filter-group">
           <LabelWithTooltip
             label="Trier par"
-            tooltip="How to order your AniList results. Trending shows currently popular titles."
+            tooltip="Définir l’ordre des résultats AniList. Tendances affiche les titres actuellement populaires."
           />
           <SearchableSelect
             options={anilistSortOptions}
             value={filters.sortBy || 'TRENDING_DESC'}
             onChange={(value) => onFiltersChange('sortBy', value)}
-            placeholder="Trending"
-            searchPlaceholder="Search..."
+            placeholder="Tendances"
+            searchPlaceholder="Rechercher..."
             labelKey="label"
             valueKey="value"
             allowClear={false}
@@ -221,7 +221,7 @@ export function AnilistFilterPanel({
         <div className="filter-group">
           <LabelWithTooltip
             label="Format"
-            tooltip="Filter by media format: TV, Movie, OVA, ONA, Special, etc."
+            tooltip="Filtrer selon le format : TV, film, OVA, ONA, spécial, etc."
           />
           <AnimeFormatSelector
             selected={filters.format || []}
@@ -232,8 +232,8 @@ export function AnilistFilterPanel({
 
         <div className="filter-group">
           <LabelWithTooltip
-            label="Status"
-            tooltip="Filter by airing status: Releasing, Finished, Not Yet Aired, etc."
+            label="Statut"
+            tooltip="Filtrer selon le statut : en diffusion, terminé, pas encore diffusé, etc."
           />
           <AnimeFormatSelector
             selected={filters.status || []}
@@ -246,7 +246,7 @@ export function AnilistFilterPanel({
       <FilterSection
         id="genres"
         title="Genres"
-        description="Select genres to include or exclude"
+        description="Sélectionner les genres à inclure ou exclure"
         icon={Sparkles}
         isOpen={expandedSections?.genres}
         onToggle={onToggleSection}
@@ -271,7 +271,7 @@ export function AnilistFilterPanel({
         <FilterSection
           id="tags"
           title="Tags"
-          description="Filter by AniList content tags"
+          description="Filtrer selon les tags AniList"
           icon={Tag}
           isOpen={expandedSections?.tags}
           onToggle={onToggleSection}
@@ -279,15 +279,15 @@ export function AnilistFilterPanel({
         >
           <div className="filter-group">
             <LabelWithTooltip
-              label="Include Tags"
-              tooltip="Filter anime that include these tags (e.g. Isekai, Reincarnation, Gore). Search to find from 350+ available tags."
+              label="Tags à inclure"
+              tooltip="Filtrer les anime contenant ces tags (ex. Isekai, Réincarnation, Gore)."
             />
             <MultiSelect
               options={anilistTagObjects}
               value={filters.tags || []}
               onChange={(tags) => onFiltersChange('tags', tags.length > 0 ? tags : undefined)}
-              placeholder="Search and select tags..."
-              searchPlaceholder="Type to search tags..."
+              placeholder="Rechercher et sélectionner des tags..."
+              searchPlaceholder="Saisissez pour rechercher des tags..."
               labelKey="label"
               valueKey="value"
               maxDisplay={5}
@@ -295,8 +295,8 @@ export function AnilistFilterPanel({
           </div>
           <div className="filter-group">
             <LabelWithTooltip
-              label="Exclude Tags"
-              tooltip="Exclude anime that have these tags. Results will not contain any of the selected tags."
+              label="Tags à exclure"
+              tooltip="Exclure les anime possédant ces tags."
             />
             <MultiSelect
               options={anilistTagObjects}
@@ -304,8 +304,8 @@ export function AnilistFilterPanel({
               onChange={(tags) =>
                 onFiltersChange('excludeTags', tags.length > 0 ? tags : undefined)
               }
-              placeholder="Search tags to exclude..."
-              searchPlaceholder="Type to search tags..."
+              placeholder="Rechercher des tags à exclure..."
+              searchPlaceholder="Saisissez pour rechercher des tags..."
               labelKey="label"
               valueKey="value"
               maxDisplay={5}
@@ -318,7 +318,7 @@ export function AnilistFilterPanel({
         <FilterSection
           id="season"
           title="Season"
-          description="Filter by anime season and year"
+          description="Filtrer selon la saison et l’année de l’anime"
           icon={Calendar}
           isOpen={expandedSections?.season}
           onToggle={onToggleSection}
@@ -327,7 +327,7 @@ export function AnilistFilterPanel({
           <div className="filter-group">
             <LabelWithTooltip
               label="Seasonal Anime"
-              tooltip="Filter by the anime season (Winter, Spring, Summer, Fall) and year."
+              tooltip="Filtrer selon la saison (hiver, printemps, été, automne) et l’année."
             />
             <AnimeSeasonSelector
               season={filters.season}
@@ -343,7 +343,7 @@ export function AnilistFilterPanel({
       <FilterSection
         id="score"
         title="Score, Popularity & Length"
-        description="Filter by score, popularity, episodes, and duration"
+        description="Filtrer selon la note, la popularité, les épisodes et la durée"
         icon={Star}
         isOpen={expandedSections?.score}
         onToggle={onToggleSection}
@@ -361,8 +361,8 @@ export function AnilistFilterPanel({
         <div className="filter-spacer" />
 
         <SingleSlider
-          label="Minimum Popularity"
-          tooltip="Minimum number of users tracking this title on AniList."
+          label="Popularité minimale"
+          tooltip="Nombre minimum d’utilisateurs suivant ce titre sur AniList."
           min={0}
           max={100000}
           step={100}
@@ -374,7 +374,7 @@ export function AnilistFilterPanel({
 
         <RangeSlider
           label="Episode Count"
-          tooltip="Filter by number of episodes."
+          tooltip="Filtrer selon le nombre d’épisodes."
           min={0}
           max={150}
           step={1}
@@ -386,7 +386,7 @@ export function AnilistFilterPanel({
 
         <RangeSlider
           label="Duration (minutes per episode)"
-          tooltip="Filter by episode duration in minutes."
+          tooltip="Filtrer selon la durée des épisodes en minutes."
           min={0}
           max={180}
           step={1}
@@ -397,8 +397,8 @@ export function AnilistFilterPanel({
 
       <FilterSection
         id="origin"
-        title="Origin, Source & Studios"
-        description="Country of origin, source material, and animation studios"
+        title="Origine, source et studios"
+        description="Pays d’origine, œuvre source et studios d’animation"
         icon={Globe}
         isOpen={expandedSections?.origin}
         onToggle={onToggleSection}
@@ -406,15 +406,15 @@ export function AnilistFilterPanel({
       >
         <div className="filter-group">
           <LabelWithTooltip
-            label="Country of Origin"
-            tooltip="Filter anime by country of origin (Japan, South Korea, China, etc.)."
+            label="Pays d’origine"
+            tooltip="Filtrer les anime selon leur pays d’origine (Japon, Corée du Sud, Chine, etc.)."
           />
           <SearchableSelect
             options={countrySelectOptions}
             value={filters.countryOfOrigin || ''}
             onChange={(val) => onFiltersChange('countryOfOrigin', val || undefined)}
-            placeholder="Any Country"
-            searchPlaceholder="Search countries..."
+            placeholder="Tous les pays"
+            searchPlaceholder="Rechercher des pays..."
             labelKey="label"
             valueKey="value"
           />
@@ -422,8 +422,8 @@ export function AnilistFilterPanel({
 
         <div className="filter-group">
           <LabelWithTooltip
-            label="Source Material"
-            tooltip="Filter by original source: Manga, Light Novel, Visual Novel, Original, etc."
+            label="Œuvre source"
+            tooltip="Filtrer selon l’œuvre source : manga, light novel, visual novel, original, etc."
           />
           <AnimeFormatSelector
             selected={filters.sourceMaterial || []}
@@ -435,11 +435,11 @@ export function AnilistFilterPanel({
         <div className="filter-group">
           <LabelWithTooltip
             label="Studios"
-            tooltip="Filter by animation studio (e.g., Studio Ghibli, MADHOUSE, MAPPA)."
+            tooltip="Filtrer selon le studio d’animation (ex. Studio Ghibli, MADHOUSE, MAPPA)."
           />
           <SearchInput
             type="company"
-            placeholder="Search animation studios..."
+            placeholder="Rechercher des studios d’animation..."
             onSearch={searchAnilistStudios}
             selectedItems={selectedStudios}
             onSelect={handleStudiosChange}
@@ -461,8 +461,8 @@ export function AnilistFilterPanel({
           <Checkbox
             checked={!!filters.isAdult}
             onChange={(checked) => onFiltersChange('isAdult', checked || undefined)}
-            label="Include adult content"
-            tooltip="Include adult/18+ rated anime in results."
+            label="Inclure le contenu adulte"
+            tooltip="Inclure les anime adultes/18+ dans les résultats."
           />
         </div>
       </FilterSection>
@@ -470,7 +470,7 @@ export function AnilistFilterPanel({
       <FilterSection
         id="extras"
         title="Stremio Extras"
-        description="Expose filter dropdowns inside Stremio"
+        description="Afficher les filtres déroulants dans Stremio"
         icon={Layers}
         isOpen={expandedSections?.extras}
         onToggle={onToggleSection}

@@ -70,11 +70,11 @@ export function MarketplaceCard({
               +{extraGenres}
             </span>
           )}
-          <span className="marketplace-row-stat" title={`${installs} installs`}>
+          <span className="marketplace-row-stat" title={`${installs} installations`}>
             <Download size={13} aria-hidden="true" />
             {formatCount(installs)}
           </span>
-          <span className="marketplace-row-stat" title={`${likes} likes`}>
+          <span className="marketplace-row-stat" title={`${likes} j'aime`}>
             <Heart size={13} aria-hidden="true" />
             {formatCount(likes)}
           </span>
@@ -86,7 +86,7 @@ export function MarketplaceCard({
           type="button"
           className="btn btn-ghost btn-sm"
           onClick={() => onPreview?.(entry)}
-          title={`Preview ${name}`}
+          title={`Aperçu de ${name}`}
         >
           <Eye size={15} aria-hidden="true" />
           <span className="marketplace-action-label">Aperçu</span>
@@ -96,8 +96,8 @@ export function MarketplaceCard({
           className={`btn btn-ghost btn-icon btn-sm marketplace-like-btn ${liked ? 'liked' : ''}`}
           onClick={() => onToggleLike?.(entry)}
           aria-pressed={liked}
-          aria-label={liked ? 'Unlike this catalog' : 'Like this catalog'}
-          title={liked ? 'Unlike' : 'Like'}
+          aria-label={liked ? 'Retirer la mention j’aime' : 'Aimer ce catalogue'}
+          title={liked ? 'Retirer j’aime' : 'J’aime'}
         >
           <Heart size={15} aria-hidden="true" fill={liked ? 'currentColor' : 'none'} />
         </button>
@@ -106,10 +106,10 @@ export function MarketplaceCard({
           className="btn btn-primary btn-sm"
           onClick={() => onInstall?.(entry)}
           disabled={installing}
-          title={`Add ${name} to your configuration`}
+          title={`Ajouter ${name} à votre configuration`}
         >
           <Download size={15} aria-hidden="true" />
-          <span className="marketplace-action-label">{installing ? 'Adding...' : 'Add'}</span>
+          <span className="marketplace-action-label">{installing ? 'Ajout...' : 'Ajouter'}</span>
         </button>
       </div>
     </div>

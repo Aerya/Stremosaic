@@ -69,11 +69,11 @@ export function SortableCatalogItem({ catalog, isActive, onSelect, onDelete, onD
                 'tmdb'}
             </span>
             {isSourceDisabled && (
-              <span className="catalog-item-badge catalog-item-badge--disabled">Disabled</span>
+              <span className="catalog-item-badge catalog-item-badge--disabled">Désactivé</span>
             )}
             {catalog.filters?.listType &&
               catalog.filters.listType !== 'discover' &&
-              !isCollectionCatalog && <span className="catalog-item-badge">Preset</span>}
+              !isCollectionCatalog && <span className="catalog-item-badge">Préréglage</span>}
           </div>
         </div>
         <div className="catalog-item-actions">
@@ -81,8 +81,8 @@ export function SortableCatalogItem({ catalog, isActive, onSelect, onDelete, onD
             <button
               className="btn btn-ghost btn-icon catalog-drag-handle"
               type="button"
-              title="Drag to reorder"
-              aria-label="Drag to reorder"
+              title="Faire glisser pour réorganiser"
+              aria-label="Faire glisser pour réorganiser"
               onClick={(e) => e.stopPropagation()}
               {...attributes}
               {...listeners}
@@ -98,7 +98,7 @@ export function SortableCatalogItem({ catalog, isActive, onSelect, onDelete, onD
                   e.stopPropagation();
                   onDuplicate(catalog._id);
                 }}
-                title="Duplicate catalog"
+                title="Dupliquer le catalogue"
                 type="button"
               >
                 <Copy size={16} />
@@ -110,7 +110,7 @@ export function SortableCatalogItem({ catalog, isActive, onSelect, onDelete, onD
                 e.stopPropagation();
                 onDelete(catalog._id);
               }}
-              title="Delete catalog"
+              title="Supprimer le catalogue"
               type="button"
               style={{ color: '#ef4444' }}
             >
@@ -127,7 +127,7 @@ export function SortableCatalogItem({ catalog, isActive, onSelect, onDelete, onD
               e.stopPropagation();
               onDuplicate(catalog._id);
             }}
-            title="Duplicate catalog"
+            title="Dupliquer le catalogue"
             type="button"
           >
             <Copy size={12} /> Duplicate
@@ -139,7 +139,7 @@ export function SortableCatalogItem({ catalog, isActive, onSelect, onDelete, onD
               e.stopPropagation();
               onDelete(catalog._id);
             }}
-            title="Delete catalog"
+            title="Supprimer le catalogue"
             type="button"
           >
             <Trash2 size={12} /> Delete

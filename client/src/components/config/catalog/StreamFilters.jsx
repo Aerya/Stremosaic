@@ -67,8 +67,8 @@ export const StreamFilters = memo(function StreamFilters({
       {type === 'series' && tvNetworkOptions.length > 0 && (
         <div className="filter-group mb-4">
           <LabelWithTooltip
-            label="Original Networks"
-            tooltip="Filter by the TV network that originally produced/aired the show."
+            label="Chaînes d’origine"
+            tooltip="Filtrer selon la chaîne ou plateforme ayant produit ou diffusé la série à l’origine."
           />
           <span className="filter-label-hint">
             Where the show originally aired (HBO, Netflix Originals, etc.)
@@ -77,8 +77,8 @@ export const StreamFilters = memo(function StreamFilters({
             options={networkOptions}
             value={(filters.withNetworks || '').split('|').filter(Boolean)}
             onChange={(values) => onFiltersChange('withNetworks', values.join('|'))}
-            placeholder="Any network"
-            searchPlaceholder="Search networks..."
+            placeholder="Toutes les chaînes"
+            searchPlaceholder="Rechercher des chaînes..."
             onSearch={onNetworkSearch}
             labelKey="name"
             valueKey="code"
@@ -90,23 +90,23 @@ export const StreamFilters = memo(function StreamFilters({
       <div className="filter-two-col">
         <div className="filter-group">
           <LabelWithTooltip
-            label="Your Region"
-            tooltip="Choose your country to see which streaming services have this content available."
+            label="Votre région"
+            tooltip="Choisissez votre pays pour voir les services de streaming disponibles."
           />
           <SearchableSelect
             options={safeWatchRegions.map((r) => ({ code: r.iso_3166_1, name: r.english_name }))}
             value={filters.watchRegion || ''}
             onChange={(value) => onFiltersChange('watchRegion', value)}
-            placeholder="Select your region"
-            searchPlaceholder="Search regions..."
+            placeholder="Sélectionner votre région"
+            searchPlaceholder="Rechercher des régions..."
             labelKey="name"
             valueKey="code"
           />
         </div>
         <div className="filter-group">
           <LabelWithTooltip
-            label="Availability Type"
-            tooltip="How to access: Subscription, Free, Rent, Buy."
+            label="Type de disponibilité"
+            tooltip="Mode d’accès : Abonnement, Gratuit, Location, Achat."
           />
           <MultiSelect
             options={monetizationTypes}
@@ -121,13 +121,13 @@ export const StreamFilters = memo(function StreamFilters({
 
       <div className="mt-4">
         <LabelWithTooltip
-          label="Streaming Services"
-          tooltip="Filter by specific streaming platforms."
+          label="Services de streaming"
+          tooltip="Filtrer par plateformes de streaming spécifiques."
         />
         <span className="filter-label-hint">
           {filters.watchRegion && safeWatchProviders.length > 0
-            ? 'Where you can currently watch in your region'
-            : 'Select your region to see available services'}
+            ? 'Disponible actuellement dans votre région'
+            : 'Sélectionnez votre région pour voir les services disponibles'}
         </span>
         {filters.watchRegion && safeWatchProviders.length > 0 ? (
           <>
@@ -136,7 +136,7 @@ export const StreamFilters = memo(function StreamFilters({
                 type="text"
                 value={providerSearch}
                 onChange={(e) => setProviderSearch(e.target.value)}
-                placeholder="Search streaming services..."
+                placeholder="Rechercher des services de streaming..."
                 className="provider-search-input"
               />
               {providerSearch && (
@@ -144,7 +144,7 @@ export const StreamFilters = memo(function StreamFilters({
                   type="button"
                   className="provider-search-clear"
                   onClick={() => setProviderSearch('')}
-                  aria-label="Clear provider search"
+                  aria-label="Effacer la recherche de service"
                 >
                   <X size={14} />
                 </button>

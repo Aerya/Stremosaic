@@ -11,37 +11,37 @@ const API_KEY_PROVIDERS = [
   {
     id: 'tvdb',
     name: 'TVDB',
-    desc: 'Allows artwork resolution by TVDB ID.',
+    desc: 'Permet la résolution d’illustrations par ID TVDB.',
     keyUrl: 'https://thetvdb.com',
-    keyUrlLabel: 'Get API key from TVDB',
+    keyUrlLabel: 'Obtenir une clé API TVDB',
   },
   {
     id: 'fanart',
     name: 'Fanart.tv',
-    desc: 'Required when using Fanart.tv artwork provider.',
+    desc: 'Requis lors de l’utilisation de Fanart.tv.',
     keyUrl: 'https://fanart.tv',
-    keyUrlLabel: 'Get API key from Fanart.tv',
+    keyUrlLabel: 'Obtenir une clé API Fanart.tv',
   },
   {
     id: 'rpdb',
     name: 'RPDB',
-    desc: 'Optional paid key. If left empty, the built-in free key is used automatically.',
+    desc: 'Clé payante optionnelle. Si vide, la clé gratuite intégrée est utilisée.',
     keyUrl: 'https://ratingposterdb.com',
-    keyUrlLabel: 'Get paid API key from RPDB',
+    keyUrlLabel: 'Obtenir une clé API payante RPDB',
   },
   {
     id: 'topPosters',
-    name: 'Top Posters',
-    desc: 'Required when using Top Posters artwork provider.',
+    name: 'Affiches principales',
+    desc: 'Requis lors de l’utilisation du fournisseur Top Posters.',
     keyUrl: 'https://api.top-streaming.stream',
-    keyUrlLabel: 'Get API key from Top Posters',
+    keyUrlLabel: 'Obtenir une clé API Top Posters',
   },
   {
     id: 'trakt',
     name: 'Trakt',
-    desc: 'Client ID for Trakt-powered discovery and previews.',
+    desc: 'ID Client pour la découverte et la prévisualisation Trakt.',
     keyUrl: 'https://trakt.tv/oauth/applications',
-    keyUrlLabel: 'Get Client ID from Trakt',
+    keyUrlLabel: 'Obtenir un ID Client Trakt',
   },
 ];
 
@@ -289,8 +289,8 @@ function ApiKeyInput({
               hasEncryptedKey && !localKey
                 ? '••••••••'
                 : isOptionalProvider
-                  ? `Optional: enter ${provider.name} paid key`
-                  : `Enter ${provider.name} API Key`
+                  ? `Optionnel : saisissez la clé payante ${provider.name}`
+                  : `Saisissez la clé API ${provider.name}`
             }
             value={localKey}
             onChange={handleChange}
@@ -323,7 +323,7 @@ function ApiKeyInput({
               color: 'var(--text-muted)',
             }}
           >
-            Using default free key ({defaultFreeKey}).
+            Clé gratuite par défaut utilisée ({defaultFreeKey}).
           </div>
         )}
         {isOptionalProvider && isDefaultFreeEntered && (
@@ -334,7 +334,7 @@ function ApiKeyInput({
               color: 'var(--text-warning)',
             }}
           >
-            Free key detected. Premium-only artwork types will still require a paid key.
+            Clé gratuite détectée. Les types d’illustrations Premium nécessitent une clé payante.
           </div>
         )}
         {validation.state !== 'idle' && (
