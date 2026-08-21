@@ -75,7 +75,7 @@ export function PosterSettingsSection() {
     if (service === 'rpdb') return { name: 'RPDB', url: 'https://ratingposterdb.com' };
     if (service === 'fanart') return { name: 'Fanart.tv', url: 'https://fanart.tv' };
     if (service === 'topPosters') {
-      return { name: 'Affiches principales', url: 'https://api.top-streaming.stream' };
+      return { name: 'Affiches principales', url: 'https://api.top-posters.com' };
     }
     return null;
   };

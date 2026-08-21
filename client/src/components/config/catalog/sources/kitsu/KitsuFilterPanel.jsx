@@ -18,7 +18,7 @@ const KITSU_SORT_OPTIONS = [
   { value: '-userCount', label: 'Plus populaires' },
   { value: '-favoritesCount', label: 'Most Favorited' },
   { value: '-startDate', label: 'Newest' },
-  { value: 'startDate', label: 'Oldest' },
+  { value: 'startDate', label: 'Plus anciens' },
   { value: '-episodeCount', label: 'Most Episodes' },
 ];
 

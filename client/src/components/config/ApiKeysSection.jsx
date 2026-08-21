@@ -31,9 +31,9 @@ const API_KEY_PROVIDERS = [
   },
   {
     id: 'topPosters',
-    name: 'Affiches principales',
+    name: 'Top Posters',
     desc: 'Requis lors de l’utilisation du fournisseur Top Posters.',
-    keyUrl: 'https://api.top-streaming.stream',
+    keyUrl: 'https://top-posters.com',
     keyUrlLabel: 'Obtenir une clé API Top Posters',
   },
   {

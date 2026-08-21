@@ -4,6 +4,7 @@ export type PosterServiceType =
   | 'none'
   | 'rpdb'
   | 'topPosters'
+  | 'postersPlus'
   | 'customUrl'
   | 'tmdb'
   | 'imdb'

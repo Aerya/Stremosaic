@@ -23,7 +23,8 @@ const PREVIEW_POSTER_PROVIDER_OVERRIDE_OPTIONS = [
   { id: 'tmdb', label: 'TMDB' },
   { id: 'imdb', label: 'IMDb' },
   { id: 'rpdb', label: 'RPDB' },
-  { id: 'topPosters', label: 'Affiches principales' },
+  { id: 'topPosters', label: 'Top Posters' },
+  { id: 'postersPlus', label: 'PostersPlus' },
 ];
 
 const PREVIEW_POSTER_PROVIDER_OPTION_TVDB = {
@@ -38,7 +39,7 @@ const PREVIEW_POSTER_PROVIDER_OPTION_FANART = {
 
 const PREVIEW_POSTER_PROVIDER_OPTION_CUSTOM_URL = {
   id: 'customUrl',
-  label: 'Custom URL',
+  label: 'URL personnalisée',
 };
 
 const PREVIEW_POSTER_PROVIDER_LABELS = {
@@ -47,8 +48,9 @@ const PREVIEW_POSTER_PROVIDER_LABELS = {
   tvdb: 'TVDB',
   fanart: 'Fanart.tv',
   rpdb: 'RPDB',
-  topPosters: 'Affiches principales',
-  customUrl: 'Custom URL',
+  topPosters: 'Top Posters',
+  postersPlus: 'PostersPlus',
+  customUrl: 'URL personnalisée',
 };
 
 const SUPPORTED_PREVIEW_POSTER_PROVIDERS = new Set([
@@ -58,6 +60,7 @@ const SUPPORTED_PREVIEW_POSTER_PROVIDERS = new Set([
   'fanart',
   'rpdb',
   'topPosters',
+  'postersPlus',
   'customUrl',
 ]);
 
@@ -66,6 +69,10 @@ function getPreviewPosterProviderHint(provider, globalProvider) {
     const globalLabel =
       PREVIEW_POSTER_PROVIDER_LABELS[globalProvider] || PREVIEW_POSTER_PROVIDER_LABELS.tmdb;
     return `Source globale par défaut (${globalLabel}).`;
+  }
+
+  if (provider === 'postersPlus') {
+    return 'Utilise le modèle d’URL de votre instance PostersPlus pour les affiches de prévisualisation.';
   }
 
   if (provider === 'customUrl') {
@@ -159,8 +166,8 @@ function resolveGlobalPreviewPosterProvider(preferences, contentType) {
     return 'tmdb';
   }
 
-  if (provider === 'customUrl') {
-    return hasCustomUrlPreviewAccess(preferences, contentType) ? 'customUrl' : 'tmdb';
+  if (provider === 'customUrl' || provider === 'postersPlus') {
+    return hasCustomUrlPreviewAccess(preferences, contentType) ? provider : 'tmdb';
   }
 
   return SUPPORTED_PREVIEW_POSTER_PROVIDERS.has(provider) ? provider : 'tmdb';
