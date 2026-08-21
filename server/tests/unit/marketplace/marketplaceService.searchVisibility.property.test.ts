@@ -124,7 +124,7 @@ function isPublicActive(entry: MarketplaceEntry): boolean {
 }
 
 function isMarketplaceSourceEnabled(entry: MarketplaceEntry): boolean {
-  return entry.source !== 'mal';
+  return (MARKETPLACE_SOURCES as readonly string[]).includes(entry.source);
 }
 
 function matchesTypeFacet(entry: MarketplaceEntry, type: MarketplaceSearchQuery['type']): boolean {

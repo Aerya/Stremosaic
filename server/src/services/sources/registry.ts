@@ -6,6 +6,7 @@ import { SimklSource } from './SimklSource.ts';
 import { KitsuSource } from './KitsuSource.ts';
 import { TraktSource } from './TraktSource.ts';
 import { BingebaseSource } from './BingebaseSource.ts';
+import { MdblistSource } from './MdblistSource.ts';
 import type { IDiscoverSource } from './types.ts';
 
 const SOURCE_REGISTRY = new Map<string, IDiscoverSource>([
@@ -17,6 +18,7 @@ const SOURCE_REGISTRY = new Map<string, IDiscoverSource>([
   ['kitsu', KitsuSource],
   ['trakt', TraktSource],
   ['bingebase', BingebaseSource],
+  ['mdblist', MdblistSource],
 ]);
 
 export function getSource(id: string | undefined): IDiscoverSource {

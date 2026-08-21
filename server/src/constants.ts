@@ -126,6 +126,7 @@ export const MARKETPLACE_SOURCES = [
   'simkl',
   'kitsu',
   'bingebase',
+  'mdblist',
 ] as const;
 export type MarketplaceSource = (typeof MARKETPLACE_SOURCES)[number];
 

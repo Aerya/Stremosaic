@@ -10,6 +10,7 @@ const SOURCES = [
   { id: 'kitsu', desc: 'Catalogues anime Kitsu', alwaysVisible: true },
   { id: 'simkl', desc: 'Découverte Simkl', alwaysVisible: true },
   { id: 'bingebase', desc: 'Listes Bingebase', alwaysVisible: true },
+  { id: 'mdblist', desc: 'Listes publiques MDBList', alwaysVisible: true },
 ];
 
 export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false }) {
@@ -71,6 +72,7 @@ export function NewCatalogModal({ isOpen, onClose, onAdd, imdbEnabled = false })
     kitsu: 'ex. Tendances Kitsu, Anime les mieux notés',
     simkl: 'ex. Anime tendances, Meilleurs de 2024',
     bingebase: 'ex. Ma liste Bingebase',
+    mdblist: 'ex. Ma liste MDBList',
     trakt: 'ex. Films tendances, Les plus vus',
   };
 

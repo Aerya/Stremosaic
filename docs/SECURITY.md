@@ -15,7 +15,7 @@ We take security seriously. If you discover a security vulnerability, please rep
 ### How to Report
 
 1. **DO NOT** open a public GitHub issue for security vulnerabilities
-2. **Preferred**: Use [GitHub's private vulnerability reporting](https://github.com/semicolumn/stremosaic/security/advisories/new)
+2. **Preferred**: Use [GitHub's private vulnerability reporting](https://github.com/Aerya/Stremosaic/security/advisories/new)
 3. **Alternative**: Email the maintainers directly
 4. Include as much detail as possible:
    - Description of the vulnerability
@@ -46,13 +46,13 @@ We take security seriously. If you discover a security vulnerability, please rep
 
 1. **Use HTTPS** - Always deploy behind a reverse proxy with TLS
 2. **Set CORS** - Configure `CORS_ORIGIN` to your specific domain
-3. **Use MongoDB Atlas** - Free tier includes encryption at rest
+3. **Protect the database** - Keep PostgreSQL or MongoDB on a private network and enable encryption at rest where available
 4. **Keep Updated** - Regularly update to the latest version
 5. **Environment Variables** - Never commit `.env` files
 
 ### API Keys
 
-- Your TMDB API key is stored securely in MongoDB
+- API keys and tokens are encrypted with AES-256-GCM before persistence in PostgreSQL or MongoDB
 - Keys are never logged (sanitized automatically)
 - Use separate keys for development and production
 
@@ -60,15 +60,15 @@ We take security seriously. If you discover a security vulnerability, please rep
 
 ### Rate Limiting
 
-API endpoints are rate-limited to 100 requests per minute per IP. This can be disabled via `DISABLE_RATE_LIMIT=true` for trusted environments.
+API endpoints are limited to 300 requests per minute per IP, sensitive endpoints to 60, monitoring endpoints to 30, and Stremio addon endpoints to 1000. `DISABLE_RATE_LIMIT=true` is honored only in development and test environments.
 
 ### TLS Verification
 
 TLS certificate verification is always enabled. Configure trusted corporate proxy certificates with Node's `NODE_EXTRA_CA_CERTS` when needed.
 
-### Debug Endpoint
+### Public endpoints
 
-The `/api/debug/config/:userId` endpoint is disabled in production mode (`NODE_ENV=production`).
+Stremio manifest, metadata and catalog routes are public by design, as are Marketplace reads and minimal health/status responses. Configuration reads and every mutation require authentication and ownership checks.
 
 ## Scope
 

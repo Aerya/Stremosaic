@@ -237,11 +237,11 @@ Live preview of discover results during catalog configuration.
 
 ## Validation & Stats
 
-| Method | Path                | Auth | Description                                                           |
-| ------ | ------------------- | ---- | --------------------------------------------------------------------- |
-| POST   | `/api/validate-key` | none | Validate a TMDB API key — `{ valid: boolean, error? }`                |
-| GET    | `/api/status`       | none | Version, build info, uptime, database/cache type, user/catalog counts |
-| GET    | `/api/stats`        | none | Public user/catalog counts — `{ users, catalogs, addonVariant }`      |
+| Method | Path                | Auth | Description                                                      |
+| ------ | ------------------- | ---- | ---------------------------------------------------------------- |
+| POST   | `/api/validate-key` | none | Validate a TMDB API key — `{ valid: boolean, error? }`           |
+| GET    | `/api/status`       | none | Version, build info, uptime and public user/catalog counts       |
+| GET    | `/api/stats`        | none | Public user/catalog counts — `{ users, catalogs, addonVariant }` |
 
 ---
 
@@ -306,10 +306,10 @@ Rate limit: 1000/min. All responses include ETag headers for caching.
 
 ## Operational
 
-| Method | Path      | Description                                                      |
-| ------ | --------- | ---------------------------------------------------------------- | ------------- |
-| GET    | `/health` | Comprehensive health check (returns 503 during shutdown)         |
-| GET    | `/ready`  | Readiness probe — `{ ready: boolean, cacheWarming: "in_progress" | "complete" }` |
+| Method | Path      | Description                                                                     |
+| ------ | --------- | ------------------------------------------------------------------------------- |
+| GET    | `/health` | Minimal health check — `{ status }` (returns 503 when unavailable)              |
+| GET    | `/ready`  | Readiness probe — `{ ready: boolean, cacheWarming: "in_progress"\|"complete" }` |
 
 ---
 
