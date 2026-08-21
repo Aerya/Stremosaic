@@ -13,21 +13,9 @@ Stremosaic est un addon de catalogues Stremio multi-sources, basé sur l'archite
 
 ## WebUI
 
-Interface en français, branding Stremosaic, logo/favicon dédiés et footer Aerya (GitHub, Blog, Ko-fi). Le panneau ElfHosted et les anciens liens Discord/Donate ont été retirés.
+Interface en français.
 
 La WebUI est protégée par l'authentification déjà présente dans la base TMDB Discover+ : une clé API TMDB valide ouvre une session JWT et les configurations associées restent privées. Les secrets sont chiffrés côté serveur.
-
-## Docker
-
-Images multi-architecture : `linux/amd64` et `linux/arm64`.
-
-```yaml
-services:
-  stremosaic:
-    image: ghcr.io/aerya/stremosaic:latest
-```
-
-Le `docker-compose.yml` complet du dépôt utilise PostgreSQL + Redis et l'image GHCR `:latest`.
 
 ## Marketplace
 
