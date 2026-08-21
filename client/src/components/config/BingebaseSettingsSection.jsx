@@ -1,78 +1,96 @@
 import { useEffect, useRef, useState } from 'react';
+import { Copy, ExternalLink } from 'lucide-react';
 import { api } from '../../services/api';
+
+const BINGEBASE_ACTIVATE_URL = 'https://bingebase.com/activate';
 
 export function BingebaseSettingsSection({ userId, onAddCatalog, addToast }) {
   const [status, setStatus] = useState({ connected: false, username: '' });
+  const [auth, setAuth] = useState(null);
   const [username, setUsername] = useState('');
   const [lists, setLists] = useState([]);
-  const [auth, setAuth] = useState(null);
   const timer = useRef(null);
+
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) return undefined;
     api
       .bingebaseStatus(userId)
-      .then((s) => {
-        setStatus(s);
-        setUsername(s.username || '');
+      .then((value) => {
+        setStatus(value);
+        setUsername(value.username || '');
       })
       .catch(() => {});
     return () => {
       if (timer.current) clearInterval(timer.current);
     };
   }, [userId]);
+
   const connect = async () => {
     try {
-      const d = await api.bingebaseDeviceCode(userId);
-      setAuth(d);
+      const data = await api.bingebaseDeviceCode(userId);
+      setAuth(data);
       if (timer.current) clearInterval(timer.current);
       timer.current = setInterval(
         async () => {
           try {
-            const r = await api.bingebaseDeviceToken(userId, d.device_code);
-            if (r.connected) {
+            const result = await api.bingebaseDeviceToken(userId, data.device_code);
+            if (result.connected) {
               clearInterval(timer.current);
               timer.current = null;
-              setStatus((x) => ({ ...x, connected: true }));
+              setStatus((current) => ({ ...current, connected: true }));
               setAuth(null);
               addToast?.('Bingebase connecté');
             }
           } catch {
-            /* Le device-code peut rester en attente jusqu'à son autorisation. */
+            // Le polling continue tant que l'autorisation n'est pas terminée.
           }
         },
-        Math.max(3, d.interval || 5) * 1000
+        Math.max(3, data.interval || 5) * 1000
       );
-    } catch (e) {
-      addToast?.(e.message, 'error');
+    } catch (error) {
+      addToast?.(error.message, 'error');
     }
   };
+
   const loadLists = async () => {
     try {
-      const r = await api.bingebaseLists(userId, username);
-      setLists(r.lists || []);
-      setStatus((x) => ({ ...x, username }));
-      if (!(r.lists || []).length) addToast?.('Aucune liste publique trouvée', 'info');
-    } catch (e) {
-      addToast?.(e.message, 'error');
+      const result = await api.bingebaseLists(userId, username);
+      setLists(result.lists || []);
+      setStatus((current) => ({ ...current, username }));
+      if (!(result.lists || []).length) addToast?.('Aucune liste publique trouvée', 'info');
+    } catch (error) {
+      addToast?.(error.message, 'error');
     }
   };
-  const add = (l) => {
+
+  const add = (list) => {
     onAddCatalog?.({
-      name: `Bingebase - ${l.name}`,
+      name: `Bingebase - ${list.name}`,
       type: 'movie',
       source: 'bingebase',
       enabled: true,
-      filters: { bingebaseListUrl: l.url },
+      filters: { bingebaseListUrl: list.url },
     });
-    addToast?.(`Catalogue ajouté : ${l.name}`);
+    addToast?.(`Catalogue ajouté : ${list.name}`);
   };
+
+  const copyCode = async () => {
+    if (!auth?.user_code) return;
+    try {
+      await navigator.clipboard.writeText(auth.user_code);
+      addToast?.('Code Bingebase copié');
+    } catch {
+      addToast?.('Impossible de copier le code', 'error');
+    }
+  };
+
   return (
     <div className="settings-card">
       <div className="settings-row">
         <div className="settings-row-info">
           <span className="settings-label">Compte Bingebase</span>
           <span className="settings-desc">
-            Connexion officielle par device-code. Aucun mot de passe Bingebase n'est stocké.
+            Connexion officielle par code d’appareil. Aucun mot de passe Bingebase n’est stocké.
           </span>
         </div>
         <div className="settings-row-control">
@@ -94,51 +112,83 @@ export function BingebaseSettingsSection({ userId, onAddCatalog, addToast }) {
           )}
         </div>
       </div>
+
       {auth && (
         <div className="settings-row">
           <div className="settings-row-info">
             <span className="settings-label">Autorisation</span>
-            <span className="settings-desc">Ouvre bingebase.com/activate et saisis le code.</span>
+            <span className="settings-desc">
+              Ouvrez la page d’activation Bingebase, connectez-vous puis saisissez ce code.
+            </span>
+            <a
+              href={BINGEBASE_ACTIVATE_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="settings-link"
+            >
+              Ouvrir bingebase.com/activate <ExternalLink size={13} />
+            </a>
           </div>
-          <div className="settings-row-control">
+          <div
+            className="settings-row-control"
+            style={{ display: 'flex', gap: '8px', alignItems: 'center' }}
+          >
             <strong style={{ fontSize: '1.25rem', letterSpacing: '0.12em' }}>
               {auth.user_code}
             </strong>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={copyCode}
+              title="Copier le code"
+            >
+              <Copy size={14} /> Copier
+            </button>
           </div>
         </div>
       )}
-      <div className="settings-row">
-        <div className="settings-row-info">
-          <span className="settings-label">Listes publiques du profil</span>
-          <span className="settings-desc">
-            Nom d'utilisateur Bingebase, puis charge les listes visibles publiquement.
-          </span>
+
+      {status.connected && (
+        <div className="settings-row">
+          <div className="settings-row-info">
+            <span className="settings-label">Listes Bingebase</span>
+            <span className="settings-desc">
+              Chargez vos listes publiques Bingebase pour les ajouter à Stremosaic.
+            </span>
+          </div>
+          <div className="settings-row-control" style={{ display: 'flex', gap: '8px' }}>
+            <input
+              className="form-input"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Nom d’utilisateur Bingebase"
+            />
+            <button className="btn btn-secondary" onClick={loadLists}>
+              Charger les listes
+            </button>
+          </div>
         </div>
-        <div className="settings-row-control" style={{ display: 'flex', gap: '8px' }}>
-          <input
-            className="form-input"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="username"
-          />
-          <button className="btn" onClick={loadLists} disabled={!username.trim()}>
-            Charger
-          </button>
-        </div>
-      </div>
+      )}
+
       {lists.length > 0 && (
-        <div style={{ display: 'grid', gap: '8px', marginTop: '12px' }}>
-          {lists.map((l) => (
-            <div key={l.url} className="settings-row">
-              <div className="settings-row-info">
-                <span className="settings-label">{l.name}</span>
-                <span className="settings-desc">{l.url}</span>
-              </div>
-              <button className="btn" onClick={() => add(l)}>
-                Ajouter
+        <div className="settings-row" style={{ alignItems: 'stretch' }}>
+          <div className="settings-row-info">
+            <span className="settings-label">Listes disponibles</span>
+          </div>
+          <div
+            className="settings-row-control"
+            style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}
+          >
+            {lists.map((list) => (
+              <button
+                key={list.url || list.name}
+                className="btn btn-secondary"
+                onClick={() => add(list)}
+              >
+                Ajouter {list.name}
               </button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>

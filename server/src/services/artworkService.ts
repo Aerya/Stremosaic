@@ -54,7 +54,7 @@ interface ArtworkProviderDefinition {
 }
 
 const RPDB_BASE_URL = 'https://api.ratingposterdb.com';
-const TOP_POSTERS_BASE_URL = 'https://api.top-streaming.stream';
+const TOP_POSTERS_BASE_URL = 'https://api.top-posters.com';
 const TVDB_API_BASE_URL = 'https://api4.thetvdb.com/v4';
 const FANART_API_BASE_URL = 'https://webservice.fanart.tv/v3';
 
@@ -63,7 +63,7 @@ const ARTWORK_CHECK_NEGATIVE_TTL_MS = LOCAL_CACHE_TTLS.ARTWORK_CHECK_NEGATIVE;
 const ARTWORK_CHECK_MAX_CACHE = 2000;
 const ALLOWED_CHECK_HOSTS = new Set([
   'api.ratingposterdb.com',
-  'api.top-streaming.stream',
+  'api.top-posters.com',
   'image.tmdb.org',
   'assets.fanart.tv',
 ]);
@@ -921,6 +921,15 @@ const fanartProvider: ArtworkProviderDefinition = {
   },
 };
 
+const postersPlusProvider: ArtworkProviderDefinition = {
+  id: 'postersPlus',
+  supportedKinds: new Set<ArtworkKind>(['poster']),
+  requiresApiKey: false,
+  resolve(context, kind, config) {
+    return resolveCustomUrl(context, kind, config);
+  },
+};
+
 const customUrlProvider: ArtworkProviderDefinition = {
   id: 'customUrl',
   supportedKinds: ALL_KINDS,
@@ -938,6 +947,7 @@ const providerRegistry = new Map<ArtworkProvider, ArtworkProviderDefinition>([
   ['tvdb', tvdbProvider],
   ['fanart', fanartProvider],
   ['metahub' as ArtworkProvider, tmdbProvider], // backward compat alias
+  ['postersPlus', postersPlusProvider],
   ['customUrl', customUrlProvider],
 ]);
 
@@ -945,7 +955,8 @@ export function isValidArtworkConfig(config: PosterOptions | null): boolean {
   if (!config) return false;
   const { service, apiKey, customUrlPattern } = config;
   if (!service || service === 'none') return false;
-  if (service === 'customUrl') return Boolean(customUrlPattern && customUrlPattern.trim());
+  if (service === 'customUrl' || service === 'postersPlus')
+    return Boolean(customUrlPattern && customUrlPattern.trim());
   if (service === 'tmdb' || service === 'imdb' || service === ('metahub' as PosterServiceType))
     return true;
   return Boolean(apiKey);
@@ -1237,7 +1248,7 @@ export function createArtworkOptions(
     const customUrlPattern =
       typeof config.customUrlPattern === 'string' ? config.customUrlPattern.trim() : undefined;
 
-    if (service === 'customUrl') {
+    if (service === 'customUrl' || service === 'postersPlus') {
       if (!customUrlPattern) continue;
       result[kind] = { service, customUrlPattern };
       continue;
@@ -1485,6 +1496,7 @@ export const PosterService = {
   FANART: 'fanart',
   RPDB: 'rpdb',
   TOP_POSTERS: 'topPosters',
+  POSTERS_PLUS: 'postersPlus',
   CUSTOM_URL: 'customUrl',
 } as const;
 

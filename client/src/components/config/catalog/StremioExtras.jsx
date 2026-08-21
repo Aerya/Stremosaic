@@ -65,7 +65,7 @@ export const StremioExtras = memo(function StremioExtras({
       <p className="stremio-extras-hint">
         {allowedModes.length === 1
           ? 'This source supports the Stremio dropdown as a genre selector.'
-          : 'Choose what the single Stremio dropdown should control for this catalog. Genre is the default and most compatible option.'}
+          : 'Choisissez ce que le menu déroulant unique de Stremio doit contrôler pour ce catalogue. Le genre est l’option par défaut et la plus compatible.'}
       </p>
       <div className="stremio-extras-grid">
         {allowedModes.map((extra) => {

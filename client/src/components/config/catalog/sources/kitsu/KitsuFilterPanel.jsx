@@ -18,7 +18,7 @@ const KITSU_SORT_OPTIONS = [
   { value: '-userCount', label: 'Plus populaires' },
   { value: '-favoritesCount', label: 'Most Favorited' },
   { value: '-startDate', label: 'Newest' },
-  { value: 'startDate', label: 'Oldest' },
+  { value: 'startDate', label: 'Plus anciens' },
   { value: '-episodeCount', label: 'Most Episodes' },
 ];
 
@@ -306,7 +306,10 @@ export function KitsuFilterPanel({
           </div>
 
           <div className="filter-group">
-            <LabelWithTooltip label="Classification par âge" tooltip="Filtrer selon la classification par âge." />
+            <LabelWithTooltip
+              label="Classification par âge"
+              tooltip="Filtrer selon la classification par âge."
+            />
             <AnimeFormatSelector
               selected={filters.kitsuAgeRating || []}
               options={KITSU_AGE_RATINGS}
