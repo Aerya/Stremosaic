@@ -393,7 +393,8 @@ export function useCatalogEditorHandlers({
         ? preferences?.apiKeys?.[selectedPreviewPosterProvider] || null
         : null;
       const selectedPreviewPosterCustomUrlPattern =
-        selectedPreviewPosterProvider === 'customUrl' || selectedPreviewPosterProvider === 'postersPlus'
+        selectedPreviewPosterProvider === 'customUrl' ||
+        selectedPreviewPosterProvider === 'postersPlus'
           ? getPreviewCustomPosterPattern(preferences, localCatalog.type)
           : null;
       const previewArtworkLanguagePreferences = getPreviewArtworkLanguagePreferences(preferences);

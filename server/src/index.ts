@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 import { config, validateRequiredConfig } from './config.ts';
 import { initStorage, getStorage } from './services/storage/index.ts';
 import { seedBuiltinMarketplace } from './services/builtinMarketplace.ts';
-import { initCache, getCacheStatus } from './services/cache/index.ts';
+import { initCache } from './services/cache/index.ts';
 import { addonRouter } from './routes/addon.ts';
 import { apiRouter } from './routes/api.ts';
 import { authRouter } from './routes/auth.ts';
@@ -21,30 +21,24 @@ import { monitoringRateLimit } from './utils/rateLimit.ts';
 import { setRevocationStore, destroySecurity } from './utils/security.ts';
 import { RedisRevocationStore } from './infrastructure/revocationStore.ts';
 import { warmEssentialCaches } from './infrastructure/cacheWarmer.ts';
-import { destroyTmdbThrottle, getTmdbThrottle } from './infrastructure/tmdbThrottle.ts';
+import { destroyTmdbThrottle } from './infrastructure/tmdbThrottle.ts';
 import { destroyImdbThrottle } from './infrastructure/imdbThrottle.ts';
-import { getConfigCache } from './infrastructure/configCache.ts';
 import {
   initImdbRatings,
   getImdbRatingsStats,
   destroyImdbRatings,
 } from './services/imdbRatings/index.ts';
-import { getCircuitBreakerState } from './services/tmdb/client.ts';
-import { getImdbCircuitBreakerState } from './services/imdb/client.ts';
-import { isImdbApiEnabled } from './services/imdb/index.ts';
 import { initImdbApi } from './services/imdb/index.ts';
 import { initAnimeIdMap } from './services/animeIdMap/index.ts';
 import { requestIdMiddleware, getRequestCacheStats } from './utils/requestContext.ts';
 import { sendError, ErrorCodes, AppError } from './utils/AppError.ts';
-import { TIMEOUTS, HEAP_WARN_THRESHOLD_MB } from './constants.ts';
+import { TIMEOUTS } from './constants.ts';
 import type { Server } from 'http';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const log = createLogger('server');
 const PORT = config.port;
-const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf8'));
-const SERVER_VERSION = pkg.version;
 
 let server: Server | null = null;
 let isShuttingDown = false;
@@ -343,14 +337,11 @@ app.get('/health', monitoringRateLimit, (req, res) => {
     });
   }
 
-  let dbStatus = 'disconnected';
   try {
-    if (getStorage()) {
-      dbStatus = 'connected';
-    }
+    getStorage();
   } catch (e) {
-    dbStatus = 'error';
     logSwallowedError('health:db-status', e);
+    return res.status(503).json({ status: 'degraded' });
   }
 
   // Determine overall status
@@ -358,49 +349,8 @@ app.get('/health', monitoringRateLimit, (req, res) => {
   if (!serverStatus.healthy) status = 'starting';
   else if (serverStatus.degraded) status = 'degraded';
 
-  const cacheStatus = getCacheStatus();
-  const throttleStats = getTmdbThrottle().getStats();
-  const configCacheStats = getConfigCache().getStats();
-
-  const health = {
-    status,
-    degradedReason: serverStatus.degraded ? serverStatus.reason : undefined,
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    startedAt: serverStatus.startedAt,
-    version: SERVER_VERSION,
-    database: dbStatus,
-    cache: cacheStatus,
-    configCache: configCacheStats,
-    tmdbThrottle: throttleStats,
-    tmdbCircuitBreaker: getCircuitBreakerState(),
-    imdbRatings: getImdbRatingsStats(),
-    imdbApi: isImdbApiEnabled()
-      ? {
-          enabled: true,
-          circuitBreaker: getImdbCircuitBreakerState(),
-        }
-      : { enabled: false },
-    cacheWarming: serverStatus.cacheWarming,
-    memory: {
-      rss: Math.round(process.memoryUsage().rss / 1024 / 1024),
-      used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
-      total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
-      unit: 'MB',
-    },
-  };
-
-  const heapUsedMB = health.memory.used;
-  if (heapUsedMB > HEAP_WARN_THRESHOLD_MB) {
-    log.warn('High heap usage', {
-      heapUsedMB,
-      rss: health.memory.rss,
-      threshold: HEAP_WARN_THRESHOLD_MB,
-    });
-  }
-
   const httpStatus = status === 'ok' || status === 'degraded' ? 200 : 503;
-  res.status(httpStatus).json(health);
+  res.status(httpStatus).json({ status });
 });
 
 app.use('/api/auth', authRouter);
@@ -524,7 +474,9 @@ async function start() {
 
     await initStorage();
     await seedBuiltinMarketplace().catch((err) => {
-      log.warn('Built-in marketplace seed failed (non-critical)', { error: err instanceof Error ? err.message : 'unknown' });
+      log.warn('Built-in marketplace seed failed (non-critical)', {
+        error: err instanceof Error ? err.message : 'unknown',
+      });
     });
 
     serverStatus.healthy = true;

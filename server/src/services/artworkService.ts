@@ -955,7 +955,8 @@ export function isValidArtworkConfig(config: PosterOptions | null): boolean {
   if (!config) return false;
   const { service, apiKey, customUrlPattern } = config;
   if (!service || service === 'none') return false;
-  if (service === 'customUrl' || service === 'postersPlus') return Boolean(customUrlPattern && customUrlPattern.trim());
+  if (service === 'customUrl' || service === 'postersPlus')
+    return Boolean(customUrlPattern && customUrlPattern.trim());
   if (service === 'tmdb' || service === 'imdb' || service === ('metahub' as PosterServiceType))
     return true;
   return Boolean(apiKey);

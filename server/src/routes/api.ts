@@ -51,7 +51,7 @@ import {
 import { sendError, ErrorCodes, safeErrorMessage, AppError } from '../utils/AppError.ts';
 import { decrypt, encrypt } from '../utils/encryption.ts';
 import { requireAuth, optionalAuth, requireConfigOwnership } from '../utils/authMiddleware.ts';
-import { computeApiKeyId, getSecurityMetrics } from '../utils/security.ts';
+import { computeApiKeyId } from '../utils/security.ts';
 import { config } from '../config.ts';
 import { getConfigCache } from '../infrastructure/configCache.ts';
 import { getCache } from '../services/cache/index.ts';
@@ -120,26 +120,13 @@ router.get('/status', async (req, res) => {
     const metadata = getBuildMetadata();
     const stats = await getPublicStats().catch(() => ({ totalUsers: 0, totalCatalogs: 0 }));
 
-    // Determine database and cache type from environment
-    const databaseType = config.database.postgresUri
-      ? 'postgres'
-      : config.database.mongodbUri
-        ? 'mongodb'
-        : 'memory';
-    const cacheType = config.cache.redisUrl ? 'redis' : 'memory';
-
     res.json({
       ...metadata,
       uptime: Math.floor(process.uptime()),
-      environment: config.nodeEnv,
-      database: databaseType,
-      cache: cacheType,
-      imdbApi: imdb.isImdbApiEnabled(),
       stats: {
         users: stats.totalUsers || 0,
         catalogs: stats.totalCatalogs || 0,
       },
-      security: getSecurityMetrics(),
     });
   } catch (error) {
     log.error('GET /status error', { error: (error as Error).message });
@@ -1067,7 +1054,8 @@ async function resolvePreviewCustomUrlPattern(req: Request): Promise<string | nu
         : null;
 
     if (
-      (fromContentTypePoster?.provider === 'customUrl' || fromContentTypePoster?.provider === 'postersPlus') &&
+      (fromContentTypePoster?.provider === 'customUrl' ||
+        fromContentTypePoster?.provider === 'postersPlus') &&
       typeof fromContentTypePoster.customUrlPattern === 'string' &&
       fromContentTypePoster.customUrlPattern.trim()
     ) {
@@ -2276,7 +2264,9 @@ router.post('/preview', requireAuth, resolveApiKey, async (req, res) => {
     );
 
     const previewCustomUrlPattern =
-      (previewPosterProvider === 'customUrl' || previewPosterProvider === 'postersPlus') ? await resolvePreviewCustomUrlPattern(req) : null;
+      previewPosterProvider === 'customUrl' || previewPosterProvider === 'postersPlus'
+        ? await resolvePreviewCustomUrlPattern(req)
+        : null;
 
     const previewProviderNeedsImdbIds =
       previewPosterProvider === 'imdb' ||

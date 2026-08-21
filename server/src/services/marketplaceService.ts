@@ -41,7 +41,7 @@ import type {
 const log = createLogger('marketplaceService');
 const DISABLED_MARKETPLACE_SOURCES = new Set<SourceType>();
 const ENABLED_MARKETPLACE_SOURCES = MARKETPLACE_SOURCES.filter(
-  (source): source is SourceType => !DISABLED_MARKETPLACE_SOURCES.has(source as SourceType)
+  (source) => !DISABLED_MARKETPLACE_SOURCES.has(source)
 );
 
 /**

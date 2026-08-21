@@ -263,9 +263,7 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
 
   return (
     <div className="artwork-kind-selector">
-      <div className="artwork-section-note">
-        Choisissez la source pour {humanTypeLabel} :
-      </div>
+      <div className="artwork-section-note">Choisissez la source pour {humanTypeLabel} :</div>
 
       <SearchableSelect
         options={artworkServiceOptions}
@@ -296,7 +294,8 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
                 borderLeft: '3px solid var(--text-warning)',
               }}
             >
-              ⚠️ Nécessite une clé API. Configurez-la dans la section <strong>Clés d’API</strong> ci-dessous.
+              ⚠️ Nécessite une clé API. Configurez-la dans la section <strong>Clés d’API</strong>{' '}
+              ci-dessous.
             </div>
           )}
 
@@ -326,7 +325,8 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
                 borderLeft: '3px solid var(--text-warning)',
               }}
             >
-              ⚠️ {serviceInfo?.name || 'Ce service'} nécessite une <strong>clé payante</strong> pour ce type d’illustration.
+              ⚠️ {serviceInfo?.name || 'Ce service'} nécessite une <strong>clé payante</strong> pour
+              ce type d’illustration.
             </div>
           )}
         </div>
@@ -340,7 +340,9 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
                 htmlFor={`${contentType}-${artKind}-custom-url`}
                 className="artwork-input-label"
               >
-                {currentProvider === 'postersPlus' ? 'URL de modèle PostersPlus' : 'Modèle d’URL personnalisée'}
+                {currentProvider === 'postersPlus'
+                  ? 'URL de modèle PostersPlus'
+                  : 'Modèle d’URL personnalisée'}
               </label>
               <input
                 id={`${contentType}-${artKind}-custom-url`}
@@ -357,10 +359,10 @@ function ArtKindSelector({ contentType, artKind, artworkSettings, preferences, o
                 onChange={(e) => updateValue({ customUrlPattern: e.target.value })}
               />
               <div className="artwork-placeholders-note">
-                Variables : {'{id}'}, {'{asset}'}, {'{type}'}, {'{imdb_id}'}, {'{tmdb_id}'}, {'{rating_id}'}
-                , {'{rating_id_type}'}, {'{season}'}, {'{episode}'}, {'{season_number}'},{' '}
-                {'{episode_number}'}, {'{api_key}'}, {'{api_key_urlencoded}'}, {'{language}'},{' '}
-                {'{language_short}'}
+                Variables : {'{id}'}, {'{asset}'}, {'{type}'}, {'{imdb_id}'}, {'{tmdb_id}'},{' '}
+                {'{rating_id}'}, {'{rating_id_type}'}, {'{season}'}, {'{episode}'},{' '}
+                {'{season_number}'}, {'{episode_number}'}, {'{api_key}'}, {'{api_key_urlencoded}'},{' '}
+                {'{language}'}, {'{language_short}'}
               </div>
             </div>
           )}

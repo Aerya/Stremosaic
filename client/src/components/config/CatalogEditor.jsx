@@ -17,6 +17,8 @@ const SOURCE_ATTRIBUTION = {
   kitsu: { label: 'Kitsu', url: 'https://kitsu.io/' },
   simkl: { label: 'Simkl', url: 'https://simkl.com/' },
   trakt: { label: 'Trakt', url: 'https://trakt.tv/' },
+  bingebase: { label: 'Bingebase', url: 'https://bingebase.com/' },
+  mdblist: { label: 'MDBList', url: 'https://mdblist.com/' },
 };
 
 const PREVIEW_POSTER_PROVIDER_OVERRIDE_OPTIONS = [
@@ -360,7 +362,10 @@ export const CatalogEditor = memo(function CatalogEditor() {
             <Sparkles size={48} />
           </div>
           <h3>Créez votre premier catalogue</h3>
-          <p>Cliquez sur » Ajouter » dans la barre latérale pour créer un catalogue personnalisé avec les filtres TMDB</p>
+          <p>
+            Cliquez sur » Ajouter » dans la barre latérale pour créer un catalogue personnalisé avec
+            les filtres TMDB
+          </p>
         </div>
       </div>
     );
@@ -396,9 +401,14 @@ export const CatalogEditor = memo(function CatalogEditor() {
 
   const imdbSourceDisabledNotice = (
     <div className="empty-state">
-      <div className="empty-state-icon"><AlertTriangle size={48} /></div>
+      <div className="empty-state-icon">
+        <AlertTriangle size={48} />
+      </div>
       <h3>Source IMDb indisponible</h3>
-      <p>IMDb est conservé uniquement pour les identifiants et l’enrichissement. Les catalogues IMDb ne sont pas proposés comme source.</p>
+      <p>
+        IMDb est conservé uniquement pour les identifiants et l’enrichissement. Les catalogues IMDb
+        ne sont pas proposés comme source.
+      </p>
     </div>
   );
 
@@ -569,7 +579,9 @@ export const CatalogEditor = memo(function CatalogEditor() {
                   style={{ margin: 0, padding: 0 }}
                 />
               </div>
-              {!localCatalog?.name?.trim() && <span className="field-error">Le nom est requis</span>}
+              {!localCatalog?.name?.trim() && (
+                <span className="field-error">Le nom est requis</span>
+              )}
               <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
                 Propulsé par{' '}
                 <a
@@ -683,7 +695,8 @@ export const CatalogEditor = memo(function CatalogEditor() {
             <div className="mal-jikan-warning" role="status">
               <AlertTriangle size={16} aria-hidden="true" />
               <span>
-                Certains résultats MAL peuvent être temporairement indisponibles si Jikan ne parvient pas à joindre MyAnimeList.
+                Certains résultats MAL peuvent être temporairement indisponibles si Jikan ne
+                parvient pas à joindre MyAnimeList.
               </span>
             </div>
           )}

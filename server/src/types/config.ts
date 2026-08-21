@@ -72,6 +72,9 @@ export interface UserPreferences {
 }
 
 export interface BaseCatalogFilters {
+  bingebaseListUrl?: string;
+  mdblistListUrl?: string;
+  servicePreset?: string;
   sortBy?: string;
   genres?: number[];
   excludeGenres?: number[];
@@ -289,7 +292,8 @@ export type SourceType =
   | 'simkl'
   | 'kitsu'
   | 'trakt'
-  | 'bingebase';
+  | 'bingebase'
+  | 'mdblist';
 
 export type CatalogFilters = TmdbCatalogFilters &
   ImdbCatalogFilters &

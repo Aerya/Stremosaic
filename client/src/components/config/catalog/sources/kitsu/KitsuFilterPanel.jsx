@@ -306,7 +306,10 @@ export function KitsuFilterPanel({
           </div>
 
           <div className="filter-group">
-            <LabelWithTooltip label="Classification par âge" tooltip="Filtrer selon la classification par âge." />
+            <LabelWithTooltip
+              label="Classification par âge"
+              tooltip="Filtrer selon la classification par âge."
+            />
             <AnimeFormatSelector
               selected={filters.kitsuAgeRating || []}
               options={KITSU_AGE_RATINGS}

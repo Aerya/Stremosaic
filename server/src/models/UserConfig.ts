@@ -13,7 +13,7 @@ const catalogSchema = new mongoose.Schema(
     type: { type: String, enum: ['movie', 'series', 'anime', 'collection'], required: true },
     source: {
       type: String,
-      enum: ['tmdb', 'imdb', 'anilist', 'mal', 'simkl', 'kitsu', 'trakt', 'bingebase'],
+      enum: ['tmdb', 'imdb', 'anilist', 'mal', 'simkl', 'kitsu', 'trakt', 'bingebase', 'mdblist'],
       default: 'tmdb',
     },
     filters: {
@@ -26,6 +26,9 @@ const catalogSchema = new mongoose.Schema(
       ratingMin: Number,
       ratingMax: Number,
       sortBy: { type: String, default: 'popularity.desc' },
+      bingebaseListUrl: String,
+      mdblistListUrl: String,
+      servicePreset: String,
       language: String,
       displayLanguage: String,
       countries: String,

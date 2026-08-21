@@ -13,7 +13,8 @@ export function BingebaseSettingsSection({ userId, onAddCatalog, addToast }) {
 
   useEffect(() => {
     if (!userId) return undefined;
-    api.bingebaseStatus(userId)
+    api
+      .bingebaseStatus(userId)
       .then((value) => {
         setStatus(value);
         setUsername(value.username || '');
@@ -29,20 +30,23 @@ export function BingebaseSettingsSection({ userId, onAddCatalog, addToast }) {
       const data = await api.bingebaseDeviceCode(userId);
       setAuth(data);
       if (timer.current) clearInterval(timer.current);
-      timer.current = setInterval(async () => {
-        try {
-          const result = await api.bingebaseDeviceToken(userId, data.device_code);
-          if (result.connected) {
-            clearInterval(timer.current);
-            timer.current = null;
-            setStatus((current) => ({ ...current, connected: true }));
-            setAuth(null);
-            addToast?.('Bingebase connecté');
+      timer.current = setInterval(
+        async () => {
+          try {
+            const result = await api.bingebaseDeviceToken(userId, data.device_code);
+            if (result.connected) {
+              clearInterval(timer.current);
+              timer.current = null;
+              setStatus((current) => ({ ...current, connected: true }));
+              setAuth(null);
+              addToast?.('Bingebase connecté');
+            }
+          } catch {
+            // Le polling continue tant que l'autorisation n'est pas terminée.
           }
-        } catch {
-          // Le polling continue tant que l'autorisation n'est pas terminée.
-        }
-      }, Math.max(3, data.interval || 5) * 1000);
+        },
+        Math.max(3, data.interval || 5) * 1000
+      );
     } catch (error) {
       addToast?.(error.message, 'error');
     }
@@ -102,7 +106,9 @@ export function BingebaseSettingsSection({ userId, onAddCatalog, addToast }) {
               Déconnecter
             </button>
           ) : (
-            <button className="btn btn-primary" onClick={connect}>Connecter Bingebase</button>
+            <button className="btn btn-primary" onClick={connect}>
+              Connecter Bingebase
+            </button>
           )}
         </div>
       </div>
@@ -114,13 +120,28 @@ export function BingebaseSettingsSection({ userId, onAddCatalog, addToast }) {
             <span className="settings-desc">
               Ouvrez la page d’activation Bingebase, connectez-vous puis saisissez ce code.
             </span>
-            <a href={BINGEBASE_ACTIVATE_URL} target="_blank" rel="noreferrer" className="settings-link">
+            <a
+              href={BINGEBASE_ACTIVATE_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="settings-link"
+            >
               Ouvrir bingebase.com/activate <ExternalLink size={13} />
             </a>
           </div>
-          <div className="settings-row-control" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <strong style={{ fontSize: '1.25rem', letterSpacing: '0.12em' }}>{auth.user_code}</strong>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={copyCode} title="Copier le code">
+          <div
+            className="settings-row-control"
+            style={{ display: 'flex', gap: '8px', alignItems: 'center' }}
+          >
+            <strong style={{ fontSize: '1.25rem', letterSpacing: '0.12em' }}>
+              {auth.user_code}
+            </strong>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={copyCode}
+              title="Copier le code"
+            >
               <Copy size={14} /> Copier
             </button>
           </div>
@@ -131,21 +152,39 @@ export function BingebaseSettingsSection({ userId, onAddCatalog, addToast }) {
         <div className="settings-row">
           <div className="settings-row-info">
             <span className="settings-label">Listes Bingebase</span>
-            <span className="settings-desc">Chargez vos listes publiques Bingebase pour les ajouter à Stremosaic.</span>
+            <span className="settings-desc">
+              Chargez vos listes publiques Bingebase pour les ajouter à Stremosaic.
+            </span>
           </div>
           <div className="settings-row-control" style={{ display: 'flex', gap: '8px' }}>
-            <input className="form-input" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Nom d’utilisateur Bingebase" />
-            <button className="btn btn-secondary" onClick={loadLists}>Charger les listes</button>
+            <input
+              className="form-input"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Nom d’utilisateur Bingebase"
+            />
+            <button className="btn btn-secondary" onClick={loadLists}>
+              Charger les listes
+            </button>
           </div>
         </div>
       )}
 
       {lists.length > 0 && (
         <div className="settings-row" style={{ alignItems: 'stretch' }}>
-          <div className="settings-row-info"><span className="settings-label">Listes disponibles</span></div>
-          <div className="settings-row-control" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div className="settings-row-info">
+            <span className="settings-label">Listes disponibles</span>
+          </div>
+          <div
+            className="settings-row-control"
+            style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}
+          >
             {lists.map((list) => (
-              <button key={list.url || list.name} className="btn btn-secondary" onClick={() => add(list)}>
+              <button
+                key={list.url || list.name}
+                className="btn btn-secondary"
+                onClick={() => add(list)}
+              >
                 Ajouter {list.name}
               </button>
             ))}

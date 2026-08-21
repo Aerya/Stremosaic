@@ -64,7 +64,8 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
       return;
     }
     let cancelled = false;
-    api.bingebaseStatus(userId)
+    api
+      .bingebaseStatus(userId)
       .then((status) => {
         if (!cancelled) setBingebaseConnected(Boolean(status?.connected));
       })
@@ -75,7 +76,6 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
       cancelled = true;
     };
   }, [userId, source]);
-
 
   // Initial browse on mount (empty query => trending).
   useEffect(() => {
@@ -219,8 +219,12 @@ export function MarketplaceBrowser({ userId = null, refreshConfig = null, apiKey
               <SearchX size={32} style={{ marginBottom: '12px', opacity: 0.5 }} />
               {source.includes('bingebase') && bingebaseConnected === false ? (
                 <>
-                  <p style={{ margin: 0, fontSize: '0.875rem' }}>Aucun catalogue Bingebase trouvé.</p>
-                  <p style={{ margin: '8px 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <p style={{ margin: 0, fontSize: '0.875rem' }}>
+                    Aucun catalogue Bingebase trouvé.
+                  </p>
+                  <p
+                    style={{ margin: '8px 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)' }}
+                  >
                     Connectez votre compte Bingebase dans les Préférences pour accéder à vos listes.
                   </p>
                   <button type="button" className="btn btn-secondary" onClick={handleOpenBingebase}>
