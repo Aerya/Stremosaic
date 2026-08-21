@@ -4,6 +4,24 @@
 Normalement pas de breaking change mais toujours en WiP.
 /!\ WiP /!\
 
+<p align="center">
+  <img src="https://img.shields.io/badge/GitHub%20Actions-Docker%20build-2088FF?style=flat-square&logo=githubactions&logoColor=white" alt="Build Docker avec GitHub Actions">
+  <img src="https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/multi--arch-amd64%20%7C%20arm64-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Multi-arch">
+  <img src="https://img.shields.io/badge/interface-fran%C3%A7aise-blue?style=flat-square" alt="Interface française">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Stremio-addon-purple?style=flat-square" alt="Stremio">
+  <img src="https://img.shields.io/badge/TMDB-source-01B4E4?style=flat-square" alt="TMDB">
+  <img src="https://img.shields.io/badge/TVDB-illustrations%20optionnelles-F5C518?style=flat-square" alt="TVDB, illustrations optionnelles">
+  <img src="https://img.shields.io/badge/AniList-source-02A9FF?style=flat-square" alt="AniList">
+  <img src="https://img.shields.io/badge/MyAnimeList-source-2E51A2?style=flat-square" alt="MyAnimeList">
+  <img src="https://img.shields.io/badge/Kitsu%20%7C%20Simkl-sources-orange?style=flat-square" alt="Kitsu et Simkl">
+  <img src="https://img.shields.io/badge/Bingebase-listes-6A5ACD?style=flat-square" alt="Bingebase">
+  <img src="https://img.shields.io/badge/MDBList-listes-2EA44F?style=flat-square" alt="MDBList">
+</p>
+
 Stremosaic est un addon de catalogues Stremio multi-sources, basé sur l'architecture de TMDB Discover+. Il permet de créer des catalogues personnalisés et de réunir plusieurs sources dans une seule configuration.
 
 ## Sources
