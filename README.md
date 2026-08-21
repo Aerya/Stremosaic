@@ -5,7 +5,7 @@ Normalement pas de breaking change mais toujours en WiP.
 /!\ WiP /!\
 
 <p align="center">
-  <img src="https://img.shields.io/badge/GitHub%20Actions-Docker%20build-2088FF?style=flat-square&logo=githubactions&logoColor=white" alt="Build Docker avec GitHub Actions">
+  <img src="https://github.com/Aerya/Stremosaic/actions/workflows/docker-publish.yml/badge.svg?branch=main" alt="Build Docker">
   <img src="https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
   <img src="https://img.shields.io/badge/multi--arch-amd64%20%7C%20arm64-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Multi-arch">
   <img src="https://img.shields.io/badge/interface-fran%C3%A7aise-blue?style=flat-square" alt="Interface française">
