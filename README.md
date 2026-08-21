@@ -1,5 +1,9 @@
 # Stremosaic
 
+/!\ WiP /!\
+Normalement pas de breaking change mais toujours en WiP.
+/!\ WiP /!\
+
 Stremosaic est un addon de catalogues Stremio multi-sources, basé sur l'architecture de TMDB Discover+. Il permet de créer des catalogues personnalisés et de réunir plusieurs sources dans une seule configuration.
 
 ## Sources
